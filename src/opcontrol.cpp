@@ -2,7 +2,8 @@
 
 #include <cmath>
 #include <algorithm>
-#include <sstream>
+#include <array>
+
 
 using namespace pros;
 
@@ -20,15 +21,6 @@ using namespace pros;
  * task, not resume it from where it left off.
  */
 
-
-bool sort(const void *arg1, const void *arg2) {
-  //Dereference off a C-like cast to double pointer
-  double first = *(double*)arg1;
-  double second = *(double*)arg2;
-
-  return (first < second);
-}
-
 void XDrive(void *p) {
   Controller cont(E_CONTROLLER_MASTER);
 
@@ -40,7 +32,7 @@ void XDrive(void *p) {
   Motor drive3(DrivePort3);
   Motor drive4(DrivePort4);
 
-  double[4] powerList = {0, 0, 0, 0};
+  std::arary <double, 3> powerList = {0, 0, 0, 0};
   double power1, power2, power3, power4;
 
   while (true) {
@@ -56,7 +48,7 @@ void XDrive(void *p) {
     powerList[2] = -leftY - leftX + rightX;
     powerList[3] = leftY -leftX + rightX;
 
-    double maxVal = std::max(powerList, *sort);
+    double maxVal = *(std::max_element(powerList.begin(), powerList,end()));
 
     for (int i=0; i<4; i++) {
       powerList[i] /= (maxVal / 127.0); //Ensure double type
