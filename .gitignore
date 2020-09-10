@@ -6,6 +6,12 @@
 *.bin
 *.elf
 
+# Visual Studio
+*.vs
+*.sln
+*.vcxproj
+*.vcxproj.user
+
 # PROS
 bin/
 .vscode/
