@@ -32,7 +32,7 @@ void XDrive(void *p) {
   Motor drive3(DrivePort3);
   Motor drive4(DrivePort4);
 
-  std::arary <double, 3> powerList = {0, 0, 0, 0};
+  std::array <double, 4> powerList = {0, 0, 0, 0};
   double power1, power2, power3, power4;
 
   while (true) {
@@ -48,7 +48,7 @@ void XDrive(void *p) {
     powerList[2] = -leftY - leftX + rightX;
     powerList[3] = leftY -leftX + rightX;
 
-    double maxVal = *(std::max_element(powerList.begin(), powerList,end()));
+    double maxVal = *(std::max_element(powerList.begin(), powerList.end()));
 
     for (int i=0; i<4; i++) {
       powerList[i] /= (maxVal / 127.0); //Ensure double type
@@ -63,5 +63,6 @@ void XDrive(void *p) {
 
 
 void opcontrol() {
-
+    std::string driveTaskName("Drive Task");
+    Task driveTask(XDrive, &driveTaskName);
 }
