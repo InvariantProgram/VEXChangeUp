@@ -12,8 +12,10 @@
 #define LeftIntakePort 10
 #define RightIntakePort 7
 #define UptakePort 8
+#define IndexerPort 3
 
 #define noStrafes 20
 #define IntakePower 100 // out of 127
+#define IndexerPower 100 // out of 127
 
 #endif

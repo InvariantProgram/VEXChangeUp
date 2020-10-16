@@ -37,6 +37,9 @@ void XDrive(void *p) {
   Motor UptakeMotor(UptakePort, E_MOTOR_GEARSET_06, 0);
   UptakeMotor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 
+  Motor IndexerMotor(IndexerPort, E_MOTOR_GEARSET_06, 1);
+  IndexerMotor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+
   std::array <double, 4> powerList = {0, 0, 0, 0};
   // double power1, power2, power3, power4;
 
@@ -47,6 +50,10 @@ void XDrive(void *p) {
 
     int RunIntake = IntakePower * (cont.get_digital(E_CONTROLLER_DIGITAL_R1) - cont.get_digital(E_CONTROLLER_DIGITAL_R2));
     // R1/+ is intake, R2/- is outtake, runs at IntakePower
+    int RunIndexer = IndexerPower * cont.get_digital(E_CONTROLLER_DIGITAL_L1);
+    // L1 is indexer
+    int RunUptake = ((! RunIndexer) ? RunIntake : RunIndexer);
+    // Runs with indexer, if indexer not running then runs with intake
 
 
 
@@ -71,9 +78,8 @@ void XDrive(void *p) {
 
     LeftIntakeMotor.move(RunIntake);
     RightIntakeMotor.move(RunIntake);
-    UptakeMotor.move(RunIntake);
-
-
+    UptakeMotor.move(RunUptake);
+    IndexerMotor.move(RunIndexer);
 
     pros::delay(20);
   }
