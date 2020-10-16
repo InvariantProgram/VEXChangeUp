@@ -32,6 +32,11 @@ void XDrive(void *p) {
   Motor BackRightWheelMotor(BackRightWheelPort, E_MOTOR_GEARSET_36, 1);
   Motor BackLeftWheelMotor(BackLeftWheelPort, E_MOTOR_GEARSET_36, 1);
 
+  Motor LeftIntakeMotor(LeftIntakePort, E_MOTOR_GEARSET_18, 0);
+  Motor RightIntakeMotor(RightIntakePort, E_MOTOR_GEARSET_18, 1);
+  Motor UptakeMotor(UptakePort, E_MOTOR_GEARSET_06, 0);
+  UptakeMotor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+
   std::array <double, 4> powerList = {0, 0, 0, 0};
   // double power1, power2, power3, power4;
 
@@ -39,6 +44,11 @@ void XDrive(void *p) {
     int leftY = cont.get_analog(ANALOG_LEFT_Y);
     int leftX = cont.get_analog(ANALOG_LEFT_X);
     int rightX = cont.get_analog(ANALOG_RIGHT_X);
+
+    int RunIntake = IntakePower * (cont.get_digital(E_CONTROLLER_DIGITAL_R1) - cont.get_digital(E_CONTROLLER_DIGITAL_R2));
+    // R1/+ is intake, R2/- is outtake, runs at IntakePower
+
+
 
     if ((leftX < noStrafes) && (leftX > -noStrafes))
       leftX = 0;
@@ -52,10 +62,18 @@ void XDrive(void *p) {
     double maxVal = *(std::max_element(powerList.begin(), powerList.end()));
 
     for (int i = 0; i < 4; i++)
-      powerList[i] /= (abs(maxVal) / 127.0); //Ensure double type
+      powerList[i] /= (abs((int) maxVal) / 127.0); //Ensure double type
 
     FrontLeftWheelMotor.move(powerList[0]); FrontRightWheelMotor.move(powerList[1]);
     BackRightWheelMotor.move(powerList[2]); BackLeftWheelMotor.move(powerList[3]);
+
+
+
+    LeftIntakeMotor.move(RunIntake);
+    RightIntakeMotor.move(RunIntake);
+    UptakeMotor.move(RunIntake);
+
+
 
     pros::delay(20);
   }
