@@ -52,7 +52,7 @@ void XDrive(void *p) {
     double maxVal = *(std::max_element(powerList.begin(), powerList.end()));
 
     for (int i = 0; i < 4; i++)
-      powerList[i] /= (maxVal / 127.0); //Ensure double type
+      powerList[i] /= (abs(maxVal) / 127.0); //Ensure double type
 
     FrontLeftWheelMotor.move(powerList[0]); FrontRightWheelMotor.move(powerList[1]);
     BackRightWheelMotor.move(powerList[2]); BackLeftWheelMotor.move(powerList[3]);
