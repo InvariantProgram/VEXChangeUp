@@ -51,7 +51,7 @@ void XDrive(void *p) {
     double maxVal = *(std::max_element(powerList.begin(), powerList.end()));
 
     for (int i=0; i<4; i++) {
-      powerList[i] /= (maxVal / 127.0); //Ensure double type
+      powerList[i] /= abs(maxVal / 127.0); //Ensure double type
     }
 
     drive1.move(powerList[0]); drive2.move(powerList[1]);
