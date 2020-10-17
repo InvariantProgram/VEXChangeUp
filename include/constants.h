@@ -9,7 +9,7 @@
 #define BackRightWheelPort 13
 #define BackLeftWheelPort 14
 
-#define LeftIntakePort 10
+#define LeftIntakePort 2
 #define RightIntakePort 7
 #define UptakePort 8
 #define IndexerPort 3
