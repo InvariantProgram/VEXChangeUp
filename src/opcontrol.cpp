@@ -33,7 +33,6 @@ void XDrive(void *p) {
   Motor drive4(DrivePort4);
 
   std::array <double, 4> powerList = {0, 0, 0, 0};
-  double power1, power2, power3, power4;
 
   while (true) {
     int leftY = cont.get_analog(ANALOG_LEFT_Y);
