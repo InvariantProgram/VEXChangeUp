@@ -74,8 +74,6 @@ void XDrive(void *p) {
     FrontLeftWheelMotor.move(powerList[0]); FrontRightWheelMotor.move(powerList[1]);
     BackRightWheelMotor.move(powerList[2]); BackLeftWheelMotor.move(powerList[3]);
 
-
-
     LeftIntakeMotor.move(RunIntake);
     RightIntakeMotor.move(RunIntake);
     UptakeMotor.move(RunUptake);
