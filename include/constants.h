@@ -1,11 +1,21 @@
 #ifndef constants_h
 #define constants_h
 
-#define DrivePort1 1
-#define DrivePort2 2
-#define DrivePort3 3
-#define DrivePort4 4
+// Broken ports on Brain 2:
+// 4 5 6 9 11 12 15 20
+
+#define FrontLeftWheelPort 16
+#define FrontRightWheelPort 19
+#define BackRightWheelPort 13
+#define BackLeftWheelPort 14
+
+#define LeftIntakePort 2
+#define RightIntakePort 7
+#define UptakePort 8
+#define IndexerPort 3
 
 #define noStrafes 20
+#define IntakePower 100 // out of 127
+#define IndexerPower 100 // out of 127
 
 #endif
