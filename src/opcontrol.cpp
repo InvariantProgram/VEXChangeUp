@@ -24,7 +24,6 @@ using namespace pros;
 void XDrive(void *p) {
   Controller cont(E_CONTROLLER_MASTER);
 
-
   //Code is written assuming +Power on all motors turns robot clockwise
   //Motor 1: Front left, Motor 2: Front right - Motors named in clockwise direction
   Motor FrontLeftWheelMotor(FrontLeftWheelPort, E_MOTOR_GEARSET_36, 1);
@@ -32,39 +31,21 @@ void XDrive(void *p) {
   Motor BackRightWheelMotor(BackRightWheelPort, E_MOTOR_GEARSET_36, 1);
   Motor BackLeftWheelMotor(BackLeftWheelPort, E_MOTOR_GEARSET_36, 1);
 
-  Motor LeftIntakeMotor(LeftIntakePort, E_MOTOR_GEARSET_18, 0);
-  Motor RightIntakeMotor(RightIntakePort, E_MOTOR_GEARSET_18, 1);
-  Motor UptakeMotor(UptakePort, E_MOTOR_GEARSET_06, 0);
-  UptakeMotor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
-
-  Motor IndexerMotor(IndexerPort, E_MOTOR_GEARSET_06, 1);
-  IndexerMotor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
-
   std::array <double, 4> powerList = {0, 0, 0, 0};
-  // double power1, power2, power3, power4;
 
   while (true) {
     int leftY = cont.get_analog(ANALOG_LEFT_Y);
     int leftX = cont.get_analog(ANALOG_LEFT_X);
-    int rightX = cont.get_analog(ANALOG_RIGHT_X);
+    int rightY = cont.get_analog(ANALOG_RIGHT_Y);
 
-    int RunIntake = IntakePower * (cont.get_digital(E_CONTROLLER_DIGITAL_R1) - cont.get_digital(E_CONTROLLER_DIGITAL_R2));
-    // R1/+ is intake, R2/- is outtake, runs at IntakePower
-    int RunIndexer = IndexerPower * cont.get_digital(E_CONTROLLER_DIGITAL_L1);
-    // L1 is indexer
-    int RunUptake = ((! RunIndexer) ? RunIntake : RunIndexer);
-    // Runs with indexer, if indexer not running then runs with intake
-
-
-
-    if ((leftX < noStrafes) && (leftX > -noStrafes))
+    if (abs(leftX) < noStrafes)
       leftX = 0;
 
     //Pre-scale calculations:
-    powerList[0] = leftY + leftX + rightX;
-    powerList[1] = -leftY + leftX + rightX;
-    powerList[2] = -leftY - leftX + rightX;
-    powerList[3] = leftY - leftX + rightX;
+    powerList[0] = leftY + leftX;
+    powerList[1] = -rightY + leftX;
+    powerList[2] = -rightY - leftX;
+    powerList[3] = leftY - leftX;
 
     double maxVal = *(std::max_element(powerList.begin(), powerList.end()));
 
@@ -74,17 +55,42 @@ void XDrive(void *p) {
     FrontLeftWheelMotor.move(powerList[0]); FrontRightWheelMotor.move(powerList[1]);
     BackRightWheelMotor.move(powerList[2]); BackLeftWheelMotor.move(powerList[3]);
 
-    LeftIntakeMotor.move(RunIntake);
-    RightIntakeMotor.move(RunIntake);
-    UptakeMotor.move(RunUptake);
-    IndexerMotor.move(RunIndexer);
-
     pros::delay(20);
   }
+}
+
+void intake(void* p) {
+    Controller cont(E_CONTROLLER_MASTER);
+
+    Motor LeftIntakeMotor(LeftIntakePort, E_MOTOR_GEARSET_18, 0);
+    Motor RightIntakeMotor(RightIntakePort, E_MOTOR_GEARSET_18, 1);
+    Motor UptakeMotor(UptakePort, E_MOTOR_GEARSET_06, 0);
+    UptakeMotor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+
+    Motor IndexerMotor(IndexerPort, E_MOTOR_GEARSET_06, 1);
+    IndexerMotor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+
+    while (true) {
+        int RunIntake = IntakePower * (cont.get_digital(E_CONTROLLER_DIGITAL_L2) - cont.get_digital(E_CONTROLLER_DIGITAL_L1));
+        // R1/+ is intake, R2/- is outtake, runs at IntakePower
+        int RunIndexer = IndexerPower * cont.get_digital(E_CONTROLLER_DIGITAL_R2);
+        // L1 is indexer
+        int RunUptake = ((!RunIndexer) ? RunIntake : RunIndexer);
+        // Runs with indexer, if indexer not running then runs with intake
+
+        LeftIntakeMotor.move(RunIntake);
+        RightIntakeMotor.move(RunIntake);
+        UptakeMotor.move(RunUptake);
+        IndexerMotor.move(RunIndexer);
+
+        pros::delay(20);
+    }
 }
 
 
 void opcontrol() {
     std::string driveTaskName("Drive Task");
+    std::string intakeTaskName("Intake Task");
     Task driveTask(XDrive, &driveTaskName);
+    Task intakeTask(intake, &intakeTaskName);
 }
