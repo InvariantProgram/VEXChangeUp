@@ -21,6 +21,16 @@ using namespace pros;
  * task, not resume it from where it left off.
  */
 
+bool XDrivePowerComp(const double &a, const double &b)
+{
+  bool FirstLess = false;
+
+  if (abs((int) a) < abs((int) b))
+    FirstLess = true;
+
+  return(FirstLess);
+}
+
 void XDrive(void *p) {
   Controller cont(E_CONTROLLER_MASTER);
 
@@ -47,10 +57,10 @@ void XDrive(void *p) {
     powerList[2] = -rightY - leftX;
     powerList[3] = leftY - leftX;
 
-    double maxVal = *(std::max_element(powerList.begin(), powerList.end()));
+    double maxVal = *(std::max_element(powerList.begin(), powerList.end(), XDrivePowerComp));
 
     for (int i = 0; i < 4; i++)
-      powerList[i] /= (abs((int) maxVal) / 127.0); //Ensure double type
+      powerList[i] /= (abs((int) maxVal) / 32.0); //Ensure double type
 
     FrontLeftWheelMotor.move(powerList[0]); FrontRightWheelMotor.move(powerList[1]);
     BackRightWheelMotor.move(powerList[2]); BackLeftWheelMotor.move(powerList[3]);
