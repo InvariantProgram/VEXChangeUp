@@ -67,16 +67,20 @@ void intake(void* p) {
     Motor UptakeMotor(UptakePort, E_MOTOR_GEARSET_06, 0);
     UptakeMotor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 
-    Motor IndexerMotor(IndexerPort, E_MOTOR_GEARSET_06, 1);
+    Motor IndexerMotor(IndexerPort, E_MOTOR_GEARSET_06, 0);
     IndexerMotor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 
     while (true) {
         int RunIntake = IntakePower * (cont.get_digital(E_CONTROLLER_DIGITAL_L2) - cont.get_digital(E_CONTROLLER_DIGITAL_L1));
-        // R1/+ is intake, R2/- is outtake, runs at IntakePower
+        // L1/+ is intake, L2/- is outtake, runs at IntakePower
         int RunIndexer = IndexerPower * cont.get_digital(E_CONTROLLER_DIGITAL_R2);
-        // L1 is indexer
-        int RunUptake = ((!RunIndexer) ? RunIntake : RunIndexer);
-        // Runs with indexer, if indexer not running then runs with intake
+        // R2 is indexer
+        int RunUptake = 0;
+        if (cont.get_digital(E_CONTROLLER_DIGITAL_R1))
+            RunUptake = 1;
+        else if (RunIndexer || (RunIntake > 0))
+            RunUptake = -1;
+        RunUptake *= UptakePower;
 
         LeftIntakeMotor.move(RunIntake);
         RightIntakeMotor.move(RunIntake);
