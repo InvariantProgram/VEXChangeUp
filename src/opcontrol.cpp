@@ -60,7 +60,7 @@ void XDrive(void *p) {
     double maxVal = *(std::max_element(powerList.begin(), powerList.end(), XDrivePowerComp));
 
     for (int i = 0; i < 4; i++)
-      powerList[i] /= (abs((int) maxVal) / 32.0); //Ensure double type
+      powerList[i] /= (abs((int) maxVal) / 127.0); //Ensure double type
 
     FrontLeftWheelMotor.move(powerList[0]); FrontRightWheelMotor.move(powerList[1]);
     BackRightWheelMotor.move(powerList[2]); BackLeftWheelMotor.move(powerList[3]);
@@ -81,6 +81,7 @@ void intake(void* p) {
     IndexerMotor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 
     while (true) {
+        
         int RunIntake = IntakePower * (cont.get_digital(E_CONTROLLER_DIGITAL_L2) - cont.get_digital(E_CONTROLLER_DIGITAL_L1));
         // L1/+ is intake, L2/- is outtake, runs at IntakePower
         int RunIndexer = IndexerPower * cont.get_digital(E_CONTROLLER_DIGITAL_R2);
@@ -91,6 +92,7 @@ void intake(void* p) {
         else if (RunIndexer || (RunIntake > 0))
             RunUptake = -1;
         RunUptake *= UptakePower;
+        
 
         LeftIntakeMotor.move(RunIntake);
         RightIntakeMotor.move(RunIntake);
