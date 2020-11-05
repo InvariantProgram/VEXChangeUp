@@ -21,6 +21,16 @@ using namespace pros;
  * task, not resume it from where it left off.
  */
 
+bool XDrivePowerComp(const double &a, const double &b)
+{
+  bool FirstLess = false;
+
+  if (abs((int) a) < abs((int) b))
+    FirstLess = true;
+
+  return(FirstLess);
+}
+
 void XDrive(void *p) {
   Controller cont(E_CONTROLLER_MASTER);
 
@@ -47,7 +57,7 @@ void XDrive(void *p) {
     powerList[2] = -rightY - leftX;
     powerList[3] = leftY - leftX;
 
-    double maxVal = *(std::max_element(powerList.begin(), powerList.end()));
+    double maxVal = *(std::max_element(powerList.begin(), powerList.end(), XDrivePowerComp));
 
     for (int i = 0; i < 4; i++)
       powerList[i] /= (abs((int) maxVal) / 127.0); //Ensure double type
@@ -71,6 +81,7 @@ void intake(void* p) {
     IndexerMotor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 
     while (true) {
+        
         int RunIntake = IntakePower * (cont.get_digital(E_CONTROLLER_DIGITAL_L2) - cont.get_digital(E_CONTROLLER_DIGITAL_L1));
         // L1/+ is intake, L2/- is outtake, runs at IntakePower
         int RunIndexer = IndexerPower * cont.get_digital(E_CONTROLLER_DIGITAL_R2);
@@ -81,6 +92,7 @@ void intake(void* p) {
         else if (RunIndexer || (RunIntake > 0))
             RunUptake = -1;
         RunUptake *= UptakePower;
+        
 
         LeftIntakeMotor.move(RunIntake);
         RightIntakeMotor.move(RunIntake);
