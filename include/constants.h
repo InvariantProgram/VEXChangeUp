@@ -16,7 +16,9 @@
 
 #define noStrafes 20
 #define IntakePower 100   // out of 127
-#define IndexerPower 100  // out of 127
+#define IndexerPower 75  // out of 127
 #define UptakePower 100   // out of 127
+
+#define movementScale 0.5
 
 #endif

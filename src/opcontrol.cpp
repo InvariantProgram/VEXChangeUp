@@ -21,7 +21,7 @@ using namespace pros;
  * task, not resume it from where it left off.
  */
 
-bool XDrivePowerComp(const double &a, const double &b)
+bool absComp(const double &a, const double &b)
 {
   bool FirstLess = false;
 
@@ -42,6 +42,7 @@ void XDrive(void *p) {
   Motor BackLeftWheelMotor(BackLeftWheelPort, E_MOTOR_GEARSET_36, 1);
 
   std::array <double, 4> powerList = {0, 0, 0, 0};
+  std::array <double, 4> velList = { 0, 0, 0, 0 };
 
   while (true) {
     int leftY = cont.get_analog(ANALOG_LEFT_Y);
@@ -51,13 +52,25 @@ void XDrive(void *p) {
     if (abs(leftX) < noStrafes)
       leftX = 0;
 
+    velList[0] = FrontLeftWheelMotor.get_actual_velocity(); velList[1] = FrontRightWheelMotor.get_actual_velocity();
+    velList[2] = BackRightWheelMotor.get_actual_velocity(); velList[3] = BackLeftWheelMotor.get_actual_velocity();
+
+    for (int i = 0; i < 4; i++) {
+        double diff = powerList[i] - velList[i];
+        if (powerList[i] == 0)
+            continue;
+        else {
+            if (abs(diff) > 5) powerList[i] = velList[i] + diff * movementScale;
+        }
+    }
+
     //Pre-scale calculations:
     powerList[0] = leftY + leftX;
     powerList[1] = -rightY + leftX;
     powerList[2] = -rightY - leftX;
     powerList[3] = leftY - leftX;
 
-    double maxVal = *(std::max_element(powerList.begin(), powerList.end(), XDrivePowerComp));
+    double maxVal = *(std::max_element(powerList.begin(), powerList.end(), absComp));
 
     for (int i = 0; i < 4; i++)
       powerList[i] /= (abs((int) maxVal) / 127.0); //Ensure double type
