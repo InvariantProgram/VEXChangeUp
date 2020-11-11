@@ -88,7 +88,7 @@ void XDrive(void *p) {
     }
 
     for (int i = 0; i < 4; ++i)
-      Voltage[i] += MovementScale * (GoalVoltage[i] - Voltage[i]);
+      Voltage[i] += MovementScale * (GoalVoltage[i] - Voltage[i]); // busted?
 
 
     FrontLeftWheelMotor.move(Voltage[0]);
@@ -149,8 +149,8 @@ void XDrive(void *p) {
 void intake(void* p) {
     Controller cont(E_CONTROLLER_MASTER);
 
-    Motor LeftIntakeMotor(LeftIntakePort, E_MOTOR_GEARSET_06, 0);
-    Motor RightIntakeMotor(RightIntakePort, E_MOTOR_GEARSET_06, 1);
+    Motor LeftIntakeMotor(LeftIntakePort, E_MOTOR_GEARSET_18, 0);
+    Motor RightIntakeMotor(RightIntakePort, E_MOTOR_GEARSET_18, 1);
     Motor UptakeMotor(UptakePort, E_MOTOR_GEARSET_06, 0);
     UptakeMotor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 

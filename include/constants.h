@@ -15,11 +15,11 @@
 #define IndexerPort 8
 
 #define StrafeDeadzone 20
-#define IntakePower 100   // out of 127
-#define IndexerPower 100  // out of 127
-#define UptakePower 100   // out of 127
+#define IntakePower 127   // out of 127
+#define IndexerPower 127  // out of 127
+#define UptakePower 127   // out of 127
 
-#define MovementScale 0.25
+#define MovementScale 0.5
 #define VoltageDiffDeadzone 5
 
 
