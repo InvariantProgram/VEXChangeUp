@@ -19,7 +19,7 @@
 #define IndexerPower 100  // out of 127
 #define UptakePower 100   // out of 127
 
-#define MovementScale 0.5
+#define MovementScale 0.25
 #define VoltageDiffDeadzone 5
 
 
