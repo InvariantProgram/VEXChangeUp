@@ -36,13 +36,13 @@ void XDrive(void *p) {
 
   //Code is written assuming +Power on all motors turns robot clockwise
   //Motor 1: Front left, Motor 2: Front right - Motors named in clockwise direction
-  Motor FrontLeftWheelMotor(FrontLeftWheelPort, E_MOTOR_GEARSET_36, 1);
-  Motor FrontRightWheelMotor(FrontRightWheelPort, E_MOTOR_GEARSET_36, 1);
-  Motor BackRightWheelMotor(BackRightWheelPort, E_MOTOR_GEARSET_36, 1);
-  Motor BackLeftWheelMotor(BackLeftWheelPort, E_MOTOR_GEARSET_36, 1);
+  Motor FrontLeftWheelMotor(FrontLeftWheelPort, E_MOTOR_GEARSET_18, 1);
+  Motor FrontRightWheelMotor(FrontRightWheelPort, E_MOTOR_GEARSET_18, 1);
+  Motor BackRightWheelMotor(BackRightWheelPort, E_MOTOR_GEARSET_18, 1);
+  Motor BackLeftWheelMotor(BackLeftWheelPort, E_MOTOR_GEARSET_18, 1);
 
   std::array <double, 4> powerList = {0, 0, 0, 0};
-  std::array <double, 4> velList = { 0, 0, 0, 0 };
+  std::array <double, 4> velList = {0, 0, 0, 0};
 
   while (true) {
     int leftY = cont.get_analog(ANALOG_LEFT_Y);
@@ -52,8 +52,11 @@ void XDrive(void *p) {
     if (abs(leftX) < noStrafes)
       leftX = 0;
 
-    velList[0] = FrontLeftWheelMotor.get_actual_velocity(); velList[1] = FrontRightWheelMotor.get_actual_velocity();
-    velList[2] = BackRightWheelMotor.get_actual_velocity(); velList[3] = BackLeftWheelMotor.get_actual_velocity();
+    velList[0] = FrontLeftWheelMotor.get_actual_velocity();
+    // printf("FrontLeftWheelMotor get_actual_velocity returns: %f\n", velList[0]);
+    velList[1] = FrontRightWheelMotor.get_actual_velocity();
+    velList[2] = BackRightWheelMotor.get_actual_velocity();
+    velList[3] = BackLeftWheelMotor.get_actual_velocity();
 
     for (int i = 0; i < 4; i++) {
         double diff = powerList[i] - velList[i];
@@ -77,7 +80,6 @@ void XDrive(void *p) {
 
     FrontLeftWheelMotor.move(powerList[0]); FrontRightWheelMotor.move(powerList[1]);
     BackRightWheelMotor.move(powerList[2]); BackLeftWheelMotor.move(powerList[3]);
-
     pros::delay(20);
   }
 }
@@ -85,8 +87,8 @@ void XDrive(void *p) {
 void intake(void* p) {
     Controller cont(E_CONTROLLER_MASTER);
 
-    Motor LeftIntakeMotor(LeftIntakePort, E_MOTOR_GEARSET_18, 0);
-    Motor RightIntakeMotor(RightIntakePort, E_MOTOR_GEARSET_18, 1);
+    Motor LeftIntakeMotor(LeftIntakePort, E_MOTOR_GEARSET_06, 0);
+    Motor RightIntakeMotor(RightIntakePort, E_MOTOR_GEARSET_06, 1);
     Motor UptakeMotor(UptakePort, E_MOTOR_GEARSET_06, 0);
     UptakeMotor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 
@@ -94,7 +96,7 @@ void intake(void* p) {
     IndexerMotor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 
     while (true) {
-        
+
         int RunIntake = IntakePower * (cont.get_digital(E_CONTROLLER_DIGITAL_L2) - cont.get_digital(E_CONTROLLER_DIGITAL_L1));
         // L1/+ is intake, L2/- is outtake, runs at IntakePower
         int RunIndexer = IndexerPower * cont.get_digital(E_CONTROLLER_DIGITAL_R2);
@@ -105,7 +107,7 @@ void intake(void* p) {
         else if (RunIndexer || (RunIntake > 0))
             RunUptake = -1;
         RunUptake *= UptakePower;
-        
+
 
         LeftIntakeMotor.move(RunIntake);
         RightIntakeMotor.move(RunIntake);
