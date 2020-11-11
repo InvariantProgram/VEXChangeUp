@@ -31,6 +31,16 @@ bool absComp(const double &a, const double &b)
   return(FirstLess);
 }
 
+int ScaleRawJoystick(int raw)
+{
+  // formula swiped from https://www.vexforum.com/t/what-do-you-think-is-a-more-efficient-way-to-drive-your-robot/64857/42
+  int ScaledVal = (pow(raw, JoystickScaleConst)) / (pow(127, JoystickScaleConst - 1));
+  if ((JoystickScaleConst % 2 == 0) && (raw < 0))
+    raw *= -1;
+
+  return(ScaledVal);
+}
+
 void XDrive(void *p) {
   Controller cont(E_CONTROLLER_MASTER);
 
@@ -41,6 +51,54 @@ void XDrive(void *p) {
   Motor BackRightWheelMotor(BackRightWheelPort, E_MOTOR_GEARSET_18, 1);
   Motor BackLeftWheelMotor(BackLeftWheelPort, E_MOTOR_GEARSET_18, 1);
 
+/*
+  calculate goal voltages from joystick values
+  slew
+*/
+
+  std::array <int, 4> Voltage = {0};
+  std::array <int, 4> GoalVoltage = {0};
+
+  while (true)
+  {
+    int leftY = cont.get_analog(ANALOG_LEFT_Y);
+    int leftX = cont.get_analog(ANALOG_LEFT_X);
+    int rightY = cont.get_analog(ANALOG_RIGHT_Y);
+
+    bool strafing = (abs(leftX) > StrafeDeadzone);
+
+    leftY = ScaleRawJoystick(leftY);
+    rightY = ScaleRawJoystick(rightY);
+    if (leftX > 0)
+      leftX = ScaleRawJoystick(127 * (leftX - StrafeDeadzone) / (127 - StrafeDeadzone));
+    else if (leftX < 0)
+      leftX = ScaleRawJoystick(127 * (leftX + StrafeDeadzone) / (127 - StrafeDeadzone));
+
+    GoalVoltage[0] = leftY + (leftX * strafing);
+    GoalVoltage[1] = -rightY + (leftX * strafing);
+    GoalVoltage[2] = -rightY - (leftX * strafing);
+    GoalVoltage[3] = leftY - (leftX * strafing);
+
+    int MaxVoltage = *(std::max_element(GoalVoltage.begin(), GoalVoltage.end(), absComp));
+
+    if (abs(MaxVoltage) > 127) // scales if necessary for strafing
+    {
+      for (int i = 0; i < 4; i++)
+        GoalVoltage[i] /= (abs((int) MaxVoltage) / 127.0); // truncates but who cares
+    }
+
+    for (int i = 0; i < 4; ++i)
+      Voltage[i] += MovementScale * (GoalVoltage[i] - Voltage[i]);
+
+    FrontLeftWheelMotor.move(Voltage[0]);
+    FrontRightWheelMotor.move(Voltage[1]);
+    BackRightWheelMotor.move(Voltage[2]);
+    BackLeftWheelMotor.move(Voltage[3]);
+
+    pros::delay(20);
+  }
+
+/*
   std::array <double, 4> powerList = {0, 0, 0, 0};
   std::array <double, 4> velList = {0, 0, 0, 0};
 
@@ -49,21 +107,23 @@ void XDrive(void *p) {
     int leftX = cont.get_analog(ANALOG_LEFT_X);
     int rightY = cont.get_analog(ANALOG_RIGHT_Y);
 
-    if (abs(leftX) < noStrafes)
+    if (abs(leftX) < StrafeDeadzone)
       leftX = 0;
 
     velList[0] = FrontLeftWheelMotor.get_actual_velocity();
-    // printf("FrontLeftWheelMotor get_actual_velocity returns: %f\n", velList[0]);
     velList[1] = FrontRightWheelMotor.get_actual_velocity();
     velList[2] = BackRightWheelMotor.get_actual_velocity();
     velList[3] = BackLeftWheelMotor.get_actual_velocity();
+
+    printf("BackRightWheelMotor get_voltage returns: %f\n", BackRightWheelMotor.get_actual_velocity());
+    printf("rightY: %d\n", rightY);
 
     for (int i = 0; i < 4; i++) {
         double diff = powerList[i] - velList[i];
         if (powerList[i] == 0)
             continue;
         else {
-            if (abs(diff) > 5) powerList[i] = velList[i] + diff * movementScale;
+            if (abs(diff) > 5) powerList[i] = velList[i] + diff * MovementScale;
         }
     }
 
@@ -82,6 +142,7 @@ void XDrive(void *p) {
     BackRightWheelMotor.move(powerList[2]); BackLeftWheelMotor.move(powerList[3]);
     pros::delay(20);
   }
+  */
 }
 
 void intake(void* p) {

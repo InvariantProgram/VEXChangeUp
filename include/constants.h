@@ -14,11 +14,17 @@
 #define UptakePort 3
 #define IndexerPort 8
 
-#define noStrafes 20
+#define StrafeDeadzone 20
 #define IntakePower 100   // out of 127
 #define IndexerPower 100  // out of 127
 #define UptakePower 100   // out of 127
 
-#define movementScale 0.5
+#define MovementScale 0.5
+#define VoltageDiffDeadzone 5
+
+
+
+#define JoystickScaleConst 1
+#define AccelerationConst 1
 
 #endif
