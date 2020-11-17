@@ -20,8 +20,6 @@ class PIDController {
 		double lastTime;
 		double lastDelta;
 
-		bool outputLog;
-
 		double filterWeight;
 		double lastDeriv;
 		double EMAFilter(double newVal);
@@ -40,8 +38,6 @@ class PIDController {
 		double setTarget(double newTarget);
 		//Get last dt
 		double getMillis();
-		//Toggle debug state on/off, return state
-		bool logger();
 
 		//Run one step of the PID control loop
 		double step(double inputVal);
