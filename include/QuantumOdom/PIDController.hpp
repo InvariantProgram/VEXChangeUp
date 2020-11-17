@@ -14,7 +14,7 @@ class PIDController {
 		double integral;
 		double integralLimit;
 		
-		double lastOutput;
+		double lastDiff;
 		double target;
 
 		double lastTime;
@@ -23,7 +23,7 @@ class PIDController {
 		bool outputLog;
 
 		double filterWeight;
-		double lastFilter;
+		double lastDeriv;
 		double EMAFilter(double newVal);
 	public:
 		//Default Constructor

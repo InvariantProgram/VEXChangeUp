@@ -1,7 +1,7 @@
 #include "QuantumOdom/PIDController.hpp"
 
 double PIDController::EMAFilter(double newVal) {
-	
+	return (filterWeight * lastDeriv) + (1.0 - filterWeight) * newVal;
 }
 
 PIDController::PIDController() {
@@ -41,9 +41,11 @@ void PIDController::setIntegralLimit(double windupGuard) {
 
 double PIDController::setTarget(double newTarget) {
 	target = newTarget;
-	lastOutput = 0;
-	lastFilter = 0;
+	lastDeriv = 0;
+	lastDiff = 0;
 	integral = 0;
+
+	lastTime = pros::millis();
 	return target;
 }
 
@@ -51,12 +53,19 @@ double PIDController::getMillis() {
 	return lastDelta;
 }
 
-bool PIDController::logger() {
-	if (outputLog) outputLog = false;
-	else outputLog = true;
-	return outpugLog;
-}
 
 double PIDController::step(double inputVal) {
-	
+	double diff = target - inputVal;
+
+	integral += diff;
+	if (abs(integral) > integralLimit) integral *= integralLimit / abs(integral);
+
+	double deriv = lastDiff - diff;
+	lastDeriv = EMAFilter(deriv);
+
+	lastDelta = pros::millis() - lastTime;
+	double output = diff * constants.kP + integral * constants.kI * lastDelta + constants.kD * lastDeriv / lastDelta;
+	output -= constants.Tf * (output - lastOutput) / lastDelta;
+	lastOutput = output;
+	return output;
 }
