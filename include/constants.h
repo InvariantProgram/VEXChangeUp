@@ -14,6 +14,9 @@
 #define UptakePort 3
 #define IndexerPort 8
 
+#define ScoreLineSensorPort 'D'
+#define SCORE_LINE_SENSOR_LIMIT 2000
+
 #define StrafeDeadzone 20
 #define IntakePower 127   // out of 127
 #define IndexerPower 127  // out of 127

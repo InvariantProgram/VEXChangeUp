@@ -146,36 +146,96 @@ void XDrive(void *p) {
   */
 }
 
+inline int RestartIndexerTimer()
+{
+  return(2 * 1000 / 20); // 2 seconds, measured in 20 ms intervals
+}
+
 void intake(void* p) {
     Controller cont(E_CONTROLLER_MASTER);
 
     Motor LeftIntakeMotor(LeftIntakePort, E_MOTOR_GEARSET_18, 0);
     Motor RightIntakeMotor(RightIntakePort, E_MOTOR_GEARSET_18, 1);
     Motor UptakeMotor(UptakePort, E_MOTOR_GEARSET_06, 0);
-    UptakeMotor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
-
+      UptakeMotor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
     Motor IndexerMotor(IndexerPort, E_MOTOR_GEARSET_06, 0);
-    IndexerMotor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+      IndexerMotor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+
+    ADIAnalogIn ScoreLineSensor(ScoreLineSensorPort);
+    ScoreLineSensor.calibrate();
+
+    int IndexerTimer = 0;
+    int BallsToScore = 0;
+    int prevBallsToScore = 0;
+    bool ScoreSensorFoundBall = 0;
+    bool R2WasPressed = 0;
 
     while (true) {
+        bool L1 = cont.get_digital(E_CONTROLLER_DIGITAL_L1);
+        bool L2 = cont.get_digital(E_CONTROLLER_DIGITAL_L2);
+        bool R1 = cont.get_digital(E_CONTROLLER_DIGITAL_R1);
+        bool R2 = cont.get_digital(E_CONTROLLER_DIGITAL_R2);
+        printf("%d %d %d %d\n", L1, L2, R1, R2);
 
-        int RunIntake = IntakePower * (cont.get_digital(E_CONTROLLER_DIGITAL_L2) - cont.get_digital(E_CONTROLLER_DIGITAL_L1));
-        // L1/+ is intake, L2/- is outtake, runs at IntakePower
-        int RunIndexer = IndexerPower * cont.get_digital(E_CONTROLLER_DIGITAL_R2);
-        // R2 is indexer
+        int ScoreSensorVal = ScoreLineSensor.get_value();
+
+        if (R2 && !R2WasPressed) // counts R2 presses
+        {
+          ++BallsToScore;
+          IndexerTimer = RestartIndexerTimer();
+        }
+
+        // If a ball has just been ejected:
+        if (ScoreSensorVal < SCORE_LINE_SENSOR_LIMIT && !ScoreSensorFoundBall) // ball has just been ejected
+        {
+          --BallsToScore;
+          // Are there still balls left?
+          if (BallsToScore > 0)
+            // Yes.  Restart timer.
+            IndexerTimer = RestartIndexerTimer();
+          else
+            // No.  Stop timer.
+            IndexerTimer = 0;
+        }
+
+        // If timer hits 0:
+        if (IndexerTimer == 0)
+          // Stop running indexer.
+          BallsToScore = 0;
+
+        printf("%d\n", ScoreLineSensor.get_value_calibrated());
+        printf("%d\n", BallsToScore);
+
+        int RunIntake = (L2 - L1);      // L2 is intake, L1 is outtake
+
+        int RunIndexer = (BallsToScore > 0) ? 1 : 0;
+
         int RunUptake = 0;
-        if (cont.get_digital(E_CONTROLLER_DIGITAL_R1))
-            RunUptake = 1;
+        if (R1)
+            RunUptake = 1;              // R1 is filter
         else if (RunIndexer || (RunIntake > 0))
-            RunUptake = -1;
-        RunUptake *= UptakePower;
+            RunUptake = -1;             // otherwise just run uptake
 
 
-        LeftIntakeMotor.move(RunIntake);
-        RightIntakeMotor.move(RunIntake);
-        UptakeMotor.move(RunUptake);
-        IndexerMotor.move(RunIndexer);
 
+        LeftIntakeMotor.move(RunIntake * IntakePower);
+        RightIntakeMotor.move(RunIntake * IntakePower);
+        UptakeMotor.move(RunUptake * UptakePower);
+        IndexerMotor.move(RunIndexer * IndexerPower);
+/*
+        bool L2Pressed = cont.get_digital(E_CONTROLLER_DIGITAL_L2);
+        bool L1Pressed = cont.get_digital(E_CONTROLLER_DIGITAL_L2);
+        int RunIndexer = 0;
+
+        if (L2Pressed)
+          timer = 50;
+        if (timer > 0)
+          RunIndexer = 1;
+        timer -= 1;
+*/
+        R2WasPressed = R2 ? true : false;
+        ScoreSensorFoundBall = (ScoreSensorVal < SCORE_LINE_SENSOR_LIMIT) ? true : false;
+        --IndexerTimer;
         pros::delay(20);
     }
 }
