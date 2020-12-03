@@ -163,6 +163,8 @@ void intake(void* p) {
 
     ADIAnalogIn ScoreLineSensor(ScoreLineSensorPort);
     ScoreLineSensor.calibrate();
+    ADIAnalogIn TopSlotLineSensor(TopSlotLineSensorPort);
+    TopSlotLineSensor.calibrate();
 
     int IndexerTimer = 0;
     int BallsToScore = 0;
@@ -178,6 +180,7 @@ void intake(void* p) {
         printf("%d %d %d %d\n", L1, L2, R1, R2);
 
         int ScoreSensorVal = ScoreLineSensor.get_value();
+        int TopSlotSensorVal = TopSlotLineSensor.get_value();
 
         if (R2 && !R2WasPressed) // counts R2 presses
         {
@@ -208,7 +211,13 @@ void intake(void* p) {
 
         int RunIntake = (L2 - L1);      // L2 is intake, L1 is outtake
 
-        int RunIndexer = (BallsToScore > 0) ? 1 : 0;
+        int RunIndexer;
+        if (BallsToScore > 0)
+          RunIndexer = 1;
+        else if (L2 && TopSlotSensorVal > TOP_SLOT_LINE_SENSOR_LIMIT)
+          RunIndexer = 1;
+        else
+          RunIndexer = 0;
 
         int RunUptake = 0;
         if (R1)
