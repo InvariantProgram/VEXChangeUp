@@ -63,7 +63,7 @@ double PIDController::step(double inputVal) {
 	double deriv = lastDiff - diff;
 	lastDeriv = EMAFilter(deriv);
 
-	lastDelta = pros::millis() - lastTime;
+	lastDelta = (pros::millis() - lastTime) / 1000.0;
 	double output = diff * constants.kP + integral * constants.kI * lastDelta + constants.kD * lastDeriv / lastDelta;
 	output -= constants.Tf * (output - lastOutput) / lastDelta;
 	lastOutput = output;
