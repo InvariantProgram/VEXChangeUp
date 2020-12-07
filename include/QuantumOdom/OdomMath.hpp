@@ -17,6 +17,9 @@ struct State {
 };
 
 class OdomMath {
+	private:
+		//Compute and return the difference in x and y, as a pair within an array in the same order
+		static std::array<double, 2> computeDiffs(const Point& iPoint, const State& iState);
 	public:
 		/*
 		* Compute the distance between a point and state
@@ -41,6 +44,4 @@ class OdomMath {
 		* @return Pair, with (Distance, Angle)
 		*/
 		static std::array<double, 2> computeAngleAndDistance(const Point& iPoint, const State& iState);
-		//Compute and return the difference in x and y, as a pair within an array in the same order
-		static std::array<double, 2> computeDiffs(const Point& iPoint, const State& iState);
 };
