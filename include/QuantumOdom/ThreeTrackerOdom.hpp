@@ -1,6 +1,6 @@
 #pragma once
 
-#include "OdomMath.hpp"
+#include "QuantumOdom/OdomMath.hpp"
 #include <array>
 
 struct Chassis {
@@ -33,7 +33,7 @@ class ThreeTrackerOdom {
 		* @param dt associated time difference, in milliseconds
 		* @return nothing- Updates internal var storedState, retrieved through get function
 		*/
-		void odomStep(std::array<double, 3> tickDiffs, double dt);
+		void odomStep(std::array<int, 3> tickDiffs);
 		/*
 		* Set the stored state to modify based on odom calculations
 		* @param iState New state to be set at: x, y, theta
@@ -49,4 +49,9 @@ class ThreeTrackerOdom {
 		* @return State object: ret.x, ret.y, ret.theta
 		*/
 		State getState();
+		/*
+		* Get the associated Chassis objec 
+		* @return Chassis object: ret.WheelDiam, ret.width, ret.midlineOffset
+		*/
+		Chassis getChassis();
 };

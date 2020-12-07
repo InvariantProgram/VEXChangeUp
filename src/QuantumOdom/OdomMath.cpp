@@ -24,7 +24,7 @@ double OdomMath::computeDistance(const Point& iPoint, const State& iState) {
 
 double OdomMath::computeAngle(const Point& iPoint, const State& iState) {
 	std::array<double, 2> diffs = computeDiffs(iPoint, iState);
-	return atan2(diffs[1], diffs[0]);
+	return atan2(diffs[1], diffs[0]) - iState.theta;
 }
 
 std::array<double, 2> OdomMath::computeAngleAndDistance(const Point& iPoint, const State& iState) {

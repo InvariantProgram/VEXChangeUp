@@ -12,15 +12,18 @@ ThreeTrackerOdom::ThreeTrackerOdom(const Chassis& iChassis) {
 	storedState = State{ 0, 0, 0 };
 }
 
-void ThreeTrackerOdom::odomStep(std::array<double, 3> tickDiffs) {
+void ThreeTrackerOdom::odomStep(std::array<int, 3> tickDiffs) {
 	//deltaArr = dL, dR, dS - format
-	std::array<double, 3> deltaArr = tickDiffs;
-	for (int i = 0; i < 3) {
-		if (abs(deltaArr[i]) > maxDiff) deltarArr[i] = deltaArr[i] / abs(deltaArr[i]) * maxDiff;
+	std::array<double, 3> deltaArr;
+	for (int i = 0; i < 3; i++) {
+		deltaArr[i] = tickDiffs[i];
+	}
+	for (int i = 0; i < 3; i++) {
+		if (abs(deltaArr[i]) > maxDiff) deltaArr[i] = deltaArr[i] / abs(deltaArr[i]) * maxDiff;
 		deltaArr[i] = deltaArr[i] / 360 * scales.WheelDiam * PI;
 	}
 	double dTheta = (deltaArr[1] - deltaArr[0]) / scales.width;
-	double shiftY = ; double shiftX;
+	double shiftY; double shiftX;
 	if (dTheta == 0) {
 		shiftY = (deltaArr[0] + deltaArr[1]) / 2;
 		shiftX = deltaArr[2];
@@ -42,4 +45,7 @@ void ThreeTrackerOdom::setChassis(const Chassis& iChassis) {
 }
 State ThreeTrackerOdom::getState() {
 	return storedState;
+}
+Chassis ThreeTrackerOdom::getChassis() {
+	return scales;
 }

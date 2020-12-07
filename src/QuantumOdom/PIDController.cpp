@@ -7,32 +7,31 @@ double PIDController::EMAFilter(double newVal) {
 PIDController::PIDController() {
 	integralLimit = 1000;
 	filterWeight = 0.5;
-	outputLog = false;
 }
 PIDController::PIDController(PIDConsts PIDstruct) {
 	PIDController();
-	constants.kP = PIDStructure.kP;
-	constants.kI = PIDStructure.kI;
-	constants.kD = PIDStructure.kD;
-	constants.Tf = PIDStructure.Tf;
+	constants.kP = PIDstruct.kP;
+	constants.kI = PIDstruct.kI;
+	constants.kD = PIDstruct.kD;
+	constants.Tf = PIDstruct.Tf;
 	integralLimit = 1000;
 	filterWeight = 0.5;
 }
 PIDController::PIDController(PIDConsts PIDstruct, double integralLimit, double filterWeight) {
 	PIDController();
-	constants.kP = PIDStructure.kP;
-	constants.kI = PIDStructure.kI;
-	constants.kD = PIDStructure.kD;
-	constants.Tf = PIDStructure.Tf;
+	constants.kP = PIDstruct.kP;
+	constants.kI = PIDstruct.kI;
+	constants.kD = PIDstruct.kD;
+	constants.Tf = PIDstruct.Tf;
 	this->integralLimit = integralLimit;
 	this->filterWeight = filterWeight;
 }
 
 void PIDController::setGains(PIDConsts PIDstruct) {
-	constants.kP = PIDStructure.kP;
-	constants.kI = PIDStructure.kI;
-	constants.kD = PIDStructure.kD;
-	constants.Tf = PIDStructure.Tf;
+	constants.kP = PIDstruct.kP;
+	constants.kI = PIDstruct.kI;
+	constants.kD = PIDstruct.kD;
+	constants.Tf = PIDstruct.Tf;
 }
 
 void PIDController::setIntegralLimit(double windupGuard) {
@@ -44,6 +43,7 @@ double PIDController::setTarget(double newTarget) {
 	lastDeriv = 0;
 	lastDiff = 0;
 	integral = 0;
+	lastOutput = 0;
 
 	lastTime = pros::millis();
 	return target;
@@ -52,7 +52,6 @@ double PIDController::setTarget(double newTarget) {
 double PIDController::getMillis() {
 	return lastDelta;
 }
-
 
 double PIDController::step(double inputVal) {
 	double diff = target - inputVal;

@@ -1,3 +1,4 @@
+#pragma once
 #include "api.h"
 
 struct PIDConsts {
@@ -10,6 +11,8 @@ struct PIDConsts {
 class PIDController {
 	private:
 		PIDConsts constants;
+
+		double lastOutput;
 
 		double integral;
 		double integralLimit;
