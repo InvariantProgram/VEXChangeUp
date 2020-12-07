@@ -1,7 +1,9 @@
 #pragma once
 #include "api.h"
+#include "QuantumOdom/OdomMath.hpp"
 #include "QuantumOdom/PIDController.hpp"
 #include "QuantumOdom/ThreeTrackerOdom.hpp"
+#include "QuantumOdom/structDefs.hpp"
 
 class XDrive {
 	private:

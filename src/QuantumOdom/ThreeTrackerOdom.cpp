@@ -1,4 +1,5 @@
 #include "QuantumOdom/ThreeTrackerOdom.hpp"
+#include <math.h>
 
 const double PI = 3.14159;
 

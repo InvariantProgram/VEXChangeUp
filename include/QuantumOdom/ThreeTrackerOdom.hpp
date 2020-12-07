@@ -1,14 +1,8 @@
 #pragma once
 
+#include "QuantumOdom/structDefs.hpp"
 #include "QuantumOdom/OdomMath.hpp"
 #include <array>
-
-struct Chassis {
-	double WheelDiam;
-	double width;
-	double midlineOffset;
-};
-
 
 class ThreeTrackerOdom {
 	private:

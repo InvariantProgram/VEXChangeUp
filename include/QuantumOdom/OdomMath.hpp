@@ -1,21 +1,7 @@
 #pragma once
+#include "QuantumOdom/structDefs.hpp"
 #include <math.h>
 #include <array>
-
-struct Point {
-	double x;
-	double y;
-};
-struct State {
-	double x;
-	double y;
-	double theta;
-
-	bool operator==(const State& rhs) const;
-	bool operator!=(const State& rhs) const;
-	State operator-(const State& rhs);
-	State operator+(const State& rhs);
-};
 
 class OdomMath {
 	private:
