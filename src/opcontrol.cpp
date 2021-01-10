@@ -21,16 +21,34 @@ using namespace pros;
  * task, not resume it from where it left off.
  */
 
+bool absComp{
+
+}
+
+
+ADIEncoder rightEnc(RightEncTop, RightEncBot, false);
+ADIEncoder leftEnc(LeftEncTop, LeftEncBot, false);
+ADIEncoder horEnc(HorEncTop, HorEncBot, false);
+
+void setState(State state) {
+
+}
+void resetSensors() {
+    rightEnc.reset();
+    leftEnc.reset();
+    horEnc.reset();
+}
+
 void XDrive(void *p) {
   Controller cont(E_CONTROLLER_MASTER);
 
 
   //Code is written assuming +Power on all motors turns robot clockwise
   //Motor 1: Front left, Motor 2: Front right - Motors named in clockwise direction
-  Motor drive1(DrivePort1);
-  Motor drive2(DrivePort2);
-  Motor drive3(DrivePort3);
-  Motor drive4(DrivePort4);
+  Motor drive1(FrontLeftWheelPort, true);
+  Motor drive2(FrontRightWheelPort, true);
+  Motor drive3(BackRightWheelPort, true);
+  Motor drive4(BackLeftWheelPort, true);
 
   std::array <double, 4> powerList = {0, 0, 0, 0};
   double power1, power2, power3, power4;
@@ -63,6 +81,29 @@ void XDrive(void *p) {
 
 
 void opcontrol() {
+    Chassis newChassis{ 2.75, 13, 0.5 };
+    Sensor_vals valStorage{ 0, 0, 0, true };
+
+    ThreeTrackerOdom odomSys(newChassis);
+
+    OdomDebug display(lv_scr_act(), LV_COLOR_ORANGE);
+    display.setStateCallback(setState);
+    display.setResetCallback(resetSensors);
+
     std::string driveTaskName("Drive Task");
     Task driveTask(XDrive, &driveTaskName);
+
+    while (true) {
+        int LVal = leftEnc.get_value(); int RVal = rightEnc.get_value(); int HVal = horEnc.get_value();
+        int LDiff = LVal - valStorage.left;
+        int RDiff = RVal - valStorage.right;
+        int HDiff = HVal - valStorage.middle;
+        std::array<int, 3> tickDiffs{ LDiff, RDiff, HDiff };
+        valStorage.setVals(RVal, LVal, HVal);
+
+        odomSys.odomStep(tickDiffs);
+        display.setData(odomSys.getState(), valStorage);
+
+        pros::delay(20);
+    }
 }
