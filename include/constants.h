@@ -21,10 +21,10 @@
 #define ScoreLineSensorPort 'B'
 #define SCORE_LINE_SENSOR_LIMIT 2100
 
-#define RightEncTop 'C'
-#define RightEncBot 'D'
-#define LeftEncTop 'E'
-#define LeftEncBot 'F'
+#define RightEncTop 'E'
+#define RightEncBot 'F'
+#define LeftEncTop 'C'
+#define LeftEncBot 'D'
 #define HorEncTop 'G'
 #define HorEncBot 'H'
 

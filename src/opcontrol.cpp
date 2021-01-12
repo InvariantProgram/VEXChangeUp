@@ -21,17 +21,19 @@ using namespace pros;
  * task, not resume it from where it left off.
  */
 
-bool absComp{
-
-}
 
 
 ADIEncoder rightEnc(RightEncTop, RightEncBot, false);
-ADIEncoder leftEnc(LeftEncTop, LeftEncBot, false);
+ADIEncoder leftEnc(LeftEncTop, LeftEncBot, true);
 ADIEncoder horEnc(HorEncTop, HorEncBot, false);
 
-void setState(State state) {
+Chassis newChassis{ 2.75, 13, 0.5 };
+Sensor_vals valStorage{ 0, 0, 0, true };
 
+ThreeTrackerOdom odomSys(newChassis);
+
+void setState(State state) {
+    odomSys.setState(state);
 }
 void resetSensors() {
     rightEnc.reset();
@@ -39,53 +41,88 @@ void resetSensors() {
     horEnc.reset();
 }
 
-void XDrive(void *p) {
-  Controller cont(E_CONTROLLER_MASTER);
+bool absComp(const double& a, const double& b)
+{
+    bool FirstLess = false;
+
+    if (abs((int)a) < abs((int)b))
+        FirstLess = true;
+
+    return(FirstLess);
+}
+
+int ScaleRawJoystick(int raw)
+{
+    // formula swiped from https://www.vexforum.com/t/what-do-you-think-is-a-more-efficient-way-to-drive-your-robot/64857/42
+    int ScaledVal = (pow(raw, JoystickScaleConst)) / (pow(127, JoystickScaleConst - 1));
+    if ((JoystickScaleConst % 2 == 0) && (raw < 0))
+        raw *= -1;
+
+    return(ScaledVal);
+}
+
+void XDrive(void* p) {
+    Controller cont(E_CONTROLLER_MASTER);
+
+    //Code is written assuming +Power on all motors turns robot clockwise
+    //Motor 1: Front left, Motor 2: Front right - Motors named in clockwise direction
+    Motor FrontLeftWheelMotor(FrontLeftWheelPort, E_MOTOR_GEARSET_18, 1);
+    Motor FrontRightWheelMotor(FrontRightWheelPort, E_MOTOR_GEARSET_18, 1);
+    Motor BackRightWheelMotor(BackRightWheelPort, E_MOTOR_GEARSET_18, 1);
+    Motor BackLeftWheelMotor(BackLeftWheelPort, E_MOTOR_GEARSET_18, 1);
+
+    /*
+      calculate goal voltages from joystick values
+      slew
+    */
+
+    std::array <int, 4> Voltage = { 0 };
+    std::array <int, 4> GoalVoltage = { 0 };
+
+    while (true)
+    {
+        int leftY = cont.get_analog(ANALOG_LEFT_Y);
+        int leftX = cont.get_analog(ANALOG_LEFT_X);
+        int rightY = cont.get_analog(ANALOG_RIGHT_Y);
+
+        bool strafing = (abs(leftX) > StrafeDeadzone);
+
+        leftY = ScaleRawJoystick(leftY);
+        rightY = ScaleRawJoystick(rightY);
+        if (leftX > 0)
+            leftX = ScaleRawJoystick(127 * (leftX - StrafeDeadzone) / (127 - StrafeDeadzone));
+        else if (leftX < 0)
+            leftX = ScaleRawJoystick(127 * (leftX + StrafeDeadzone) / (127 - StrafeDeadzone));
+
+        GoalVoltage[0] = leftY + (leftX * strafing);
+        GoalVoltage[1] = -rightY + (leftX * strafing);
+        GoalVoltage[2] = -rightY - (leftX * strafing);
+        GoalVoltage[3] = leftY - (leftX * strafing);
+
+        int MaxVoltage = *(std::max_element(GoalVoltage.begin(), GoalVoltage.end(), absComp));
+
+        if (abs(MaxVoltage) > 127) // scales if necessary for strafing
+        {
+            for (int i = 0; i < 4; i++)
+                GoalVoltage[i] /= (abs((int)MaxVoltage) / 127.0); // truncates but who cares
+        }
+
+        for (int i = 0; i < 4; ++i)
+            Voltage[i] += MovementScale * (GoalVoltage[i] - Voltage[i]); // busted?
 
 
-  //Code is written assuming +Power on all motors turns robot clockwise
-  //Motor 1: Front left, Motor 2: Front right - Motors named in clockwise direction
-  Motor drive1(FrontLeftWheelPort, true);
-  Motor drive2(FrontRightWheelPort, true);
-  Motor drive3(BackRightWheelPort, true);
-  Motor drive4(BackLeftWheelPort, true);
+        FrontLeftWheelMotor.move(Voltage[0]);
+        FrontRightWheelMotor.move(Voltage[1]);
+        BackRightWheelMotor.move(Voltage[2]);
+        BackLeftWheelMotor.move(Voltage[3]);
 
-  std::array <double, 4> powerList = {0, 0, 0, 0};
-  double power1, power2, power3, power4;
-
-  while (true) {
-    int leftY = cont.get_analog(ANALOG_LEFT_Y);
-    int leftX = cont.get_analog(ANALOG_LEFT_X);
-    int rightX = cont.get_analog(ANALOG_RIGHT_X);
-
-    if (leftX < noStrafes) leftX = 0;
-
-    //Pre-scale calculations:
-    powerList[0] = leftY + leftX + rightX;
-    powerList[1] = -leftY + leftX + rightX;
-    powerList[2] = -leftY - leftX + rightX;
-    powerList[3] = leftY -leftX + rightX;
-
-    double maxVal = *(std::max_element(powerList.begin(), powerList.end()));
-
-    for (int i=0; i<4; i++) {
-      powerList[i] /= (maxVal / 127.0); //Ensure double type
+        pros::delay(20);
     }
-
-    drive1.move(powerList[0]); drive2.move(powerList[1]);
-    drive3.move(powerList[2]); drive4.move(powerList[3]);
-
-    pros::delay(20);
-  }
 }
 
 
+
 void opcontrol() {
-    Chassis newChassis{ 2.75, 13, 0.5 };
-    Sensor_vals valStorage{ 0, 0, 0, true };
-
-    ThreeTrackerOdom odomSys(newChassis);
-
     OdomDebug display(lv_scr_act(), LV_COLOR_ORANGE);
     display.setStateCallback(setState);
     display.setResetCallback(resetSensors);

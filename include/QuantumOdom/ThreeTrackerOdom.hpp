@@ -8,7 +8,7 @@ class ThreeTrackerOdom {
 	private:
 		Chassis scales;
 		State storedState;
-		const double maxDiff = 60;
+		const double maxDiff = 100;
 	public:
 		/*
 		* Constructs an Odom object
