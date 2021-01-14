@@ -23,7 +23,13 @@ struct Point {
 	double x;
 	double y;
 };
-
+//PIDController
+struct PIDConsts {
+	double kP;
+	double kI;
+	double kD;
+	double Tf;
+};
 struct State {
 	//Designed to be used in inch, inch, radian
 	double x;

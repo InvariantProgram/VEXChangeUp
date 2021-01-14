@@ -1,12 +1,6 @@
 #pragma once
 #include "api.h"
-
-struct PIDConsts {
-	double kP;
-	double kI;
-	double kD;
-	double Tf;
-};
+#include "QuantumOdom/structDefs.hpp"
 
 class PIDController {
 	private:
@@ -43,5 +37,5 @@ class PIDController {
 		double getMillis();
 
 		//Run one step of the PID control loop
-		double step(double inputVal);
+		int step(int inputVal);
 };

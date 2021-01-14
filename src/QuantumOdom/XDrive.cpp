@@ -22,7 +22,7 @@ XDrive::XDrive(ThreeTrackerOdom* iOdom, PIDController* iStraight, PIDController*
     if (leftPorts[0] < 0)
         leftMotorFront.set_reversed(true);
     if (leftPorts[1] < 0)
-        leftMotorFront.set_reversed(true);
+        leftMotorBack.set_reversed(true);
 }
 
 
@@ -37,17 +37,18 @@ void XDrive::setParams(int acceptableError, double timelimit) {
     errorBounds = acceptableError;
     settleTime = timelimit;
 }
-void XDrive::driveDistance(const double dist) {
+void XDrive::driveDistance(double dist) {
     int withinCount = 0;
     bool isRunning = true;
-    int currentReadings, unifiedOutput, rightOutput, leftOutput, rightVelocity, leftVelocity;
+    int currentReadings=0, unifiedOutput=0, rightOutput=0, leftOutput=0, rightVelocity=0, leftVelocity=0;
+    printf("Target: %d\n", dist);
     driveCont->setTarget(dist);
     Point start{odomObj->getState().x, odomObj->getState().y};
     rightEncoder->reset(); leftEncoder->reset();
     while (isRunning) {
         currentReadings = OdomMath::computeDistance(start, odomObj->getState());
+        printf("Current: %d\n", currentReadings);
         unifiedOutput = driveCont->step(currentReadings);
-
         rightOutput = unifiedOutput;
         leftOutput = unifiedOutput;
 
@@ -55,8 +56,8 @@ void XDrive::driveDistance(const double dist) {
         leftMotorFront.move_velocity(leftOutput);
         rightMotorBack.move_velocity(rightOutput);
         leftMotorBack.move_velocity(leftOutput);
-
-        if (abs(currentReadings) < errorBounds)
+        
+        if (abs(dist - currentReadings) < errorBounds)
             withinCount++;
         else
             withinCount = 0;
@@ -67,6 +68,8 @@ void XDrive::driveDistance(const double dist) {
             leftMotorFront.move_velocity(0);
             leftMotorBack.move_velocity(0);
         }
+        std::array<int, 3> diffs = {leftEncoder->get_value(), rightEncoder->get_value(), strafeEncoder->get_value()};
+        odomObj->odomStep(diffs);
         rightEncoder->reset(); leftEncoder->reset(); strafeEncoder->reset();
         pros::delay(20);
     }

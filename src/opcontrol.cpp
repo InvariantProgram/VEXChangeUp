@@ -20,17 +20,21 @@ using namespace pros;
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
-
-
-
-ADIEncoder rightEnc(RightEncTop, RightEncBot, false);
-ADIEncoder leftEnc(LeftEncTop, LeftEncBot, true);
-ADIEncoder horEnc(HorEncTop, HorEncBot, false);
+pros::ADIEncoder rightEnc(RightEncTop, RightEncBot, true);
+pros::ADIEncoder leftEnc(LeftEncTop, LeftEncBot, true);
+pros::ADIEncoder horEnc(HorEncTop, HorEncBot, true);
 
 Chassis newChassis{ 2.75, 13, 0.5 };
 Sensor_vals valStorage{ 0, 0, 0, true };
 
 ThreeTrackerOdom odomSys(newChassis);
+
+//------------------
+PIDConsts straight{ 8, 0, 0.1, 0 };
+PIDConsts turn{ 20, 0, 0.001, 0 };
+
+PIDController driveCont(straight);
+PIDController turnCont(turn);
 
 void setState(State state) {
     odomSys.setState(state);
@@ -43,12 +47,7 @@ void resetSensors() {
 
 bool absComp(const double& a, const double& b)
 {
-    bool FirstLess = false;
-
-    if (abs((int)a) < abs((int)b))
-        FirstLess = true;
-
-    return(FirstLess);
+    return (abs((int)a) < abs((int)b));
 }
 
 int ScaleRawJoystick(int raw)
@@ -61,7 +60,7 @@ int ScaleRawJoystick(int raw)
     return(ScaledVal);
 }
 
-void XDrive(void* p) {
+void baseControl(void* p) {
     Controller cont(E_CONTROLLER_MASTER);
 
     //Code is written assuming +Power on all motors turns robot clockwise
@@ -76,7 +75,7 @@ void XDrive(void* p) {
       slew
     */
 
-    std::array <int, 4> Voltage = { 0 };
+    std::array <double, 4> Voltage = { 0 };
     std::array <int, 4> GoalVoltage = { 0 };
 
     while (true)
@@ -94,10 +93,10 @@ void XDrive(void* p) {
         else if (leftX < 0)
             leftX = ScaleRawJoystick(127 * (leftX + StrafeDeadzone) / (127 - StrafeDeadzone));
 
-        GoalVoltage[0] = leftY + (leftX * strafing);
-        GoalVoltage[1] = -rightY + (leftX * strafing);
-        GoalVoltage[2] = -rightY - (leftX * strafing);
-        GoalVoltage[3] = leftY - (leftX * strafing);
+        GoalVoltage[0] = leftY * (1 - strafing) + (leftX * strafing);
+        GoalVoltage[1] = -rightY * (1 - strafing) + (leftX * strafing);
+        GoalVoltage[2] = -rightY * (1 - strafing) - (leftX * strafing);
+        GoalVoltage[3] = leftY * (1 - strafing) - (leftX * strafing);
 
         int MaxVoltage = *(std::max_element(GoalVoltage.begin(), GoalVoltage.end(), absComp));
 
@@ -120,15 +119,19 @@ void XDrive(void* p) {
     }
 }
 
-
-
 void opcontrol() {
+    
+    XDrive testDrive(&odomSys, &driveCont, &turnCont, &rightEnc, &leftEnc, &horEnc,
+        { FrontRightWheelPort, BackRightWheelPort }, { -FrontLeftWheelPort, -BackLeftWheelPort }, 1, 50);
+    testDrive.driveDistance(15);
+    
+    /*
     OdomDebug display(lv_scr_act(), LV_COLOR_ORANGE);
     display.setStateCallback(setState);
     display.setResetCallback(resetSensors);
 
     std::string driveTaskName("Drive Task");
-    Task driveTask(XDrive, &driveTaskName);
+    Task driveTask(baseControl, &driveTaskName);
 
     while (true) {
         int LVal = leftEnc.get_value(); int RVal = rightEnc.get_value(); int HVal = horEnc.get_value();
@@ -143,4 +146,5 @@ void opcontrol() {
 
         pros::delay(20);
     }
+    */
 }

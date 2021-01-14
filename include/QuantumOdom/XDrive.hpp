@@ -25,7 +25,13 @@ class XDrive {
 	public:
         //Default Constructor
         XDrive();
-        //Full constructor (No default constructor)
+        /*
+        * Full constructor (No default constructor)
+        * Assumes running all motors moves bot forwards
+        * Set motorport values to negative for reverse
+        * Acceptable Error in encoder ticks : Subject to change??
+        * Settling time in milliseconds
+        */
         XDrive(ThreeTrackerOdom* iOdom, PIDController* iStraight, PIDController* iTurn, pros::ADIEncoder* iRightEnc, 
             pros::ADIEncoder* iLeftEnc, pros::ADIEncoder* iStrafeEnc, 
             std::array<int, 2> rightPorts, std::array<int, 2> leftPorts, 
@@ -38,8 +44,8 @@ class XDrive {
         void setParams(int acceptableError, double timelimit);
         //Move forward until at a point
         void drivePoint(const Point& iPoint);
-        //Dirve forward a defined distance
-        void driveDistance(const double dist);
+        //Dirve forward a defined distance in inches
+        void driveDistance(double dist);
         //Turns towards the point
         void turnPoint(const Point& iPoint);
         //Runs motors for the specified time in milliseconds at the set speed

@@ -198,8 +198,8 @@ void OdomDebug::setData(State state, Sensor_vals sensors) {
 
     // move start and end of line
     linePoints[0] = { (int16_t)((c_x * fieldDim)), (int16_t)((c_y * fieldDim) - (lineWidth / 2)) };
-    double newY = lineLength * cos(c_theta);
-    double newX = lineLength * sin(c_theta);
+    double newX = lineLength * cos(c_theta);
+    double newY = lineLength * sin(c_theta);
     linePoints[1] = { (int16_t)(newX + linePoints[0].x), (int16_t)(-newY + linePoints[0].y) };
 
     lv_line_set_points(line, linePoints.data(), linePoints.size());
@@ -225,7 +225,7 @@ lv_res_t OdomDebug::tileAction(lv_obj_t* tileObj) {
     int num = lv_obj_get_free_num(tileObj);
     int y = num / 6;
     int x = num - y * 6;
-    if (that->stateFnc) that->stateFnc({ x * 24 + 12, 144 - y * 24 - 12, 0 });
+    if (that->stateFnc) that->stateFnc({ x * 24 + 12, 144 - y * 24 - 12, PI/2 });
     else std::cout << "OdomDebug: No tile action callback provided";
     return LV_RES_OK;
 }

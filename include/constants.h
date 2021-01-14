@@ -21,12 +21,12 @@
 #define ScoreLineSensorPort 'B'
 #define SCORE_LINE_SENSOR_LIMIT 2100
 
-#define RightEncTop 'E'
-#define RightEncBot 'F'
+#define RightEncTop 'G'
+#define RightEncBot 'H'
 #define LeftEncTop 'C'
 #define LeftEncBot 'D'
-#define HorEncTop 'G'
-#define HorEncBot 'H'
+#define HorEncTop 'E'
+#define HorEncBot 'F'
 
 #define StrafeDeadzone 20
 #define IntakePower 127   // out of 127
