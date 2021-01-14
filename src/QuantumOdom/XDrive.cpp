@@ -88,16 +88,16 @@ void XDrive::turnPoint(const Point& iPoint) {
     int currentDifference;
     while (isRunning) {
         odomObj->odomStep({ leftEncoder->get_value(), rightEncoder->get_value(), strafeEncoder->get_value() });
-        currentDifference = OdomMath::computeAngle(iPoint, odomObj->getState());
-        rightOutput = turnCont->step(currentDifference);
-        leftOutput = -1 * rightOutput;
+        currentDifference = OdomMath::computeAngle(iPoint, odomObj->getState()) * odomObj->getChassis().width;
+        leftOutput = turnCont->step(currentDifference);
+        rightOutput = -1 * leftOutput;
 
         rightMotorFront.move_velocity(rightOutput);
         rightMotorBack.move_velocity(rightOutput);
         leftMotorBack.move_velocity(leftOutput);
         leftMotorFront.move_velocity(leftOutput);
 
-        if (abs(currentDifference) * PI * odomObj->getChassis().width < errorBounds)
+        if (abs(currentDifference) * odomObj->getChassis().width < errorBounds)
             withinCount++;
         else
             withinCount = 0;

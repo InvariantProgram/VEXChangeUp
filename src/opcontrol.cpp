@@ -31,7 +31,7 @@ ThreeTrackerOdom odomSys(newChassis);
 
 //------------------
 PIDConsts straight{ 8, 0, 0.1, 0 };
-PIDConsts turn{ 20, 0, 0.001, 0 };
+PIDConsts turn{ 9, 0, 0.1, 0 };
 
 PIDController driveCont(straight);
 PIDController turnCont(turn);
@@ -123,7 +123,7 @@ void opcontrol() {
     
     XDrive testDrive(&odomSys, &driveCont, &turnCont, &rightEnc, &leftEnc, &horEnc,
         { FrontRightWheelPort, BackRightWheelPort }, { -FrontLeftWheelPort, -BackLeftWheelPort }, 1, 50);
-    testDrive.driveDistance(15);
+    testDrive.turnPoint(Point{ 10, 10 });
     
     /*
     OdomDebug display(lv_scr_act(), LV_COLOR_ORANGE);
