@@ -36,7 +36,7 @@ int ScaleRawJoystick(int raw)
   // formula swiped from https://www.vexforum.com/t/what-do-you-think-is-a-more-efficient-way-to-drive-your-robot/64857/42
   int ScaledVal = (pow(raw, JoystickScaleConst)) / (pow(127, JoystickScaleConst - 1));
   if ((JoystickScaleConst % 2 == 0) && (raw < 0))
-    raw *= -1;
+    ScaledVal *= -1;
 
   return(ScaledVal);
 }
@@ -67,6 +67,7 @@ void XDrive(void *p) {
 
     bool strafing = (abs(leftX) > StrafeDeadzone);
 
+    if (abs(leftY - rightY) < forceStraight) rightY = leftY;
     leftY = ScaleRawJoystick(leftY);
     rightY = ScaleRawJoystick(rightY);
     if (leftX > 0)
@@ -146,11 +147,6 @@ void XDrive(void *p) {
   */
 }
 
-inline int RestartIndexerTimer()
-{
-  return(2 * 1000 / 20); // 2 seconds, measured in 20 ms intervals
-}
-
 void intake(void* p) {
     Controller cont(E_CONTROLLER_MASTER);
 
@@ -177,7 +173,7 @@ void intake(void* p) {
         bool L2 = cont.get_digital(E_CONTROLLER_DIGITAL_L2);
         bool R1 = cont.get_digital(E_CONTROLLER_DIGITAL_R1);
         bool R2 = cont.get_digital(E_CONTROLLER_DIGITAL_R2);
-        printf("%d %d %d %d\n", L1, L2, R1, R2);
+        //printf("%d %d %d %d\n", L1, L2, R1, R2);
 
         int ScoreSensorVal = ScoreLineSensor.get_value();
         int TopSlotSensorVal = TopSlotLineSensor.get_value();
@@ -185,7 +181,7 @@ void intake(void* p) {
         if (R2 && !R2WasPressed) // counts R2 presses
         {
           ++BallsToScore;
-          IndexerTimer = RestartIndexerTimer();
+          IndexerTimer = IndexMaxTime / 20;
         }
 
         // If a ball has just been ejected:
@@ -195,7 +191,7 @@ void intake(void* p) {
           // Are there still balls left?
           if (BallsToScore > 0)
             // Yes.  Restart timer.
-            IndexerTimer = RestartIndexerTimer();
+            IndexerTimer = IndexMaxTime / 20;
           else
             // No.  Stop timer.
             IndexerTimer = 0;
@@ -206,7 +202,7 @@ void intake(void* p) {
           // Stop running indexer.
           BallsToScore = 0;
 
-        printf("Score: %d\n", ScoreLineSensor.get_value_calibrated());
+        //printf("Score: %d\n", ScoreLineSensor.get_value_calibrated());
         printf("Top slot: %d\n", TopSlotLineSensor.get_value_calibrated());
 
         int RunIntake = (L2 - L1);      // L2 is intake, L1 is outtake
@@ -214,7 +210,7 @@ void intake(void* p) {
         int RunIndexer;
         if (BallsToScore > 0)
           RunIndexer = 1;
-        else if (L2 && TopSlotSensorVal > TOP_SLOT_LINE_SENSOR_LIMIT)
+        else if (L2 && TopSlotSensorVal > TOP_SLOT_LINE_SENSOR_LIMIT) //&& TopSlotSensorVal > TOP_SLOT_LINE_SENSOR_LIMIT
           RunIndexer = 1;
         else
           RunIndexer = 0;

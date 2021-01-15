@@ -15,10 +15,10 @@
 #define IndexerPort 8
 
 #define TopSlotLineSensorPort 'A'
-#define TOP_SLOT_LINE_SENSOR_LIMIT 2300
+#define TOP_SLOT_LINE_SENSOR_LIMIT 2450
 
 #define ScoreLineSensorPort 'B'
-#define SCORE_LINE_SENSOR_LIMIT 2100
+#define SCORE_LINE_SENSOR_LIMIT 2700
 
 #define StrafeDeadzone 20
 #define IntakePower 127   // out of 127
@@ -28,9 +28,11 @@
 #define MovementScale 0.5
 #define VoltageDiffDeadzone 5
 
+#define forceStraight 10
+#define IndexMaxTime 750
 
 
-#define JoystickScaleConst 1
+#define JoystickScaleConst 2
 #define AccelerationConst 1
 
 #endif
