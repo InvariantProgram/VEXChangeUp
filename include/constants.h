@@ -14,10 +14,10 @@
 #define UptakePort 3
 #define IndexerPort 8
 
-#define TopSlotLineSensorPort 'C'
+#define TopSlotLineSensorPort 'A'
 #define TOP_SLOT_LINE_SENSOR_LIMIT 2300
 
-#define ScoreLineSensorPort 'D'
+#define ScoreLineSensorPort 'B'
 #define SCORE_LINE_SENSOR_LIMIT 2100
 
 #define StrafeDeadzone 20

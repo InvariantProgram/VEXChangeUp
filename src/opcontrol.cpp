@@ -206,8 +206,8 @@ void intake(void* p) {
           // Stop running indexer.
           BallsToScore = 0;
 
-        printf("%d\n", ScoreLineSensor.get_value_calibrated());
-        printf("%d\n", BallsToScore);
+        printf("Score: %d\n", ScoreLineSensor.get_value_calibrated());
+        printf("Top slot: %d\n", TopSlotLineSensor.get_value_calibrated());
 
         int RunIntake = (L2 - L1);      // L2 is intake, L1 is outtake
 
