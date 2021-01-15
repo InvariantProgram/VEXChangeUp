@@ -13,6 +13,15 @@ ThreeTrackerOdom::ThreeTrackerOdom(const Chassis& iChassis) {
 	storedState = State{ 0, 0, 0 };
 }
 
+double ThreeTrackerOdom::angleClamp() {
+	double result;
+	int quotient = (int)(storedState.theta / (2 * PI));
+	double remainder = storedState.theta - quotient * 2 * PI;
+	if (remainder < 0) result = 2 * PI - remainder;
+	else result = remainder;
+	return result;
+}
+
 void ThreeTrackerOdom::odomStep(std::array<int, 3> tickDiffs) {
 	//deltaArr = dL, dR, dS - format
 	std::array<double, 3> deltaArr;
@@ -33,7 +42,7 @@ void ThreeTrackerOdom::odomStep(std::array<int, 3> tickDiffs) {
 		shiftY = (deltaArr[0] + deltaArr[1]) * sin(dTheta / 2) / dTheta;
 		shiftX = (deltaArr[2] / dTheta - scales.midlineOffset) * 2 * sin(dTheta / 2);
 	}
-	storedState.theta += dTheta;
+	storedState.theta += dTheta; storedState.theta = angleClamp();
 	storedState.y += shiftY * sin(storedState.theta) + shiftX * cos(storedState.theta);
 	storedState.x += shiftY * cos(storedState.theta) + shiftX * sin(storedState.theta);
 }

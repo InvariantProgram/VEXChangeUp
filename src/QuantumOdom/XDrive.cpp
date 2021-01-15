@@ -26,6 +26,15 @@ XDrive::XDrive(ThreeTrackerOdom* iOdom, PIDController* iStraight, PIDController*
 }
 
 
+double XDrive::angleClamp(double angle) {
+    double result;
+    int quotient = (int)(angle / (2 * PI));
+    double remainder = angle - quotient * 2 * PI;
+    if (remainder < 0) result = 2 * PI - remainder;
+    else result = remainder;
+    return result;
+}
+
 void XDrive::setTimeLimit(double timelimit) {
     settleTime = timelimit;
 }
@@ -40,14 +49,12 @@ void XDrive::setParams(int acceptableError, double timelimit) {
 void XDrive::driveDistance(double dist) {
     int withinCount = 0;
     bool isRunning = true;
-    int currentReadings=0, unifiedOutput=0, rightOutput=0, leftOutput=0, rightVelocity=0, leftVelocity=0;
-    printf("Target: %d\n", dist);
+    double currentReadings=0, unifiedOutput=0, rightOutput=0, leftOutput=0, rightVelocity=0, leftVelocity=0;
     driveCont->setTarget(dist);
     Point start{odomObj->getState().x, odomObj->getState().y};
-    rightEncoder->reset(); leftEncoder->reset();
+    rightEncoder->reset(); leftEncoder->reset(); strafeEncoder->reset();
     while (isRunning) {
         currentReadings = OdomMath::computeDistance(start, odomObj->getState());
-        printf("Current: %d\n", currentReadings);
         unifiedOutput = driveCont->step(currentReadings);
         rightOutput = unifiedOutput;
         leftOutput = unifiedOutput;
@@ -57,7 +64,7 @@ void XDrive::driveDistance(double dist) {
         rightMotorBack.move_velocity(rightOutput);
         leftMotorBack.move_velocity(leftOutput);
         
-        if (abs(dist - currentReadings) < errorBounds)
+        if (abs(abs(dist) - currentReadings) < errorBounds)
             withinCount++;
         else
             withinCount = 0;
@@ -74,30 +81,27 @@ void XDrive::driveDistance(double dist) {
         pros::delay(20);
     }
 }
-void XDrive::drivePoint(const Point& iPoint) {
-    turnPoint(iPoint);
-    driveDistance(OdomMath::computeDistance(iPoint, odomObj->getState()));
-}
-
-void XDrive::turnPoint(const Point& iPoint) {
-    bool isRunning = true;
+void XDrive::strafeDistance(double dist) {
     int withinCount = 0;
-    int leftOutput, rightOutput, leftVelocity, rightVelocity;
-    turnCont->setTarget(0);
-    rightEncoder->reset(); leftEncoder->reset();
-    int currentDifference;
+    bool isRunning = true;
+    int currentReadings=0, unifiedOutput=0, topOutput=0, botOutput=0, topVelocity=0, botVelocity=0;
+    driveCont->setTarget(dist);
+    Point start{ odomObj->getState().x, odomObj->getState().y };
+    strafeEncoder->reset(); rightEncoder->reset(); leftEncoder->reset();
     while (isRunning) {
-        odomObj->odomStep({ leftEncoder->get_value(), rightEncoder->get_value(), strafeEncoder->get_value() });
-        currentDifference = OdomMath::computeAngle(iPoint, odomObj->getState()) * odomObj->getChassis().width;
-        leftOutput = turnCont->step(currentDifference);
-        rightOutput = -1 * leftOutput;
+        currentReadings = OdomMath::computeDistance(start, odomObj->getState());
+        printf("Diff: %i\n", currentReadings);
+        unifiedOutput = driveCont->step(currentReadings);
+        printf("Output: %i\n", unifiedOutput);
+        topOutput = unifiedOutput;
+        botOutput = unifiedOutput;
 
-        rightMotorFront.move_velocity(rightOutput);
-        rightMotorBack.move_velocity(rightOutput);
-        leftMotorBack.move_velocity(leftOutput);
-        leftMotorFront.move_velocity(leftOutput);
+        rightMotorFront.move_velocity(-topOutput);
+        leftMotorFront.move_velocity(topOutput);
+        rightMotorBack.move_velocity(botOutput);
+        leftMotorBack.move_velocity(-botOutput);
 
-        if (abs(currentDifference) * odomObj->getChassis().width < errorBounds)
+        if (abs(abs(dist) - currentReadings) < errorBounds)
             withinCount++;
         else
             withinCount = 0;
@@ -108,7 +112,88 @@ void XDrive::turnPoint(const Point& iPoint) {
             leftMotorFront.move_velocity(0);
             leftMotorBack.move_velocity(0);
         }
+        odomObj->odomStep({ leftEncoder->get_value(), rightEncoder->get_value(), strafeEncoder->get_value() });
         rightEncoder->reset(); leftEncoder->reset(); strafeEncoder->reset();
+        pros::delay(20);
+    }
+}
+void XDrive::drivePoint(const Point& iPoint) {
+    turnPoint(iPoint);
+    driveDistance(OdomMath::computeDistance(iPoint, odomObj->getState()));
+}
+
+void XDrive::turnPoint(const Point& iPoint) {
+    bool isRunning = true;
+    int withinCount = 0;
+    double leftOutput, rightOutput, leftVelocity, rightVelocity;
+    turnCont->setTarget(0);
+    rightEncoder->reset(); leftEncoder->reset();
+    double currentDifference;
+    while (isRunning) {
+        currentDifference = OdomMath::computeAngle(iPoint, odomObj->getState()) * odomObj->getChassis().width;
+        leftOutput = turnCont->step(currentDifference);
+        rightOutput = -1 * leftOutput;
+
+        rightMotorFront.move_velocity(rightOutput);
+        rightMotorBack.move_velocity(rightOutput);
+        leftMotorBack.move_velocity(leftOutput);
+        leftMotorFront.move_velocity(leftOutput);
+
+        if (abs(currentDifference) < errorBounds)
+            withinCount++;
+        else
+            withinCount = 0;
+        if (withinCount * 20 >= settleTime) {
+            isRunning = false;
+            rightMotorFront.move_velocity(0);
+            rightMotorBack.move_velocity(0);
+            leftMotorFront.move_velocity(0);
+            leftMotorBack.move_velocity(0);
+        }
+        odomObj->odomStep({ leftEncoder->get_value(), rightEncoder->get_value(), strafeEncoder->get_value() });
+        rightEncoder->reset(); leftEncoder->reset(); strafeEncoder->reset();
+        pros::delay(20);
+    }
+}
+
+void XDrive::turnAngle(double angle) {
+    bool isRunning = true;
+    int withinCount = 0;
+    double leftOutput, rightOutput, leftVelocity, rightVelocity;
+    double target = angle * PI / 180;
+
+    turnCont->setTarget(0);
+    rightEncoder->reset(); leftEncoder->reset();
+    double currentDifference;
+    
+    while (isRunning) {
+        odomObj->odomStep({ leftEncoder->get_value(), rightEncoder->get_value(), strafeEncoder->get_value() });
+        double diff = target - odomObj->getState().theta;
+        if (diff > PI) currentDifference = diff - 2 * PI;
+        else if (diff < -PI) currentDifference = diff + 2 * PI;
+        else currentDifference = diff;
+        currentDifference = currentDifference * odomObj->getChassis().width;
+
+        leftOutput = turnCont->step(currentDifference);
+        rightOutput = -1 * leftOutput;
+
+        rightMotorFront.move_velocity(rightOutput);
+        rightMotorBack.move_velocity(rightOutput);
+        leftMotorBack.move_velocity(leftOutput);
+        leftMotorFront.move_velocity(leftOutput);
+
+        if (abs(currentDifference) < errorBounds)
+            withinCount++;
+        else
+            withinCount = 0;
+        if (withinCount * 20 >= settleTime) {
+            isRunning = false;
+            rightMotorFront.move_velocity(0);
+            rightMotorBack.move_velocity(0);
+            leftMotorFront.move_velocity(0);
+            leftMotorBack.move_velocity(0);
+            printf("Successful exit");
+        }
         pros::delay(20);
     }
 }

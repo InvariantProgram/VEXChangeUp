@@ -37,5 +37,5 @@ class PIDController {
 		double getMillis();
 
 		//Run one step of the PID control loop
-		int step(int inputVal);
+		double step(double inputVal);
 };

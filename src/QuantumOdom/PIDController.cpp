@@ -53,8 +53,8 @@ double PIDController::getMillis() {
 	return lastDelta;
 }
 
-int PIDController::step(int inputVal) {
-	int diff = target - inputVal;
+double PIDController::step(double inputVal) {
+	double diff = target - inputVal;
 	printf("Target: %d\n", target);
 	printf("Prop: %d\n", diff);
 

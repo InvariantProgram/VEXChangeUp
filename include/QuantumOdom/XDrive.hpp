@@ -22,6 +22,8 @@ class XDrive {
 		pros::Motor rightMotorBack;
 		pros::Motor leftMotorFront;
 		pros::Motor leftMotorBack;
+
+        double angleClamp(double angle);
 	public:
         //Default Constructor
         XDrive();
@@ -44,10 +46,14 @@ class XDrive {
         void setParams(int acceptableError, double timelimit);
         //Move forward until at a point
         void drivePoint(const Point& iPoint);
-        //Dirve forward a defined distance in inches
+        //Drive forward a defined distance in inches
         void driveDistance(double dist);
+        //Drive rightwards a defined distance in inches
+        void strafeDistance(double dist);
         //Turns towards the point
         void turnPoint(const Point& iPoint);
+        //Turns to a specified angle in degrees
+        void turnAngle(double angle);
         //Runs motors for the specified time in milliseconds at the set speed
         void runallMotors(int time, int speed);
 
