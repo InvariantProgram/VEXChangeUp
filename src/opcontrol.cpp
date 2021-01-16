@@ -158,9 +158,9 @@ void intake(void* p) {
       IndexerMotor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 
     ADIAnalogIn ScoreLineSensor(ScoreLineSensorPort);
-    ScoreLineSensor.calibrate();
+    //ScoreLineSensor.calibrate();
     ADIAnalogIn TopSlotLineSensor(TopSlotLineSensorPort);
-    TopSlotLineSensor.calibrate();
+    //TopSlotLineSensor.calibrate();
 
     int IndexerTimer = 0;
     int BallsToScore = 0;
