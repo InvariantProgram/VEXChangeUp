@@ -56,5 +56,6 @@ class XDrive {
         void turnAngle(double angle);
         //Runs motors for the specified time in milliseconds at the set speed
         void runallMotors(int time, int speed);
-
+        //Strafes all motors for the specified time in milliseconds at the set speed
+        void strafeMotors(int time, int speed);
 };

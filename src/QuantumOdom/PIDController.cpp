@@ -66,7 +66,7 @@ double PIDController::step(double inputVal) {
 
 	lastDelta = (pros::millis() - lastTime) / 1000.0;
 	int output = diff * constants.kP + integral * constants.kI * lastDelta + constants.kD * lastDeriv / lastDelta;
-	output -= constants.Tf * (output - lastOutput) / lastDelta;
+	output -= constants.Tf * (output - lastOutput);
 	lastOutput = output;
 	printf("output: %d\n", output);
 	return output;
