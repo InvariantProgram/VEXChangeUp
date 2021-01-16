@@ -11,24 +11,3 @@
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-pros::ADIEncoder rightEnc(RightEncTop, RightEncBot, true);
-pros::ADIEncoder leftEnc(LeftEncTop, LeftEncBot, true);
-pros::ADIEncoder horEnc(HorEncTop, HorEncBot, true);
-
-Chassis newChassis{ 2.75, 13, 0.5 };
-Sensor_vals valStorage{ 0, 0, 0, true };
-
-ThreeTrackerOdom odomSys(newChassis);
-
-//------------------
-PIDConsts straight{ 8, 0, 0.1, 0 };
-PIDConsts turn{ 5, 0, 0, 0 };
-
-PIDController driveCont(straight);
-PIDController turnCont(turn);
-
-XDrive testDrive(&odomSys, &driveCont, &turnCont, &rightEnc, &leftEnc, &horEnc,
-    { FrontRightWheelPort, BackRightWheelPort }, { -FrontLeftWheelPort, -BackLeftWheelPort }, 1, 10);
- void autonomous() {
-     testDrive.drivePoint({})
- }

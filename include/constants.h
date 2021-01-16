@@ -16,10 +16,10 @@
 #define IndexerPort 8
 
 #define TopSlotLineSensorPort 'A'
-#define TOP_SLOT_LINE_SENSOR_LIMIT 2300
+#define TOP_SLOT_LINE_SENSOR_LIMIT 2450
 
 #define ScoreLineSensorPort 'B'
-#define SCORE_LINE_SENSOR_LIMIT 2100
+#define SCORE_LINE_SENSOR_LIMIT 2700
 
 #define RightEncTop 'G'
 #define RightEncBot 'H'

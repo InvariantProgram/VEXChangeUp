@@ -123,7 +123,7 @@ void baseControl(void* p) {
 }
 
 void opcontrol() {
-    
+    /*
     OdomDebug display(lv_scr_act(), LV_COLOR_ORANGE);
     display.setStateCallback(setState);
     display.setResetCallback(resetSensors);
@@ -144,5 +144,5 @@ void opcontrol() {
 
         pros::delay(20);
     }
-    
+    */
 }
