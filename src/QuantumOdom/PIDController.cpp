@@ -55,8 +55,6 @@ double PIDController::getMillis() {
 
 double PIDController::step(double inputVal) {
 	double diff = target - inputVal;
-	printf("Target: %d\n", target);
-	printf("Prop: %d\n", diff);
 
 	integral += diff;
 	if (abs(integral) > integralLimit) integral *= integralLimit / abs(integral);
@@ -66,8 +64,7 @@ double PIDController::step(double inputVal) {
 
 	lastDelta = (pros::millis() - lastTime) / 1000.0;
 	int output = diff * constants.kP + integral * constants.kI * lastDelta + constants.kD * lastDeriv / lastDelta;
-	output -= constants.Tf * (output - lastOutput) / lastDelta;
+	output -= constants.Tf * (output - lastOutput);
 	lastOutput = output;
-	printf("output: %d\n", output);
 	return output;
 }

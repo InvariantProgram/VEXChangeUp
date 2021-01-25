@@ -9,8 +9,10 @@ leftMotorBack(pros::Motor(4)) {
     settleTime = 250;
 }
 
-XDrive::XDrive(ThreeTrackerOdom* iOdom, PIDController* iStraight, PIDController* iTurn, pros::ADIEncoder* iRightEnc, pros::ADIEncoder* iLeftEnc, pros::ADIEncoder* iStrafeEnc,
-    std::array<int, 2> rightPorts, std::array<int, 2> leftPorts, int acceptableError, double timelimit) : odomObj(iOdom), driveCont(iStraight), turnCont(iTurn),
+XDrive::XDrive(ThreeTrackerOdom* iOdom, PIDController* iForward, PIDController* iTurn, PIDController* iStraight,
+    pros::ADIEncoder* iRightEnc, pros::ADIEncoder* iLeftEnc, pros::ADIEncoder* iStrafeEnc,
+    std::array<int, 2> rightPorts, std::array<int, 2> leftPorts,
+    int acceptableError, double timelimit) : odomObj(iOdom), driveCont(iForward), turnCont(iTurn), straightCont(iStraight),
     rightEncoder(iRightEnc), leftEncoder(iLeftEnc), strafeEncoder(iStrafeEnc), rightMotorFront(pros::Motor(abs(rightPorts[0]))), rightMotorBack(pros::Motor(abs(rightPorts[1]))),
     leftMotorFront(pros::Motor(abs(leftPorts[0]))), leftMotorBack(pros::Motor(abs(leftPorts[1]))) {
     errorBounds = acceptableError;
@@ -42,6 +44,11 @@ void XDrive::setErrorBounds(int acceptableError) {
     errorBounds = acceptableError;
 }
 
+void XDrive::setSlew(int minDiff, int rate) {
+    slewDiff = minDiff;
+    slewrate = rate;
+}
+
 void XDrive::setParams(int acceptableError, double timelimit) {
     errorBounds = acceptableError;
     settleTime = timelimit;
@@ -49,15 +56,22 @@ void XDrive::setParams(int acceptableError, double timelimit) {
 void XDrive::driveDistance(double dist) {
     int withinCount = 0;
     bool isRunning = true;
-    double currentReadings=0, unifiedOutput=0, rightOutput=0, leftOutput=0, rightVelocity=0, leftVelocity=0;
+    double currentReadings=0, unifiedOutput=0, rightOutput=0, leftOutput=0, rightVelocity=0, leftVelocity=0, straightenOutput=0;
+    straightCont->setTarget(0);
     driveCont->setTarget(dist);
     Point start{odomObj->getState().x, odomObj->getState().y};
-    rightEncoder->reset(); leftEncoder->reset(); strafeEncoder->reset();
+    double angle = odomObj->getState().theta;
     while (isRunning) {
         currentReadings = OdomMath::computeDistance(start, odomObj->getState());
         unifiedOutput = driveCont->step(currentReadings);
-        rightOutput = unifiedOutput;
+        straightenOutput = straightCont->step(angle - odomObj->getState().theta);
+        rightOutput = unifiedOutput + straightenOutput;
         leftOutput = unifiedOutput;
+
+        rightVelocity = rightMotorFront.get_actual_velocity();
+        if (abs(rightOutput - rightVelocity) > slewDiff) rightOutput = rightVelocity + slewrate * (rightOutput - rightVelocity) / abs(rightOutput - rightVelocity);
+        leftVelocity = leftMotorFront.get_actual_velocity();
+        if (abs(leftOutput - leftVelocity) > slewDiff) leftOutput = leftVelocity + slewrate * (leftOutput - leftVelocity) / abs(leftOutput - leftVelocity);
 
         rightMotorFront.move_velocity(rightOutput);
         leftMotorFront.move_velocity(leftOutput);
@@ -75,26 +89,28 @@ void XDrive::driveDistance(double dist) {
             leftMotorFront.move_velocity(0);
             leftMotorBack.move_velocity(0);
         }
-        std::array<int, 3> diffs = {leftEncoder->get_value(), rightEncoder->get_value(), strafeEncoder->get_value()};
-        odomObj->odomStep(diffs);
-        rightEncoder->reset(); leftEncoder->reset(); strafeEncoder->reset();
         pros::delay(20);
     }
 }
 void XDrive::strafeDistance(double dist) {
     int withinCount = 0;
     bool isRunning = true;
-    int currentReadings=0, unifiedOutput=0, topOutput=0, botOutput=0, topVelocity=0, botVelocity=0;
+    int currentReadings=0, unifiedOutput=0, topOutput=0, botOutput=0, topVelocity=0, botVelocity=0, straightenOutput=0;
+    straightCont->setTarget(0);
     driveCont->setTarget(dist);
     Point start{ odomObj->getState().x, odomObj->getState().y };
-    strafeEncoder->reset(); rightEncoder->reset(); leftEncoder->reset();
+    double angle = odomObj->getState().theta;
     while (isRunning) {
         currentReadings = OdomMath::computeDistance(start, odomObj->getState());
-        printf("Diff: %i\n", currentReadings);
         unifiedOutput = driveCont->step(currentReadings);
-        printf("Output: %i\n", unifiedOutput);
+        straightenOutput = straightCont->step(angle - odomObj->getState().theta);
         topOutput = unifiedOutput;
-        botOutput = unifiedOutput;
+        botOutput = (unifiedOutput > 0) ? unifiedOutput - straightenOutput : unifiedOutput + straightenOutput;
+
+        topVelocity = rightMotorFront.get_actual_velocity();
+        if (abs(topOutput - topVelocity) > slewDiff) topOutput = topVelocity + slewrate * (topOutput - topVelocity) / abs(topOutput - topVelocity);
+        botVelocity = rightMotorBack.get_actual_velocity();
+        if (abs(botOutput - botVelocity) > slewDiff) botOutput = botVelocity + slewrate * (botOutput - botVelocity) / abs(botOutput - botVelocity);
 
         rightMotorFront.move_velocity(-topOutput);
         leftMotorFront.move_velocity(topOutput);
@@ -112,8 +128,6 @@ void XDrive::strafeDistance(double dist) {
             leftMotorFront.move_velocity(0);
             leftMotorBack.move_velocity(0);
         }
-        odomObj->odomStep({ leftEncoder->get_value(), rightEncoder->get_value(), strafeEncoder->get_value() });
-        rightEncoder->reset(); leftEncoder->reset(); strafeEncoder->reset();
         pros::delay(20);
     }
 }
@@ -127,10 +141,10 @@ void XDrive::turnPoint(const Point& iPoint) {
     int withinCount = 0;
     double leftOutput, rightOutput, leftVelocity, rightVelocity;
     turnCont->setTarget(0);
-    rightEncoder->reset(); leftEncoder->reset();
     double currentDifference;
     while (isRunning) {
         currentDifference = OdomMath::computeAngle(iPoint, odomObj->getState()) * odomObj->getChassis().width;
+
         leftOutput = turnCont->step(currentDifference);
         rightOutput = -1 * leftOutput;
 
@@ -150,8 +164,6 @@ void XDrive::turnPoint(const Point& iPoint) {
             leftMotorFront.move_velocity(0);
             leftMotorBack.move_velocity(0);
         }
-        odomObj->odomStep({ leftEncoder->get_value(), rightEncoder->get_value(), strafeEncoder->get_value() });
-        rightEncoder->reset(); leftEncoder->reset(); strafeEncoder->reset();
         pros::delay(20);
     }
 }
@@ -163,11 +175,9 @@ void XDrive::turnAngle(double angle) {
     double target = angle * PI / 180;
 
     turnCont->setTarget(0);
-    rightEncoder->reset(); leftEncoder->reset();
     double currentDifference;
-    
+
     while (isRunning) {
-        odomObj->odomStep({ leftEncoder->get_value(), rightEncoder->get_value(), strafeEncoder->get_value() });
         double diff = target - odomObj->getState().theta;
         if (diff > PI) currentDifference = diff - 2 * PI;
         else if (diff < -PI) currentDifference = diff + 2 * PI;

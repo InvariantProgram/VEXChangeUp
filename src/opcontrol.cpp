@@ -30,14 +30,16 @@ Sensor_vals valStorage{ 0, 0, 0, true };
 ThreeTrackerOdom odomSys(newChassis);
 
 //------------------
-PIDConsts straight{ 8, 0, 0.1, 0 };
+PIDConsts forward{ 8, 0, 0.1, 0 };
 PIDConsts turn{ 5, 0, 0, 0 };
+PIDConsts straight{ 0, 0, 0, 0 };
 
-PIDController driveCont(straight);
+PIDController driveCont(forward);
 PIDController turnCont(turn);
+PIDController straightCont(straight);
 
-XDrive testDrive(&odomSys, &driveCont, &turnCont, &rightEnc, &leftEnc, &horEnc,
-    { FrontRightWheelPort, BackRightWheelPort }, { -FrontLeftWheelPort, -BackLeftWheelPort }, 1, 10);
+XDrive testDrive(&odomSys, &driveCont, &turnCont, &straightCont, &rightEnc, &leftEnc, &horEnc,
+    { FrontRightWheelPort, BackRightWheelPort }, { -FrontLeftWheelPort, -BackLeftWheelPort }, 1, 30);
 
 void setState(State state) {
     odomSys.setState(state);
@@ -122,14 +124,10 @@ void baseControl(void* p) {
     }
 }
 
-void opcontrol() {
-    
+void runOdom(void* p) {
     OdomDebug display(lv_scr_act(), LV_COLOR_ORANGE);
     display.setStateCallback(setState);
     display.setResetCallback(resetSensors);
-
-    std::string driveTaskName("Drive Task");
-    Task driveTask(baseControl, &driveTaskName);
 
     while (true) {
         int LVal = leftEnc.get_value(); int RVal = rightEnc.get_value(); int HVal = horEnc.get_value();
@@ -144,5 +142,12 @@ void opcontrol() {
 
         pros::delay(20);
     }
+}
+
+void opcontrol() {
+    Task odomTask(runOdom);
+
+    testDrive.driveDistance(15);
+
     
 }

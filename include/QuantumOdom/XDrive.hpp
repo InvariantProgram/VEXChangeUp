@@ -11,8 +11,12 @@ class XDrive {
 
 		PIDController* driveCont;
 		PIDController* turnCont;
+        PIDController* straightCont;
 		int errorBounds;
 		double settleTime;
+
+        int slewDiff = 40;
+        int slewrate = 30;
 
 		pros::ADIEncoder* rightEncoder;
 		pros::ADIEncoder* leftEncoder;
@@ -34,8 +38,8 @@ class XDrive {
         * Acceptable Error in encoder ticks : Subject to change??
         * Settling time in milliseconds
         */
-        XDrive(ThreeTrackerOdom* iOdom, PIDController* iStraight, PIDController* iTurn, pros::ADIEncoder* iRightEnc, 
-            pros::ADIEncoder* iLeftEnc, pros::ADIEncoder* iStrafeEnc, 
+        XDrive(ThreeTrackerOdom* iOdom, PIDController* iForward, PIDController* iTurn, PIDController* iStraight,
+            pros::ADIEncoder* iRightEnc, pros::ADIEncoder* iLeftEnc, pros::ADIEncoder* iStrafeEnc,  
             std::array<int, 2> rightPorts, std::array<int, 2> leftPorts, 
             int acceptableError, double timelimit);
         //Set the settle time for the drive - for the final section of the path
@@ -44,6 +48,8 @@ class XDrive {
         void setErrorBounds(int acceptableError);
         //Set settling parameters
         void setParams(int acceptableError, double timelimit);
+        //Set slew parameters
+        void setSlew(int minDiff, int rate);
         //Move forward until at a point
         void drivePoint(const Point& iPoint);
         //Drive forward a defined distance in inches

@@ -1,5 +1,7 @@
 #include "QuantumOdom\OdomMath.hpp"
 
+const double PI = 3.14159;
+
 double OdomMath::computeDistance(const Point& iPoint, const State& iState) {
 	std::array<double, 2> diffs = computeDiffs(iPoint, iState);
 	double squareSum = pow(diffs[0], 2) + pow(diffs[1], 2);
@@ -8,7 +10,12 @@ double OdomMath::computeDistance(const Point& iPoint, const State& iState) {
 
 double OdomMath::computeAngle(const Point& iPoint, const State& iState) {
 	std::array<double, 2> diffs = computeDiffs(iPoint, iState);
-	return atan2(diffs[1], diffs[0]) - iState.theta;
+	double principalAngle = atan2(diffs[1], diffs[0]);
+	if (principalAngle < 0) principalAngle += 2 * PI;
+	double diff = principalAngle - iState.theta;
+	if (diff > PI) diff -= 2 * PI;
+	else if (diff < -PI) diff += 2 * PI;
+	return diff;
 }
 
 std::array<double, 2> OdomMath::computeAngleAndDistance(const Point& iPoint, const State& iState) {
