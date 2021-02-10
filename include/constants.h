@@ -11,8 +11,8 @@
 
 #define LeftIntakePort 2
 #define RightIntakePort 7
-#define UptakePort 3
-#define IndexerPort 8
+#define rightUptakePort 3
+#define leftUptakePort 8
 
 #define TopSlotLineSensorPort 'A'
 #define TOP_SLOT_LINE_SENSOR_LIMIT 2450
@@ -22,8 +22,8 @@
 
 #define StrafeDeadzone 20
 #define IntakePower 127   // out of 127
-#define IndexerPower 127  // out of 127
-#define UptakePower 127   // out of 127
+#define reversePower 127  // out of 127
+#define UptakePower 600   // out of 127
 
 #define MovementScale 0.5
 #define VoltageDiffDeadzone 5

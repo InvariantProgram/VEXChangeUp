@@ -46,10 +46,10 @@ void XDrive(void *p) {
 
   //Code is written assuming +Power on all motors turns robot clockwise
   //Motor 1: Front left, Motor 2: Front right - Motors named in clockwise direction
-  Motor FrontLeftWheelMotor(FrontLeftWheelPort, E_MOTOR_GEARSET_18, 1);
-  Motor FrontRightWheelMotor(FrontRightWheelPort, E_MOTOR_GEARSET_18, 1);
-  Motor BackRightWheelMotor(BackRightWheelPort, E_MOTOR_GEARSET_18, 1);
-  Motor BackLeftWheelMotor(BackLeftWheelPort, E_MOTOR_GEARSET_18, 1);
+  Motor FrontLeftWheelMotor(FrontLeftWheelPort, E_MOTOR_GEARSET_18, 0);
+  Motor FrontRightWheelMotor(FrontRightWheelPort, E_MOTOR_GEARSET_18, 0);
+  Motor BackRightWheelMotor(BackRightWheelPort, E_MOTOR_GEARSET_18, 0);
+  Motor BackLeftWheelMotor(BackLeftWheelPort, E_MOTOR_GEARSET_18, 0);
 
 /*
   calculate goal voltages from joystick values
@@ -99,150 +99,61 @@ void XDrive(void *p) {
 
     pros::delay(20);
   }
-
-/*
-  std::array <double, 4> powerList = {0, 0, 0, 0};
-  std::array <double, 4> velList = {0, 0, 0, 0};
-
-  while (true) {
-    int leftY = cont.get_analog(ANALOG_LEFT_Y);
-    int leftX = cont.get_analog(ANALOG_LEFT_X);
-    int rightY = cont.get_analog(ANALOG_RIGHT_Y);
-
-    if (abs(leftX) < StrafeDeadzone)
-      leftX = 0;
-
-    velList[0] = FrontLeftWheelMotor.get_actual_velocity();
-    velList[1] = FrontRightWheelMotor.get_actual_velocity();
-    velList[2] = BackRightWheelMotor.get_actual_velocity();
-    velList[3] = BackLeftWheelMotor.get_actual_velocity();
-
-    printf("BackRightWheelMotor get_voltage returns: %f\n", BackRightWheelMotor.get_actual_velocity());
-    printf("rightY: %d\n", rightY);
-
-    for (int i = 0; i < 4; i++) {
-        double diff = powerList[i] - velList[i];
-        if (powerList[i] == 0)
-            continue;
-        else {
-            if (abs(diff) > 5) powerList[i] = velList[i] + diff * MovementScale;
-        }
-    }
-
-    //Pre-scale calculations:
-    powerList[0] = leftY + leftX;
-    powerList[1] = -rightY + leftX;
-    powerList[2] = -rightY - leftX;
-    powerList[3] = leftY - leftX;
-
-    double maxVal = *(std::max_element(powerList.begin(), powerList.end(), absComp));
-
-    for (int i = 0; i < 4; i++)
-      powerList[i] /= (abs((int) maxVal) / 127.0); //Ensure double type
-
-    FrontLeftWheelMotor.move(powerList[0]); FrontRightWheelMotor.move(powerList[1]);
-    BackRightWheelMotor.move(powerList[2]); BackLeftWheelMotor.move(powerList[3]);
-    pros::delay(20);
-  }
-  */
 }
 
 void intake(void* p) {
     Controller cont(E_CONTROLLER_MASTER);
 
-    Motor LeftIntakeMotor(LeftIntakePort, E_MOTOR_GEARSET_18, 0);
-    Motor RightIntakeMotor(RightIntakePort, E_MOTOR_GEARSET_18, 1);
-    Motor UptakeMotor(UptakePort, E_MOTOR_GEARSET_06, 0);
-      UptakeMotor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
-    Motor IndexerMotor(IndexerPort, E_MOTOR_GEARSET_06, 0);
-      IndexerMotor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+    Motor leftIntake(LeftIntakePort, E_MOTOR_GEARSET_18, 0);
+    Motor rightIntake(RightIntakePort, E_MOTOR_GEARSET_18, 1);
+    Motor rightUptake(rightUptakePort, E_MOTOR_GEARSET_06, 1);
+    Motor leftUptake(leftUptakePort, E_MOTOR_GEARSET_06, 0);
 
-    ADIAnalogIn ScoreLineSensor(ScoreLineSensorPort);
-    //ScoreLineSensor.calibrate();
-    ADIAnalogIn TopSlotLineSensor(TopSlotLineSensorPort);
-    //TopSlotLineSensor.calibrate();
-
-    int IndexerTimer = 0;
-    int BallsToScore = 0;
-    int prevBallsToScore = 0;
-    bool ScoreSensorFoundBall = 0;
-    bool R2WasPressed = 0;
+    ADIUltrasonic ultrasonic('A', 'B');
+    bool blocked = false;
 
     while (true) {
-        bool L1 = cont.get_digital(E_CONTROLLER_DIGITAL_L1);
-        bool L2 = cont.get_digital(E_CONTROLLER_DIGITAL_L2);
-        bool R1 = cont.get_digital(E_CONTROLLER_DIGITAL_R1);
         bool R2 = cont.get_digital(E_CONTROLLER_DIGITAL_R2);
-        //printf("%d %d %d %d\n", L1, L2, R1, R2);
+        bool R1 = cont.get_digital(E_CONTROLLER_DIGITAL_R1);
+        bool L2 = cont.get_digital(E_CONTROLLER_DIGITAL_L2);
+        bool L1 = cont.get_digital(E_CONTROLLER_DIGITAL_L1);
 
-        int ScoreSensorVal = ScoreLineSensor.get_value();
-        int TopSlotSensorVal = TopSlotLineSensor.get_value();
+        bool Y = cont.get_digital(E_CONTROLLER_DIGITAL_Y);
 
-        if (R2 && !R2WasPressed) // counts R2 presses
-        {
-          ++BallsToScore;
-          IndexerTimer = IndexMaxTime / 20;
+        double intakeVal = IntakePower * L2 - reversePower * (L1 || R1);
+        rightIntake.move(intakeVal);
+        leftIntake.move(intakeVal);
+
+        if (Y) {
+            rightIntake.move_velocity(200);
+            leftIntake.move_velocity(200);
+            rightUptake.move_velocity(300);
+            leftUptake.move_velocity(300);
+            pros::delay(250);
+            rightUptake.move_velocity(0);
+            leftUptake.move_velocity(0);
+            rightIntake.move_velocity(0);
+            leftIntake.move_velocity(0);
         }
 
-        // If a ball has just been ejected:
-        if (ScoreSensorVal < SCORE_LINE_SENSOR_LIMIT && !ScoreSensorFoundBall) // ball has just been ejected
-        {
-          --BallsToScore;
-          // Are there still balls left?
-          if (BallsToScore > 0)
-            // Yes.  Restart timer.
-            IndexerTimer = IndexMaxTime / 20;
-          else
-            // No.  Stop timer.
-            IndexerTimer = 0;
+        if (R2) {
+            rightUptake.move_velocity(UptakePower);
+            leftUptake.move_velocity(UptakePower);
         }
+        else if (R1) {
+            rightUptake.move(-reversePower);
+            leftUptake.move(-reversePower);
+        }
+        else {
+            rightUptake.move_velocity(0);
+            leftUptake.move_velocity(0);
+        }
+       
 
-        // If timer hits 0:
-        if (IndexerTimer == 0)
-          // Stop running indexer.
-          BallsToScore = 0;
-
-        //printf("Score: %d\n", ScoreLineSensor.get_value_calibrated());
-        printf("Top slot: %d\n", TopSlotLineSensor.get_value_calibrated());
-
-        int RunIntake = (L2 - L1);      // L2 is intake, L1 is outtake
-
-        int RunIndexer;
-        if (BallsToScore > 0)
-          RunIndexer = 1;
-        else if (L2 && TopSlotSensorVal > TOP_SLOT_LINE_SENSOR_LIMIT) //&& TopSlotSensorVal > TOP_SLOT_LINE_SENSOR_LIMIT
-          RunIndexer = 1;
-        else
-          RunIndexer = 0;
-
-        int RunUptake = 0;
-        if (R1)
-            RunUptake = 1;              // R1 is filter
-        else if (RunIndexer || (RunIntake > 0))
-            RunUptake = -1;             // otherwise just run uptake
-
-
-
-        LeftIntakeMotor.move(RunIntake * IntakePower);
-        RightIntakeMotor.move(RunIntake * IntakePower);
-        UptakeMotor.move(RunUptake * UptakePower);
-        IndexerMotor.move(RunIndexer * IndexerPower);
-/*
-        bool L2Pressed = cont.get_digital(E_CONTROLLER_DIGITAL_L2);
-        bool L1Pressed = cont.get_digital(E_CONTROLLER_DIGITAL_L2);
-        int RunIndexer = 0;
-
-        if (L2Pressed)
-          timer = 50;
-        if (timer > 0)
-          RunIndexer = 1;
-        timer -= 1;
-*/
-        R2WasPressed = R2 ? true : false;
-        ScoreSensorFoundBall = (ScoreSensorVal < SCORE_LINE_SENSOR_LIMIT) ? true : false;
-        --IndexerTimer;
         pros::delay(20);
     }
+
+
 }
 
 
