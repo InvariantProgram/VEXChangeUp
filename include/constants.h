@@ -29,11 +29,11 @@
 #define JoystickScaleConst 2
 #define AccelerationConst 1
 
-#define leftEncTop 'G'
-#define leftEncBot 'H'
-#define rightEncTop 'E'
-#define rightEncBot 'F'
-#define horEncTop 'C'
-#define horEncBot 'D'
+#define LeftEncTop 'G'
+#define LeftEncBot 'H'
+#define RightEncTop 'E'
+#define RightEncBot 'F'
+#define HorEncTop 'C'
+#define HorEncBot 'D'
 
 #endif
