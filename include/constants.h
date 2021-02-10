@@ -31,9 +31,9 @@
 
 #define LeftEncTop 'G'
 #define LeftEncBot 'H'
-#define RightEncTop 'E'
-#define RightEncBot 'F'
-#define HorEncTop 'C'
-#define HorEncBot 'D'
+#define RightEncTop 'C'
+#define RightEncBot 'D'
+#define HorEncTop 'E'
+#define HorEncBot 'F'
 
 #endif

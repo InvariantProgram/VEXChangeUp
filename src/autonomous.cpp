@@ -12,8 +12,8 @@
  * from where it left off.
  */
 
-pros::ADIEncoder rightEnc(RightEncTop, RightEncBot, true);
-pros::ADIEncoder leftEnc(LeftEncTop, LeftEncBot, true);
+pros::ADIEncoder rightEnc(RightEncTop, RightEncBot);
+pros::ADIEncoder leftEnc(LeftEncTop, LeftEncBot);
 pros::ADIEncoder horEnc(HorEncTop, HorEncBot, true);
 
 Chassis newChassis{ 2.75, 13, 0.5 };
@@ -23,104 +23,69 @@ ThreeTrackerOdom odomSys(newChassis);
 
 //------------------
 PIDConsts straight{ 8, 0, 0.1, 0 };
-PIDConsts turn{ 5, 0, 0, 0 };
+PIDConsts turn{ 8, 0, 0, 0 };
+PIDConsts nonExist{ 0, 0, 0, 0 };
+
+PIDConsts longForward{ 5, 0, 0.001, 0 };
 
 PIDController driveCont(straight);
 PIDController turnCont(turn);
+PIDController straightCont(nonExist);
 
-XDrive drive(&odomSys, &driveCont, &turnCont, &rightEnc, &leftEnc, &horEnc,
-    { FrontRightWheelPort, BackRightWheelPort }, { -FrontLeftWheelPort, -BackLeftWheelPort }, 1, 10);
+XDrive drive(&odomSys, &driveCont, &turnCont, &straightCont, &rightEnc, &leftEnc, &horEnc,
+    { -FrontRightWheelPort, -BackRightWheelPort }, { FrontLeftWheelPort, BackLeftWheelPort }, 1, 10);
 
 pros::Motor LeftIntakeMotor(LeftIntakePort, pros::E_MOTOR_GEARSET_18, 0);
 pros::Motor RightIntakeMotor(RightIntakePort, pros::E_MOTOR_GEARSET_18, 1);
-pros::Motor UptakeMotor(UptakePort, pros::E_MOTOR_GEARSET_06, 0);
-pros::Motor IndexerMotor(IndexerPort, pros::E_MOTOR_GEARSET_06, 0);
+
+pros::Motor leftIntake(LeftIntakePort, pros::E_MOTOR_GEARSET_18, 0);
+pros::Motor rightIntake(RightIntakePort, pros::E_MOTOR_GEARSET_18, 1);
+pros::Motor rightUptake(rightUptakePort, pros::E_MOTOR_GEARSET_06, 1);
+pros::Motor leftUptake(leftUptakePort, pros::E_MOTOR_GEARSET_06, 0);
 
 void runIntake(int power) {
-    LeftIntakeMotor.move(power);
-    RightIntakeMotor.move(power);
+    rightIntake.move_velocity(power);
+    leftIntake.move_velocity(power);
 }
-void flipOut() {
-    UptakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-    IndexerMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+void runUptake(int power) {
+    rightUptake.move_velocity(power);
+    leftUptake.move_velocity(power);
+}
+void flipIntake() {
+    rightIntake.move_velocity(200);
+    leftIntake.move_velocity(200);
+    pros::delay(350);
+    rightIntake.move_velocity(0);
+    leftIntake.move_velocity(0);
+}
 
-    runIntake(-127);
-    UptakeMotor.move(127);
-    pros::delay(750);
-    runIntake(0);
-    UptakeMotor.move(0);
-}
-void score() {
-    double lastSensorVal;
-    IndexerMotor.move(127);
-    while (ScoreLineSensor.get_value() > SCORE_LINE_SENSOR_LIMIT && lastSensorVal < SCORE_LINE_SENSOR_LIMIT) {
-        lastSensorVal = ScoreLineSensor.get_value();
-        pros::delay(20);
-    }
-    pros::delay(500);
-    IndexerMotor.move_velocity(0);
-}
-void toPosition() {
-    while (TopSlotLineSensor.get_value() > TOP_SLOT_LINE_SENSOR_LIMIT) {
-        IndexerMotor.move(100);
-        pros::delay(20);
-    }
-    IndexerMotor.move(0);
-}
 void systemTask(void* p) {
-    pros::delay(300);
-    flipOut();
-    pros::delay(500);
-    runIntake(127);
-    UptakeMotor.move(-127);
-    pros::delay(2000);
-    toPosition();
-    pros::delay(1750);
-    score();
-    score();
-    runIntake(0);
-    score();
-    score();
-    pros::delay(1750);
-    UptakeMotor.move_velocity(-127);
-    runIntake(127);
-    pros::delay(5000);
-    toPosition();
-    pros::delay(2500);
-    score();
-    pros::delay(750);
-    runIntake(0);
-    score();
-    pros::delay(500);
-    runIntake(127);
+    flipIntake();
 }
 void driveTask(void* p) {
-    drive.strafeDistance(7.8);
-    turn = { 25, 0, 0, 0 };
-    drive.turnAngle(0);
+    drive.driveDistance(17);
+    runIntake(50);
+    drive.turnAngle(-90);
+    drive.driveDistance(10);
+    runIntake(0);
+    runUptake(600);
+    drive.runallMotors(300, 75);
     pros::delay(750);
-    drive.driveDistance(26);
-    turn = { 15, 0, 0, 0 };
-    drive.turnAngle(45);
-    pros::delay(20);
-    drive.driveDistance(10);
-    drive.runallMotors(900, 100);
-    pros::delay(1500);
+    runUptake(0);
+    drive.runallMotors(300, -75);
+    runIntake(200);
+    pros::delay(150);
+    driveCont.setGains(longForward);
     drive.driveDistance(-10);
-    drive.turnAngle(215);
-    drive.driveDistance(54);
-    drive.turnAngle(90);
-    drive.driveDistance(10);
-    drive.runallMotors(900, 100);
-    pros::delay(1500);
-    drive.driveDistance(-6);
-    drive.turnAngle(180);
-    drive.driveDistance(32);
-    drive.turnAngle(135);
-    drive.driveDistance(10);
-    drive.runallMotors(900, 100);
-    pros::delay(1500);
-    drive.driveDistance(-10);
+    drive.turnPoint({ -10, 10 });
+    drive.driveDistance(30);
+    runIntake(0);
+    pros::delay(300);
+    drive.runallMotors(500, 75);
+    runUptake(600);
+    pros::delay(750);
+    runUptake(0);
+    
 }
 void odomTask(void* p) {
     OdomDebug display(lv_scr_act(), LV_COLOR_ORANGE);
