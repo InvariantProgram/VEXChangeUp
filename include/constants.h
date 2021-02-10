@@ -14,12 +14,6 @@
 #define rightUptakePort 3
 #define leftUptakePort 8
 
-#define TopSlotLineSensorPort 'A'
-#define TOP_SLOT_LINE_SENSOR_LIMIT 2450
-
-#define ScoreLineSensorPort 'B'
-#define SCORE_LINE_SENSOR_LIMIT 2700
-
 #define StrafeDeadzone 20
 #define IntakePower 127   // out of 127
 #define reversePower 127  // out of 127
@@ -34,5 +28,12 @@
 
 #define JoystickScaleConst 2
 #define AccelerationConst 1
+
+#define leftEncTop 'G'
+#define leftEncBot 'H'
+#define rightEncTop 'E'
+#define rightEncBot 'F'
+#define horEncTop 'C'
+#define horEncBot 'D'
 
 #endif
