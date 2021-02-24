@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{3DCC8F69-3060-4104-AB87-731F8C8BC81E}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <Link>
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\src%40autonomous.cpp" />
+    <ClCompile Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\src%40initialize.cpp" />
+    <ClCompile Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\src%40main.cpp" />
+    <ClCompile Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\src%40opcontrol.cpp" />
+    <ClCompile Include="src\autonomous.cpp" />
+    <ClCompile Include="src\initialize.cpp" />
+    <ClCompile Include="src\opcontrol.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40alloca.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40arm-none-eabi%40thumb%40v7-ar%40fpv3%40softfp%40bits%40atomic_word.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40arm-none-eabi%40thumb%40v7-ar%40fpv3%40softfp%40bits%40c++allocator.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40arm-none-eabi%40thumb%40v7-ar%40fpv3%40softfp%40bits%40c++config.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40arm-none-eabi%40thumb%40v7-ar%40fpv3%40softfp%40bits%40c++locale.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40arm-none-eabi%40thumb%40v7-ar%40fpv3%40softfp%40bits%40cpu_defines.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40arm-none-eabi%40thumb%40v7-ar%40fpv3%40softfp%40bits%40ctype_base.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40arm-none-eabi%40thumb%40v7-ar%40fpv3%40softfp%40bits%40ctype_inline.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40arm-none-eabi%40thumb%40v7-ar%40fpv3%40softfp%40bits%40error_constants.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40arm-none-eabi%40thumb%40v7-ar%40fpv3%40softfp%40bits%40gthr-default.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40arm-none-eabi%40thumb%40v7-ar%40fpv3%40softfp%40bits%40gthr.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40arm-none-eabi%40thumb%40v7-ar%40fpv3%40softfp%40bits%40os_defines.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40backward%40auto_ptr.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40backward%40binders.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40algorithmfwd.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40allocated_ptr.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40allocator.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40alloc_traits.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40atomic_base.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40atomic_lockfree_defines.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40basic_ios.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40basic_string.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40char_traits.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40concept_check.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40cpp_type_traits.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40cxxabi_forced.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40cxxabi_init_exception.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40enable_special_members.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40exception.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40exception_defines.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40exception_ptr.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40functexcept.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40functional_hash.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40hashtable.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40hashtable_policy.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40hash_bytes.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40invoke.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40ios_base.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40localefwd.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40locale_classes.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40locale_facets.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40memoryfwd.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40move.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40nested_exception.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40node_handle.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40ostream_insert.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40postypes.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40predefined_ops.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40ptr_traits.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40range_access.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40refwrap.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40shared_ptr.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40shared_ptr_atomic.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40shared_ptr_base.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40specfun.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40std_abs.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40std_function.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40stl_algo.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40stl_algobase.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40stl_bvector.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40stl_construct.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40stl_function.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40stl_heap.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40stl_iterator.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40stl_iterator_base_funcs.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40stl_iterator_base_types.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40stl_pair.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40stl_raw_storage_iter.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40stl_relops.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40stl_tempbuf.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40stl_uninitialized.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40stl_vector.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40streambuf_iterator.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40stringfwd.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40uniform_int_dist.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40unique_ptr.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40unordered_map.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40bits%40uses_allocator.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40debug%40assertions.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40debug%40debug.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40ext%40aligned_buffer.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40ext%40alloc_traits.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40ext%40atomicity.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40ext%40concurrence.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40ext%40new_allocator.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40ext%40numeric_traits.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40ext%40string_conversions.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40ext%40type_traits.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40c++%407.2.1%40tr1%40special_function_util.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40ctype.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40errno.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40locale.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40machine%40endian.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40machine%40ieeefp.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40machine%40stdlib.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40machine%40types.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40machine%40_default_types.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40machine%40_endian.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40machine%40_types.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40math.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40newlib.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40stdint.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40stdio.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40stdlib.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40string.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40strings.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40sys%40cdefs.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40sys%40config.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40sys%40errno.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40sys%40features.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40sys%40lock.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40sys%40reent.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40sys%40sched.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40sys%40select.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40sys%40stdio.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40sys%40timespec.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40sys%40types.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40sys%40_intsup.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40sys%40_pthreadtypes.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40sys%40_sigset.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40sys%40_stdint.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40sys%40_timespec.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40sys%40_timeval.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40sys%40_types.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40wchar.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40wctype.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40xlocale.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40_ansi.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40arm-none-eabi%40include%40_newlib_version.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40lib%40gcc%40arm-none-eabi%407.2.1%40include%40stdarg.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40lib%40gcc%40arm-none-eabi%407.2.1%40include%40stdbool.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40lib%40gcc%40arm-none-eabi%407.2.1%40include%40stddef.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\%40c%40%40users%40keviz%40documents%40changeup_1\c%40%40program files%40pros%40toolchain%40usr%40lib%40gcc%40arm-none-eabi%407.2.1%40include%40stdint.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40api.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40constants.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lvgl.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_conf.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_conf_checker.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_core%40lv_group.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_core%40lv_indev.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_core%40lv_lang.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_core%40lv_obj.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_core%40lv_refr.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_core%40lv_style.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_core%40lv_vdb.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_draw%40lv_draw.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_draw%40lv_draw_img.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_draw%40lv_draw_label.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_draw%40lv_draw_line.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_draw%40lv_draw_rect.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_draw%40lv_draw_triangle.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_fonts%40lv_font_builtin.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_hal%40lv_hal.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_hal%40lv_hal_disp.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_hal%40lv_hal_indev.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_hal%40lv_hal_tick.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_misc%40lv_anim.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_misc%40lv_area.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_misc%40lv_color.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_misc%40lv_font.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_misc%40lv_fs.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_misc%40lv_ll.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_misc%40lv_log.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_misc%40lv_mem.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_misc%40lv_symbol_def.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_misc%40lv_task.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_misc%40lv_txt.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_arc.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_bar.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_btn.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_btnm.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_calendar.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_canvas.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_cb.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_chart.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_cont.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_ddlist.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_gauge.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_img.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_imgbtn.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_kb.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_label.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_led.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_line.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_list.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_lmeter.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_mbox.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_page.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_preload.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_roller.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_slider.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_spinbox.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_sw.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_ta.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_table.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_tabview.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_tileview.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_objx%40lv_win.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_themes%40lv_theme.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_themes%40lv_theme_alien.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_themes%40lv_theme_default.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_themes%40lv_theme_material.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_themes%40lv_theme_mono.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_themes%40lv_theme_nemo.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_themes%40lv_theme_night.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_themes%40lv_theme_templ.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_themes%40lv_theme_zen.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40display%40lv_version.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40main.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40pros%40adi.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40pros%40adi.hpp" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40pros%40colors.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40pros%40imu.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40pros%40imu.hpp" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40pros%40llemu.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40pros%40llemu.hpp" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40pros%40misc.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40pros%40misc.hpp" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40pros%40motors.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40pros%40motors.hpp" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40pros%40rtos.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40pros%40rtos.hpp" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40pros%40vision.h" />
+    <ClInclude Include=".vscode\cquery_cached_index\c%40%40users%40keviz%40documents%40changeup_1\include%40pros%40vision.hpp" />
+    <ClInclude Include="include\api.h" />
+    <ClInclude Include="include\constants.h" />
+    <ClInclude Include="include\display\lvgl.h" />
+    <ClInclude Include="include\display\lv_conf.h" />
+    <ClInclude Include="include\display\lv_conf_checker.h" />
+    <ClInclude Include="include\display\lv_core\lv_group.h" />
+    <ClInclude Include="include\display\lv_core\lv_indev.h" />
+    <ClInclude Include="include\display\lv_core\lv_lang.h" />
+    <ClInclude Include="include\display\lv_core\lv_obj.h" />
+    <ClInclude Include="include\display\lv_core\lv_refr.h" />
+    <ClInclude Include="include\display\lv_core\lv_style.h" />
+    <ClInclude Include="include\display\lv_core\lv_vdb.h" />
+    <ClInclude Include="include\display\lv_draw\lv_draw.h" />
+    <ClInclude Include="include\display\lv_draw\lv_draw_arc.h" />
+    <ClInclude Include="include\display\lv_draw\lv_draw_img.h" />
+    <ClInclude Include="include\display\lv_draw\lv_draw_label.h" />
+    <ClInclude Include="include\display\lv_draw\lv_draw_line.h" />
+    <ClInclude Include="include\display\lv_draw\lv_draw_rbasic.h" />
+    <ClInclude Include="include\display\lv_draw\lv_draw_rect.h" />
+    <ClInclude Include="include\display\lv_draw\lv_draw_triangle.h" />
+    <ClInclude Include="include\display\lv_draw\lv_draw_vbasic.h" />
+    <ClInclude Include="include\display\lv_fonts\lv_font_builtin.h" />
+    <ClInclude Include="include\display\lv_hal\lv_hal.h" />
+    <ClInclude Include="include\display\lv_hal\lv_hal_disp.h" />
+    <ClInclude Include="include\display\lv_hal\lv_hal_indev.h" />
+    <ClInclude Include="include\display\lv_hal\lv_hal_tick.h" />
+    <ClInclude Include="include\display\lv_misc\lv_anim.h" />
+    <ClInclude Include="include\display\lv_misc\lv_area.h" />
+    <ClInclude Include="include\display\lv_misc\lv_circ.h" />
+    <ClInclude Include="include\display\lv_misc\lv_color.h" />
+    <ClInclude Include="include\display\lv_misc\lv_font.h" />
+    <ClInclude Include="include\display\lv_misc\lv_fs.h" />
+    <ClInclude Include="include\display\lv_misc\lv_gc.h" />
+    <ClInclude Include="include\display\lv_misc\lv_ll.h" />
+    <ClInclude Include="include\display\lv_misc\lv_log.h" />
+    <ClInclude Include="include\display\lv_misc\lv_math.h" />
+    <ClInclude Include="include\display\lv_misc\lv_mem.h" />
+    <ClInclude Include="include\display\lv_misc\lv_symbol_def.h" />
+    <ClInclude Include="include\display\lv_misc\lv_task.h" />
+    <ClInclude Include="include\display\lv_misc\lv_templ.h" />
+    <ClInclude Include="include\display\lv_misc\lv_txt.h" />
+    <ClInclude Include="include\display\lv_misc\lv_ufs.h" />
+    <ClInclude Include="include\display\lv_objx\lv_arc.h" />
+    <ClInclude Include="include\display\lv_objx\lv_bar.h" />
+    <ClInclude Include="include\display\lv_objx\lv_btn.h" />
+    <ClInclude Include="include\display\lv_objx\lv_btnm.h" />
+    <ClInclude Include="include\display\lv_objx\lv_calendar.h" />
+    <ClInclude Include="include\display\lv_objx\lv_canvas.h" />
+    <ClInclude Include="include\display\lv_objx\lv_cb.h" />
+    <ClInclude Include="include\display\lv_objx\lv_chart.h" />
+    <ClInclude Include="include\display\lv_objx\lv_cont.h" />
+    <ClInclude Include="include\display\lv_objx\lv_ddlist.h" />
+    <ClInclude Include="include\display\lv_objx\lv_gauge.h" />
+    <ClInclude Include="include\display\lv_objx\lv_img.h" />
+    <ClInclude Include="include\display\lv_objx\lv_imgbtn.h" />
+    <ClInclude Include="include\display\lv_objx\lv_kb.h" />
+    <ClInclude Include="include\display\lv_objx\lv_label.h" />
+    <ClInclude Include="include\display\lv_objx\lv_led.h" />
+    <ClInclude Include="include\display\lv_objx\lv_line.h" />
+    <ClInclude Include="include\display\lv_objx\lv_list.h" />
+    <ClInclude Include="include\display\lv_objx\lv_lmeter.h" />
+    <ClInclude Include="include\display\lv_objx\lv_mbox.h" />
+    <ClInclude Include="include\display\lv_objx\lv_objx_templ.h" />
+    <ClInclude Include="include\display\lv_objx\lv_page.h" />
+    <ClInclude Include="include\display\lv_objx\lv_preload.h" />
+    <ClInclude Include="include\display\lv_objx\lv_roller.h" />
+    <ClInclude Include="include\display\lv_objx\lv_slider.h" />
+    <ClInclude Include="include\display\lv_objx\lv_spinbox.h" />
+    <ClInclude Include="include\display\lv_objx\lv_sw.h" />
+    <ClInclude Include="include\display\lv_objx\lv_ta.h" />
+    <ClInclude Include="include\display\lv_objx\lv_table.h" />
+    <ClInclude Include="include\display\lv_objx\lv_tabview.h" />
+    <ClInclude Include="include\display\lv_objx\lv_tileview.h" />
+    <ClInclude Include="include\display\lv_objx\lv_win.h" />
+    <ClInclude Include="include\display\lv_themes\lv_theme.h" />
+    <ClInclude Include="include\display\lv_themes\lv_theme_alien.h" />
+    <ClInclude Include="include\display\lv_themes\lv_theme_default.h" />
+    <ClInclude Include="include\display\lv_themes\lv_theme_material.h" />
+    <ClInclude Include="include\display\lv_themes\lv_theme_mono.h" />
+    <ClInclude Include="include\display\lv_themes\lv_theme_nemo.h" />
+    <ClInclude Include="include\display\lv_themes\lv_theme_night.h" />
+    <ClInclude Include="include\display\lv_themes\lv_theme_templ.h" />
+    <ClInclude Include="include\display\lv_themes\lv_theme_zen.h" />
+    <ClInclude Include="include\display\lv_version.h" />
+    <ClInclude Include="include\main.h" />
+    <ClInclude Include="include\okapi\api.hpp" />
+    <ClInclude Include="include\okapi\api\chassis\controller\chassisController.hpp" />
+    <ClInclude Include="include\okapi\api\chassis\controller\chassisControllerIntegrated.hpp" />
+    <ClInclude Include="include\okapi\api\chassis\controller\chassisControllerPid.hpp" />
+    <ClInclude Include="include\okapi\api\chassis\controller\chassisScales.hpp" />
+    <ClInclude Include="include\okapi\api\chassis\controller\defaultOdomChassisController.hpp" />
+    <ClInclude Include="include\okapi\api\chassis\controller\odomChassisController.hpp" />
+    <ClInclude Include="include\okapi\api\chassis\model\chassisModel.hpp" />
+    <ClInclude Include="include\okapi\api\chassis\model\hDriveModel.hpp" />
+    <ClInclude Include="include\okapi\api\chassis\model\readOnlyChassisModel.hpp" />
+    <ClInclude Include="include\okapi\api\chassis\model\skidSteerModel.hpp" />
+    <ClInclude Include="include\okapi\api\chassis\model\threeEncoderSkidSteerModel.hpp" />
+    <ClInclude Include="include\okapi\api\chassis\model\threeEncoderXDriveModel.hpp" />
+    <ClInclude Include="include\okapi\api\chassis\model\xDriveModel.hpp" />
+    <ClInclude Include="include\okapi\api\control\async\asyncController.hpp" />
+    <ClInclude Include="include\okapi\api\control\async\asyncLinearMotionProfileController.hpp" />
+    <ClInclude Include="include\okapi\api\control\async\asyncMotionProfileController.hpp" />
+    <ClInclude Include="include\okapi\api\control\async\asyncPosIntegratedController.hpp" />
+    <ClInclude Include="include\okapi\api\control\async\asyncPositionController.hpp" />
+    <ClInclude Include="include\okapi\api\control\async\asyncPosPidController.hpp" />
+    <ClInclude Include="include\okapi\api\control\async\asyncVelIntegratedController.hpp" />
+    <ClInclude Include="include\okapi\api\control\async\asyncVelocityController.hpp" />
+    <ClInclude Include="include\okapi\api\control\async\asyncVelPidController.hpp" />
+    <ClInclude Include="include\okapi\api\control\async\asyncWrapper.hpp" />
+    <ClInclude Include="include\okapi\api\control\closedLoopController.hpp" />
+    <ClInclude Include="include\okapi\api\control\controllerInput.hpp" />
+    <ClInclude Include="include\okapi\api\control\controllerOutput.hpp" />
+    <ClInclude Include="include\okapi\api\control\iterative\iterativeController.hpp" />
+    <ClInclude Include="include\okapi\api\control\iterative\iterativeMotorVelocityController.hpp" />
+    <ClInclude Include="include\okapi\api\control\iterative\iterativePositionController.hpp" />
+    <ClInclude Include="include\okapi\api\control\iterative\iterativePosPidController.hpp" />
+    <ClInclude Include="include\okapi\api\control\iterative\iterativeVelocityController.hpp" />
+    <ClInclude Include="include\okapi\api\control\iterative\iterativeVelPidController.hpp" />
+    <ClInclude Include="include\okapi\api\control\offsettableControllerInput.hpp" />
+    <ClInclude Include="include\okapi\api\control\util\controllerRunner.hpp" />
+    <ClInclude Include="include\okapi\api\control\util\flywheelSimulator.hpp" />
+    <ClInclude Include="include\okapi\api\control\util\pathfinderUtil.hpp" />
+    <ClInclude Include="include\okapi\api\control\util\pidTuner.hpp" />
+    <ClInclude Include="include\okapi\api\control\util\settledUtil.hpp" />
+    <ClInclude Include="include\okapi\api\coreProsAPI.hpp" />
+    <ClInclude Include="include\okapi\api\device\button\abstractButton.hpp" />
+    <ClInclude Include="include\okapi\api\device\button\buttonBase.hpp" />
+    <ClInclude Include="include\okapi\api\device\motor\abstractMotor.hpp" />
+    <ClInclude Include="include\okapi\api\device\rotarysensor\continuousRotarySensor.hpp" />
+    <ClInclude Include="include\okapi\api\device\rotarysensor\rotarySensor.hpp" />
+    <ClInclude Include="include\okapi\api\filter\averageFilter.hpp" />
+    <ClInclude Include="include\okapi\api\filter\composableFilter.hpp" />
+    <ClInclude Include="include\okapi\api\filter\demaFilter.hpp" />
+    <ClInclude Include="include\okapi\api\filter\ekfFilter.hpp" />
+    <ClInclude Include="include\okapi\api\filter\emaFilter.hpp" />
+    <ClInclude Include="include\okapi\api\filter\filter.hpp" />
+    <ClInclude Include="include\okapi\api\filter\filteredControllerInput.hpp" />
+    <ClInclude Include="include\okapi\api\filter\medianFilter.hpp" />
+    <ClInclude Include="include\okapi\api\filter\passthroughFilter.hpp" />
+    <ClInclude Include="include\okapi\api\filter\velMath.hpp" />
+    <ClInclude Include="include\okapi\api\odometry\odometry.hpp" />
+    <ClInclude Include="include\okapi\api\odometry\odomMath.hpp" />
+    <ClInclude Include="include\okapi\api\odometry\odomState.hpp" />
+    <ClInclude Include="include\okapi\api\odometry\point.hpp" />
+    <ClInclude Include="include\okapi\api\odometry\stateMode.hpp" />
+    <ClInclude Include="include\okapi\api\odometry\threeEncoderOdometry.hpp" />
+    <ClInclude Include="include\okapi\api\odometry\twoEncoderOdometry.hpp" />
+    <ClInclude Include="include\okapi\api\units\QAcceleration.hpp" />
+    <ClInclude Include="include\okapi\api\units\QAngle.hpp" />
+    <ClInclude Include="include\okapi\api\units\QAngularAcceleration.hpp" />
+    <ClInclude Include="include\okapi\api\units\QAngularJerk.hpp" />
+    <ClInclude Include="include\okapi\api\units\QAngularSpeed.hpp" />
+    <ClInclude Include="include\okapi\api\units\QArea.hpp" />
+    <ClInclude Include="include\okapi\api\units\QForce.hpp" />
+    <ClInclude Include="include\okapi\api\units\QFrequency.hpp" />
+    <ClInclude Include="include\okapi\api\units\QJerk.hpp" />
+    <ClInclude Include="include\okapi\api\units\QLength.hpp" />
+    <ClInclude Include="include\okapi\api\units\QMass.hpp" />
+    <ClInclude Include="include\okapi\api\units\QPressure.hpp" />
+    <ClInclude Include="include\okapi\api\units\QSpeed.hpp" />
+    <ClInclude Include="include\okapi\api\units\QTime.hpp" />
+    <ClInclude Include="include\okapi\api\units\QTorque.hpp" />
+    <ClInclude Include="include\okapi\api\units\QVolume.hpp" />
+    <ClInclude Include="include\okapi\api\units\RQuantity.hpp" />
+    <ClInclude Include="include\okapi\api\util\abstractRate.hpp" />
+    <ClInclude Include="include\okapi\api\util\abstractTimer.hpp" />
+    <ClInclude Include="include\okapi\api\util\logging.hpp" />
+    <ClInclude Include="include\okapi\api\util\mathUtil.hpp" />
+    <ClInclude Include="include\okapi\api\util\supplier.hpp" />
+    <ClInclude Include="include\okapi\api\util\timeUtil.hpp" />
+    <ClInclude Include="include\okapi\impl\chassis\controller\chassisControllerBuilder.hpp" />
+    <ClInclude Include="include\okapi\impl\control\async\asyncMotionProfileControllerBuilder.hpp" />
+    <ClInclude Include="include\okapi\impl\control\async\asyncPosControllerBuilder.hpp" />
+    <ClInclude Include="include\okapi\impl\control\async\asyncVelControllerBuilder.hpp" />
+    <ClInclude Include="include\okapi\impl\control\iterative\iterativeControllerFactory.hpp" />
+    <ClInclude Include="include\okapi\impl\control\util\controllerRunnerFactory.hpp" />
+    <ClInclude Include="include\okapi\impl\control\util\pidTunerFactory.hpp" />
+    <ClInclude Include="include\okapi\impl\device\adiUltrasonic.hpp" />
+    <ClInclude Include="include\okapi\impl\device\button\adiButton.hpp" />
+    <ClInclude Include="include\okapi\impl\device\button\controllerButton.hpp" />
+    <ClInclude Include="include\okapi\impl\device\controller.hpp" />
+    <ClInclude Include="include\okapi\impl\device\controllerUtil.hpp" />
+    <ClInclude Include="include\okapi\impl\device\motor\adiMotor.hpp" />
+    <ClInclude Include="include\okapi\impl\device\motor\motor.hpp" />
+    <ClInclude Include="include\okapi\impl\device\motor\motorGroup.hpp" />
+    <ClInclude Include="include\okapi\impl\device\rotarysensor\adiEncoder.hpp" />
+    <ClInclude Include="include\okapi\impl\device\rotarysensor\adiGyro.hpp" />
+    <ClInclude Include="include\okapi\impl\device\rotarysensor\integratedEncoder.hpp" />
+    <ClInclude Include="include\okapi\impl\device\rotarysensor\potentiometer.hpp" />
+    <ClInclude Include="include\okapi\impl\filter\velMathFactory.hpp" />
+    <ClInclude Include="include\okapi\impl\util\configurableTimeUtilFactory.hpp" />
+    <ClInclude Include="include\okapi\impl\util\rate.hpp" />
+    <ClInclude Include="include\okapi\impl\util\timer.hpp" />
+    <ClInclude Include="include\okapi\impl\util\timeUtilFactory.hpp" />
+    <ClInclude Include="include\okapi\pathfinder\include\pathfinder.h" />
+    <ClInclude Include="include\okapi\pathfinder\include\pathfinder\fit.h" />
+    <ClInclude Include="include\okapi\pathfinder\include\pathfinder\followers\distance.h" />
+    <ClInclude Include="include\okapi\pathfinder\include\pathfinder\followers\encoder.h" />
+    <ClInclude Include="include\okapi\pathfinder\include\pathfinder\io.h" />
+    <ClInclude Include="include\okapi\pathfinder\include\pathfinder\lib.h" />
+    <ClInclude Include="include\okapi\pathfinder\include\pathfinder\mathutil.h" />
+    <ClInclude Include="include\okapi\pathfinder\include\pathfinder\modifiers\swerve.h" />
+    <ClInclude Include="include\okapi\pathfinder\include\pathfinder\modifiers\tank.h" />
+    <ClInclude Include="include\okapi\pathfinder\include\pathfinder\spline.h" />
+    <ClInclude Include="include\okapi\pathfinder\include\pathfinder\structs.h" />
+    <ClInclude Include="include\okapi\pathfinder\include\pathfinder\trajectory.h" />
+    <ClInclude Include="include\pros\adi.h" />
+    <ClInclude Include="include\pros\adi.hpp" />
+    <ClInclude Include="include\pros\apix.h" />
+    <ClInclude Include="include\pros\api_legacy.h" />
+    <ClInclude Include="include\pros\colors.h" />
+    <ClInclude Include="include\pros\imu.h" />
+    <ClInclude Include="include\pros\imu.hpp" />
+    <ClInclude Include="include\pros\llemu.h" />
+    <ClInclude Include="include\pros\llemu.hpp" />
+    <ClInclude Include="include\pros\misc.h" />
+    <ClInclude Include="include\pros\misc.hpp" />
+    <ClInclude Include="include\pros\motors.h" />
+    <ClInclude Include="include\pros\motors.hpp" />
+    <ClInclude Include="include\pros\rtos.h" />
+    <ClInclude Include="include\pros\rtos.hpp" />
+    <ClInclude Include="include\pros\serial.h" />
+    <ClInclude Include="include\pros\serial.hpp" />
+    <ClInclude Include="include\pros\vision.h" />
+    <ClInclude Include="include\pros\vision.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\cold.package.bin" />
+    <None Include="bin\hot.package.bin" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -43,7 +43,7 @@ void ThreeTrackerOdom::odomStep(std::array<int, 3> tickDiffs) {
 		shiftX = (deltaArr[2] / dTheta - scales.midlineOffset) * 2 * sin(dTheta / 2);
 	}
 	storedState.theta += dTheta; storedState.theta = angleClamp();
-	storedState.y += shiftY * sin(storedState.theta) + shiftX * cos(storedState.theta);
+	storedState.y += shiftY * sin(storedState.theta) - shiftX * cos(storedState.theta);
 	storedState.x += shiftY * cos(storedState.theta) + shiftX * sin(storedState.theta);
 }
 

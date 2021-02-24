@@ -1,0 +1,12 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\firmware",
+    "\\include",
+    "\\include\\QuantumOdom",
+    "\\src",
+    "\\src\\QuantumOdom"
+  ],
+  "SelectedNode": "\\src\\QuantumOdom\\XDrive.cpp",
+  "PreviewInSolutionExplorer": false
+}

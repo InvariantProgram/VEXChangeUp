@@ -13,20 +13,20 @@
  */
 
 pros::ADIEncoder rightEnc(RightEncTop, RightEncBot);
-pros::ADIEncoder leftEnc(LeftEncTop, LeftEncBot);
+pros::ADIEncoder leftEnc(LeftEncTop, LeftEncBot, true);
 pros::ADIEncoder horEnc(HorEncTop, HorEncBot, true);
 
-Chassis newChassis{ 2.75, 13, 0.5 };
+Chassis newChassis{ 2.75, 12.75, 0.5 };
 Sensor_vals valStorage{ 0, 0, 0, true };
 
 ThreeTrackerOdom odomSys(newChassis);
 
 //------------------
-PIDConsts straight{ 8, 0, 0.1, 0 };
-PIDConsts turn{ 8, 0, 0, 0 };
+PIDConsts straight{ 3, 0, 0.1, 0 };
+PIDConsts turn{ 3, 0, 0, 0 };
 PIDConsts nonExist{ 0, 0, 0, 0 };
 
-PIDConsts longForward{ 5, 0, 0.001, 0 };
+PIDConsts longForward{ 1, 0, 0.001, 0 };
 
 PIDController driveCont(straight);
 PIDController turnCont(turn);
@@ -52,9 +52,10 @@ void runUptake(int power) {
     leftUptake.move_velocity(power);
 }
 void flipIntake() {
-    rightIntake.move_velocity(200);
-    leftIntake.move_velocity(200);
-    pros::delay(350);
+    runIntake(200);
+    pros::delay(300);
+    runIntake(-200);
+    pros::delay(150);
     rightIntake.move_velocity(0);
     leftIntake.move_velocity(0);
 }
@@ -69,22 +70,16 @@ void driveTask(void* p) {
     drive.driveDistance(10);
     runIntake(0);
     runUptake(600);
-    drive.runallMotors(300, 75);
+    drive.runallMotors(300, 60);
     pros::delay(750);
     runUptake(0);
-    drive.runallMotors(300, -75);
+    drive.runallMotors(375, -60);
     runIntake(200);
     pros::delay(150);
     driveCont.setGains(longForward);
     drive.driveDistance(-10);
-    drive.turnPoint({ -10, 10 });
-    drive.driveDistance(30);
     runIntake(0);
-    pros::delay(300);
-    drive.runallMotors(500, 75);
-    runUptake(600);
-    pros::delay(750);
-    runUptake(0);
+    drive.drivePoint({ -20, 31.5 });
     
 }
 void odomTask(void* p) {

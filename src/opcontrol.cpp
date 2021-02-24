@@ -90,7 +90,7 @@ void XDrive(void *p) {
 
     for (int i = 0; i < 4; ++i)
       Voltage[i] += MovementScale * (GoalVoltage[i] - Voltage[i]); // busted?
-
+    
 
     FrontLeftWheelMotor.move(Voltage[0]);
     FrontRightWheelMotor.move(Voltage[1]);
@@ -104,21 +104,28 @@ void XDrive(void *p) {
 void intake(void* p) {
     Controller cont(E_CONTROLLER_MASTER);
 
+    Distance maxIntake(botDist);
+    Distance topUptake(topDist);
+
     Motor leftIntake(LeftIntakePort, E_MOTOR_GEARSET_18, 0);
     Motor rightIntake(RightIntakePort, E_MOTOR_GEARSET_18, 1);
     Motor rightUptake(rightUptakePort, E_MOTOR_GEARSET_06, 1);
     Motor leftUptake(leftUptakePort, E_MOTOR_GEARSET_06, 0);
 
-    ADIUltrasonic ultrasonic('A', 'B');
     bool blocked = false;
 
+
     while (true) {
+        
+
         bool R2 = cont.get_digital(E_CONTROLLER_DIGITAL_R2);
         bool R1 = cont.get_digital(E_CONTROLLER_DIGITAL_R1);
         bool L2 = cont.get_digital(E_CONTROLLER_DIGITAL_L2);
         bool L1 = cont.get_digital(E_CONTROLLER_DIGITAL_L1);
 
         bool Y = cont.get_digital(E_CONTROLLER_DIGITAL_Y);
+        bool Right = cont.get_digital_new_press(E_CONTROLLER_DIGITAL_RIGHT);
+        bool Left = cont.get_digital_new_press(E_CONTROLLER_DIGITAL_LEFT);
 
         double intakeVal = IntakePower * L2 - reversePower * (L1 || R1);
         rightIntake.move(intakeVal);
@@ -135,6 +142,20 @@ void intake(void* p) {
             rightIntake.move_velocity(0);
             leftIntake.move_velocity(0);
         }
+        if (Right) {
+            rightUptake.move_velocity(600);
+            leftUptake.move_velocity(600);
+            pros::delay(750);
+            rightIntake.move_velocity(200);
+            leftIntake.move_velocity(200);
+            pros::delay(150);
+            rightIntake.move_velocity(0);
+            leftIntake.move_velocity(0);
+            pros::delay(100);
+            rightUptake.move_velocity(0);
+            leftUptake.move_velocity(0);
+        }
+        
 
         if (R2) {
             rightUptake.move_velocity(UptakePower);
@@ -148,18 +169,43 @@ void intake(void* p) {
             rightUptake.move_velocity(0);
             leftUptake.move_velocity(0);
         }
-       
 
-        pros::delay(20);
+        pros::delay(1);
     }
 
 
 }
 
+void showOdomDriver(void* p) {
+    OdomDebug display(lv_scr_act(), LV_COLOR_ORANGE);
+
+    pros::ADIEncoder rightEnc(RightEncTop, RightEncBot);
+    pros::ADIEncoder leftEnc(LeftEncTop, LeftEncBot, true);
+    pros::ADIEncoder horEnc(HorEncTop, HorEncBot, true);
+
+    Sensor_vals valStorage{ 0, 0, 0, true };
+    Chassis newChassis{ 2.75, 13, 0.5 };
+    ThreeTrackerOdom odomSys(newChassis);
+
+    while (true) {
+        int LVal = leftEnc.get_value(); int RVal = rightEnc.get_value(); int HVal = horEnc.get_value();
+        int LDiff = LVal - valStorage.left;
+        int RDiff = RVal - valStorage.right;
+        int HDiff = HVal - valStorage.middle;
+        std::array<int, 3> tickDiffs{ LDiff, RDiff, HDiff };
+        valStorage.setVals(RVal, LVal, HVal);
+
+        odomSys.odomStep(tickDiffs);
+        display.setData(odomSys.getState(), valStorage);
+
+        pros::delay(20);
+    }
+}
 
 void opcontrol() {
     std::string driveTaskName("Drive Task");
     std::string intakeTaskName("Intake Task");
     Task driveTask(XDrive, &driveTaskName);
     Task intakeTask(intake, &intakeTaskName);
+    Task odomShow(showOdomDriver);
 }

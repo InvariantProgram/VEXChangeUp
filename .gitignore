@@ -6,13 +6,6 @@
 *.bin
 *.elf
 
-# Visual Studio
-*.vs
-*.sln
-*.vcxproj
-*.vcxproj.filters
-*.vcxproj.user
-
 # PROS
 bin/
 .vscode/
@@ -21,3 +14,9 @@ temp.log
 temp.errors
 *.ini
 .d/
+*.ipch
+.vs/ChangeUp_1/v16/.suo
+.vs/ChangeUp_1/v16/Browse.VC.db
+.vs/ChangeUp_1/v16/Browse.VC.db-shm
+.vs/ChangeUp_1/v16/Browse.VC.db-wal
+.vs/ChangeUp_1/v16/Browse.VC.opendb

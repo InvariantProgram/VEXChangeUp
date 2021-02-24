@@ -153,7 +153,7 @@ void XDrive::turnPoint(const Point& iPoint) {
         leftMotorBack.move_velocity(leftOutput);
         leftMotorFront.move_velocity(leftOutput);
 
-        if (abs(currentDifference) < errorBounds)
+        if (abs(currentDifference) < errorBounds / 4)
             withinCount++;
         else
             withinCount = 0;
