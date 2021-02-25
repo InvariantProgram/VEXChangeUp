@@ -107,8 +107,8 @@ void intake(void* p) {
     Distance botDistance(botDist);
     Distance topDistance(topDist);
 
-    Motor leftIntake(LeftIntakePort, E_MOTOR_GEARSET_18, 0);
-    Motor rightIntake(RightIntakePort, E_MOTOR_GEARSET_18, 1);
+    Motor leftIntake(LeftIntakePort, E_MOTOR_GEARSET_06, 0);
+    Motor rightIntake(RightIntakePort, E_MOTOR_GEARSET_06, 1);
     Motor rightUptake(rightUptakePort, E_MOTOR_GEARSET_06, 1);
     Motor leftUptake(leftUptakePort, E_MOTOR_GEARSET_06, 0);
 
@@ -117,9 +117,8 @@ void intake(void* p) {
     double topVal;
     double botVal;
     while (true) {
-        double bottomDistanceVal = botDistance.get();
         double topDistanceVal = topDistance.get();
-        printf("Bot: %d\n", bottomDistanceVal);
+        printf("Bot: %d\n", botDistance.get());
 
         bool R2 = cont.get_digital(E_CONTROLLER_DIGITAL_R2);
         bool R1 = cont.get_digital(E_CONTROLLER_DIGITAL_R1);
@@ -131,11 +130,12 @@ void intake(void* p) {
         bool Left = cont.get_digital_new_press(E_CONTROLLER_DIGITAL_LEFT);
         bool Down = cont.get_digital(E_CONTROLLER_DIGITAL_DOWN);
         bool B = cont.get_digital(E_CONTROLLER_DIGITAL_B);
+        bool X = cont.get_digital_new_press(E_CONTROLLER_DIGITAL_X);
 
-        if (cont.get_digital_new_press(E_CONTROLLER_DIGITAL_X)) {
+        if (X) {
             double startTime = pros::millis();
-            rightIntake.move_velocity(200);
-            leftIntake.move_velocity(200);
+            rightIntake.move_velocity(150);
+            leftIntake.move_velocity(150);
             int i = 0; bool run = true;
             while (pros::millis() - startTime < 1000 && run) {
                 if (botDistance.get() < detectLimit) run = false;
@@ -144,7 +144,6 @@ void intake(void* p) {
             rightIntake.move_velocity(0);
             leftIntake.move_velocity(0);
         }
-
         if (R2) {
             rightUptake.move_velocity(UptakePower);
             leftUptake.move_velocity(UptakePower);
