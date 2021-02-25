@@ -104,8 +104,8 @@ void XDrive(void *p) {
 void intake(void* p) {
     Controller cont(E_CONTROLLER_MASTER);
 
-    Distance maxIntake(botDist);
-    Distance topUptake(topDist);
+    Distance botDistance(botDist);
+    Distance topDistance(topDist);
 
     Motor leftIntake(LeftIntakePort, E_MOTOR_GEARSET_18, 0);
     Motor rightIntake(RightIntakePort, E_MOTOR_GEARSET_18, 1);
@@ -114,9 +114,12 @@ void intake(void* p) {
 
     bool blocked = false;
 
-
+    double topVal;
+    double botVal;
     while (true) {
-        
+        double bottomDistanceVal = botDistance.get();
+        double topDistanceVal = topDistance.get();
+        printf("Bot: %d\n", bottomDistanceVal);
 
         bool R2 = cont.get_digital(E_CONTROLLER_DIGITAL_R2);
         bool R1 = cont.get_digital(E_CONTROLLER_DIGITAL_R1);
@@ -126,40 +129,33 @@ void intake(void* p) {
         bool Y = cont.get_digital(E_CONTROLLER_DIGITAL_Y);
         bool Right = cont.get_digital_new_press(E_CONTROLLER_DIGITAL_RIGHT);
         bool Left = cont.get_digital_new_press(E_CONTROLLER_DIGITAL_LEFT);
+        bool Down = cont.get_digital(E_CONTROLLER_DIGITAL_DOWN);
+        bool B = cont.get_digital(E_CONTROLLER_DIGITAL_B);
 
-        double intakeVal = IntakePower * L2 - reversePower * (L1 || R1);
-        rightIntake.move(intakeVal);
-        leftIntake.move(intakeVal);
-
-        if (Y) {
+        if (cont.get_digital_new_press(E_CONTROLLER_DIGITAL_X)) {
+            double startTime = pros::millis();
             rightIntake.move_velocity(200);
             leftIntake.move_velocity(200);
-            rightUptake.move_velocity(300);
-            leftUptake.move_velocity(300);
-            pros::delay(250);
-            rightUptake.move_velocity(0);
-            leftUptake.move_velocity(0);
+            int i = 0; bool run = true;
+            while (pros::millis() - startTime < 1000 && run) {
+                if (botDistance.get() < detectLimit) run = false;
+                pros::delay(20);
+            }
             rightIntake.move_velocity(0);
             leftIntake.move_velocity(0);
         }
-        if (Right) {
-            rightUptake.move_velocity(600);
-            leftUptake.move_velocity(600);
-            pros::delay(750);
-            rightIntake.move_velocity(200);
-            leftIntake.move_velocity(200);
-            pros::delay(150);
-            rightIntake.move_velocity(0);
-            leftIntake.move_velocity(0);
-            pros::delay(100);
-            rightUptake.move_velocity(0);
-            leftUptake.move_velocity(0);
-        }
-        
 
         if (R2) {
             rightUptake.move_velocity(UptakePower);
             leftUptake.move_velocity(UptakePower);
+        }
+        else if (Y) {
+            rightUptake.move_velocity(UptakePower / 2);
+            leftUptake.move_velocity(UptakePower / 2);
+        }
+        else if (B) {
+            rightUptake.move_velocity(-200);
+            leftUptake.move_velocity(-200);
         }
         else if (R1) {
             rightUptake.move(-reversePower);
@@ -168,6 +164,20 @@ void intake(void* p) {
         else {
             rightUptake.move_velocity(0);
             leftUptake.move_velocity(0);
+        }
+
+        if (L2 || L1 || R1) {
+            double intakeVal = IntakePower * L2 - reversePower * (L1 || R1);
+            rightIntake.move(intakeVal);
+            leftIntake.move(intakeVal);
+        }
+        else if (Down) {
+            rightIntake.move_velocity(-75);
+            leftIntake.move_velocity(-75);
+        }
+        else {
+            rightIntake.move(0);
+            leftIntake.move(0);
         }
 
         pros::delay(1);

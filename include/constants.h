@@ -25,7 +25,6 @@
 #define forceStraight 10
 #define IndexMaxTime 750
 
-
 #define JoystickScaleConst 1
 #define AccelerationConst 1
 
@@ -36,9 +35,9 @@
 #define HorEncTop 'C'
 #define HorEncBot 'D'
 
-#define botDist 20 
-#define topDist 10
+#define botDist 10 
+#define topDist 20
 
-#define ultraLimit 100
+#define detectLimit 60
 
 #endif

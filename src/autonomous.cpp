@@ -22,11 +22,11 @@ Sensor_vals valStorage{ 0, 0, 0, true };
 ThreeTrackerOdom odomSys(newChassis);
 
 //------------------
-PIDConsts straight{ 3, 0, 0.1, 0 };
-PIDConsts turn{ 3, 0, 0, 0 };
+PIDConsts straight{ 5.5, 0, 0.1, 0 };
+PIDConsts turn{ 10, 0, 0.001, 0 };
 PIDConsts nonExist{ 0, 0, 0, 0 };
 
-PIDConsts longForward{ 1, 0, 0.001, 0 };
+PIDConsts longForward{ 5, 0, 0.001, 0 };
 
 PIDController driveCont(straight);
 PIDController turnCont(turn);
@@ -42,6 +42,9 @@ pros::Motor leftIntake(LeftIntakePort, pros::E_MOTOR_GEARSET_18, 0);
 pros::Motor rightIntake(RightIntakePort, pros::E_MOTOR_GEARSET_18, 1);
 pros::Motor rightUptake(rightUptakePort, pros::E_MOTOR_GEARSET_06, 1);
 pros::Motor leftUptake(leftUptakePort, pros::E_MOTOR_GEARSET_06, 0);
+
+pros::Distance botDistance(botDist);
+pros::Distance topDistance(topDist);
 
 void runIntake(int power) {
     rightIntake.move_velocity(power);
@@ -59,6 +62,17 @@ void flipIntake() {
     rightIntake.move_velocity(0);
     leftIntake.move_velocity(0);
 }
+void intakeToMax() {
+    double startTime = pros::millis();
+    runIntake(200);
+    int i = 0; bool run = true;
+    while (pros::millis() - startTime < 1000 && run) {
+        if (botDistance.get() < detectLimit) run = false;
+        pros::delay(20);
+    }
+    runIntake(0);
+}
+
 
 void systemTask(void* p) {
     flipIntake();
@@ -79,8 +93,11 @@ void driveTask(void* p) {
     driveCont.setGains(longForward);
     drive.driveDistance(-10);
     runIntake(0);
-    drive.drivePoint({ -20, 31.5 });
-    
+    drive.turnPoint({ -20, 31.5 });
+    drive.driveDistance(30);
+    drive.turnAngle(135);
+    drive.runallMotors(300, 60);
+    runUptake(600);
 }
 void odomTask(void* p) {
     OdomDebug display(lv_scr_act(), LV_COLOR_ORANGE);
