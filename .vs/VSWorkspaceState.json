@@ -2,11 +2,10 @@
   "ExpandedNodes": [
     "",
     "\\include",
-    "\\include\\pros",
     "\\include\\QuantumOdom",
     "\\src",
     "\\src\\QuantumOdom"
   ],
-  "SelectedNode": "\\src\\QuantumOdom\\structDefs.cpp",
+  "SelectedNode": "\\src\\autonomous.cpp",
   "PreviewInSolutionExplorer": false
 }

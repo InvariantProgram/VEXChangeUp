@@ -117,8 +117,7 @@ void intake(void* p) {
     double topVal;
     double botVal;
     while (true) {
-        double topDistanceVal = topDistance.get();
-        printf("Bot: %d\n", botDistance.get());
+        printf("Top: %d\n", topDistance.get());
 
         bool R2 = cont.get_digital(E_CONTROLLER_DIGITAL_R2);
         bool R1 = cont.get_digital(E_CONTROLLER_DIGITAL_R1);
@@ -136,14 +135,18 @@ void intake(void* p) {
             double startTime = pros::millis();
             rightIntake.move_velocity(150);
             leftIntake.move_velocity(150);
+            rightUptake.move_velocity(165);
+            leftUptake.move_velocity(165);
             int i = 0; bool run = true;
-            while (pros::millis() - startTime < 1000 && run) {
-                if (botDistance.get() < detectLimit) run = false;
-                pros::delay(20);
+            while (pros::millis() - startTime < 2500 && run) {
+                pros::delay(5);
+                if (topDistance.get() < detectLimit) run = false;
             }
             rightIntake.move_velocity(0);
             leftIntake.move_velocity(0);
-        }
+            rightUptake.move_velocity(0);
+            leftUptake.move_velocity(0);
+;        }
         if (R2) {
             rightUptake.move_velocity(UptakePower);
             leftUptake.move_velocity(UptakePower);
