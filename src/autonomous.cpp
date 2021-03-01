@@ -76,11 +76,11 @@ void intakeToMax(int speed, int timeOut = 1000) {
     }
     runIntake(0);
 }
-void index() {
+void index(int timeOut = 2500) {
     double startTime = pros::millis();
     runUptake(100);
     int i = 0; bool run = true;
-    while (pros::millis() - startTime < 2500 && run) {
+    while (pros::millis() - startTime < timeOut && run) {
         if (topDistance.get() < detectLimit) run = false;
         pros::delay(5);
     }
@@ -98,11 +98,6 @@ void fullIntake() {
     runUptake(0);
     runIntake(0);
 }
-/*
-double PI = 3.14159;
-State start{ 39.5, 14.5, -3 * PI / 4 };
-*/
-
 
 void systemTask(void* p) {
     if (selectedAuton == "None") {
