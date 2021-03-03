@@ -132,7 +132,6 @@ void XDrive::strafeDistance(double dist) {
     }
 }
 void XDrive::drivePoint(const Point& iPoint) {
-    turnPoint(iPoint);
     driveDistance(OdomMath::computeDistance(iPoint, odomObj->getState()));
 }
 

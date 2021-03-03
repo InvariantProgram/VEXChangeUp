@@ -125,19 +125,19 @@ void intake(void* p) {
         bool L1 = cont.get_digital(E_CONTROLLER_DIGITAL_L1);
 
         bool Y = cont.get_digital(E_CONTROLLER_DIGITAL_Y);
-        bool Right = cont.get_digital_new_press(E_CONTROLLER_DIGITAL_RIGHT);
+        bool Right = cont.get_digital(E_CONTROLLER_DIGITAL_RIGHT);
         bool Left = cont.get_digital_new_press(E_CONTROLLER_DIGITAL_LEFT);
         bool Down = cont.get_digital(E_CONTROLLER_DIGITAL_DOWN);
         bool B = cont.get_digital(E_CONTROLLER_DIGITAL_B);
         bool X = cont.get_digital_new_press(E_CONTROLLER_DIGITAL_X);
 
-        if (X) {
+        if (Y) {
             double startTime = pros::millis();
             rightIntake.move_velocity(150);
             leftIntake.move_velocity(150);
-            rightUptake.move_velocity(165);
-            leftUptake.move_velocity(165);
-            int i = 0; bool run = true;
+            rightUptake.move_velocity(170);
+            leftUptake.move_velocity(170);
+            bool run = true;
             while (pros::millis() - startTime < 2500 && run) {
                 pros::delay(5);
                 if (topDistance.get() < detectLimit) run = false;
@@ -151,13 +151,13 @@ void intake(void* p) {
             rightUptake.move_velocity(UptakePower);
             leftUptake.move_velocity(UptakePower);
         }
-        else if (Y) {
-            rightUptake.move_velocity(UptakePower / 2);
-            leftUptake.move_velocity(UptakePower / 2);
+        else if (Right) {
+            rightUptake.move_velocity(-UptakePower / 2);
+            leftUptake.move_velocity(-UptakePower / 2);
         }
         else if (B) {
-            rightUptake.move_velocity(-200);
-            leftUptake.move_velocity(-200);
+            rightUptake.move_velocity(UptakePower / 2);
+            leftUptake.move_velocity(UptakePower / 2);
         }
         else if (R1) {
             rightUptake.move(-reversePower);
@@ -174,8 +174,8 @@ void intake(void* p) {
             leftIntake.move(intakeVal);
         }
         else if (Down) {
-            rightIntake.move_velocity(-75);
-            leftIntake.move_velocity(-75);
+            rightIntake.move_velocity(-150);
+            leftIntake.move_velocity(-150);
         }
         else {
             rightIntake.move(0);

@@ -26,10 +26,15 @@ Sensor_vals valStorage{ 0, 0, 0, true };
 ThreeTrackerOdom odomSys(newChassis);
 
 //------------------
-PIDConsts straight{ 8, 0, 0.0001, 0 };
-PIDConsts turn{ 9.25, 0, 0, 0 };
-PIDConsts nonExist{ 0, 0, 0, 0 };
+PIDConsts straight{ 8.5, 0, 0.0001, 0 };
+PIDConsts turn{ 9.33, 0, 0, 0 };
+PIDConsts nonExist{ 3.5, 0, 0, 0 };
 
+PIDConsts strongerStraight{ 8, 0, 0, 0 };
+
+PIDConsts fasterForward{ 10, 0, 0, 0 };
+
+PIDConsts biggerTurns{ 12, 0, 0.0001, 0 };
 PIDConsts longForward{ 8.75, 0, 0.001, 0 };
 
 PIDController driveCont(straight);
@@ -59,10 +64,10 @@ void runUptake(int power) {
     leftUptake.move_velocity(power);
 }
 void flipIntake() {
-    runIntake(200);
-    pros::delay(300);
+    runIntake(-600);
+    pros::delay(1250);
     runIntake(-200);
-    pros::delay(150);
+    pros::delay(250);
     rightIntake.move_velocity(0);
     leftIntake.move_velocity(0);
 }
@@ -76,16 +81,17 @@ void intakeToMax(int speed, int timeOut = 1000) {
     }
     runIntake(0);
 }
-void index(int timeOut = 2500) {
+void index(int timeOut = 1500) {
     double startTime = pros::millis();
-    runUptake(100);
-    int i = 0; bool run = true;
+    runUptake(150);
+    bool run = true;
     while (pros::millis() - startTime < timeOut && run) {
-        if (topDistance.get() < detectLimit) run = false;
         pros::delay(5);
+        if (topDistance.get() < detectLimit) run = false;
     }
     runUptake(0);
 }
+
 void fullIntake() {
     double startTime = pros::millis();
     runUptake(150);
@@ -107,56 +113,52 @@ void systemTask(void* p) {
         runIntake(600);
         pros::delay(750);
         runIntake(0);
-        pros::delay(250);
-        index();
-        notification.give();
-        notification.take(TIMEOUT_MAX);
-        intakeToMax(600, 1500);
         notification.give();
     }
 }
 void driveTask(void* p) {
     if (selectedAuton == "None") {
         notification.take(0);
-        drive.driveDistance(17);
+        drive.driveDistance(15.75);
         drive.turnAngle(-90);
-        drive.driveDistance(14);
-        drive.runallMotors(300, 60);
+        drive.driveDistance(15);
         runUptake(600);
-        pros::delay(700);
+        pros::delay(500);
         runUptake(0);
         pros::delay(150);
         notification.give();
+        driveCont.setGains(straight);
         drive.driveDistance(-10);
+        pros::delay(250);
         drive.turnAngle(135);
         driveCont.setGains(longForward);
-        drive.driveDistance(47);
+        pros::delay(50);
+        drive.drivePoint({ -4.5, 24 });
+        turnCont.setGains(turn);
         drive.turnAngle(-135);
-        drive.runallMotors(500, 60);
+        pros::delay(150);
+        drive.runallMotors(750, 60);
         runUptake(600);
-        pros::delay(400);
+        pros::delay(750);
         runUptake(0);
-        notification.take(0);
+        runIntake(-100);
         driveCont.setGains(straight);
         drive.driveDistance(-10);
         drive.turnAngle(135);
+        runIntake(0);
+        pros::delay(50);
         driveCont.setGains(longForward);
-        drive.driveDistance(40);
+        drive.drivePoint({-35.5, 55});
         drive.turnAngle(180);
         runIntake(200);
         driveCont.setGains(straight);
-        drive.driveDistance(24);
-        runIntake(0);
-        drive.runallMotors(500, 60);
-        notification.give();
-        notification.take(2500);
-        runIntake(300);
+        runIntake(600);
+        drive.runallMotors(1050, 125);
         runUptake(600);
-        pros::delay(900);
-        runUptake(0);
-        pros::delay(500);
+        pros::delay(750);
         runIntake(0);
-        drive.runallMotors(600, -75);
+        runUptake(0);
+        drive.runallMotors(200, -200);
     }
 }
 void odomTask(void* p) {
