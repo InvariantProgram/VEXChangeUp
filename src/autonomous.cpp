@@ -52,6 +52,7 @@ pros::Motor rightIntake(RightIntakePort, pros::E_MOTOR_GEARSET_06, 1);
 pros::Motor rightUptake(rightUptakePort, pros::E_MOTOR_GEARSET_06, 1);
 pros::Motor leftUptake(leftUptakePort, pros::E_MOTOR_GEARSET_06, 0);
 
+
 pros::Distance botDistance(botDist);
 pros::Distance topDistance(topDist);
 
@@ -106,8 +107,17 @@ void fullIntake() {
 }
 
 void systemTask(void* p) {
-    if (selectedAuton == "None") {
-        flipIntake();
+    flipIntake();
+
+    if (selectedAuton == "Home Row") {
+        pros::delay(500);
+        notification.take(TIMEOUT_MAX);
+        runIntake(600);
+        pros::delay(750);
+        runIntake(0);
+        notification.give();
+    }
+    else if (selectedAuton == "Two Goal") {
         pros::delay(500);
         notification.take(TIMEOUT_MAX);
         runIntake(600);
@@ -117,7 +127,7 @@ void systemTask(void* p) {
     }
 }
 void driveTask(void* p) {
-    if (selectedAuton == "None") {
+    if (selectedAuton == "Home Row") {
         notification.take(0);
         drive.driveDistance(15.75);
         drive.turnAngle(-90);
@@ -153,12 +163,49 @@ void driveTask(void* p) {
         runIntake(200);
         driveCont.setGains(straight);
         runIntake(600);
-        drive.runallMotors(1050, 125);
+        drive.runallMotors(950, 125);
         runUptake(600);
         pros::delay(750);
         runIntake(0);
         runUptake(0);
         drive.runallMotors(200, -200);
+    }
+    else if (selectedAuton == "Two Goal") {
+        notification.take(0);
+        drive.driveDistance(15.75);
+        drive.turnAngle(-90);
+        drive.driveDistance(15);
+        runUptake(600);
+        pros::delay(500);
+        runUptake(0);
+        pros::delay(150);
+        notification.give();
+        driveCont.setGains(straight);
+        drive.driveDistance(-10);
+        pros::delay(250);
+        drive.turnAngle(135);
+        driveCont.setGains(longForward);
+        pros::delay(50);
+        drive.drivePoint({ -4.5, 24 });
+        turnCont.setGains(turn);
+        drive.turnAngle(-135);
+        pros::delay(150);
+        drive.runallMotors(950, 60);
+        runUptake(600);
+        pros::delay(750);
+        runUptake(0);
+        pros::delay(1250);
+        runIntake(600);
+        pros::delay(800);
+        runIntake(-200);
+        pros::delay(250);
+        runIntake(0);
+        runUptake(600);
+        pros::delay(500);
+        runUptake(0);
+        runIntake(600);
+        drive.runallMotors(600, -75);
+        runIntake(0);
     }
 }
 void odomTask(void* p) {

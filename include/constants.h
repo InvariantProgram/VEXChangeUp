@@ -35,7 +35,7 @@
 #define HorEncTop 'C'
 #define HorEncBot 'D'
 
-#define botDist 11 
+#define botDist 21 
 #define topDist 10
 
 #define detectLimit 150
