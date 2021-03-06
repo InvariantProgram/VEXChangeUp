@@ -1,53 +1,66 @@
 #pragma once
 #include "api.h"
+#include "QuantumOdom/OdomMath.hpp"
+#include "QuantumOdom/PIDController.hpp"
+#include "QuantumOdom/ThreeTrackerOdom.hpp"
+#include "QuantumOdom/structDefs.hpp"
 
 class XDrive {
 	private:
+		ThreeTrackerOdom* odomObj;
+
+		PIDController* driveCont;
+		PIDController* turnCont;
+        PIDController* straightCont;
+		int errorBounds;
+		double settleTime;
+
+        int slewDiff = 40;
+        int slewrate = 30;
+
+		pros::ADIEncoder* rightEncoder;
+		pros::ADIEncoder* leftEncoder;
+		pros::ADIEncoder* strafeEncoder;
+
 		pros::Motor rightMotorFront;
 		pros::Motor rightMotorBack;
 		pros::Motor leftMotorFront;
 		pros::Motor leftMotorBack;
+
+        double angleClamp(double angle);
 	public:
         //Default Constructor
         XDrive();
         /*
-        * Initialize and set the motors of the X-drive
+        * Full constructor (No default constructor)
         * Assumes running all motors moves bot forwards
         * Set motorport values to negative for reverse
+        * Acceptable Error in encoder ticks : Subject to change??
+        * Settling time in milliseconds
         */
-        XDrive(std::array<int, 2> rightPorts, std::array<int, 2> leftPorts);
-        /*
-        * Sets the gearsets of the motors of the drive
-        * @param gearset: New gearset to apply to the motors
-        */
-        void changeGearset(pros::motor_gearset_e_t gearset);
-        /*
-        * Sets the brakemode of the motors of the drive
-        * @param brake: New brakemode to apply to the motors
-        */
-        void changeBrakemode(pros::motor_brake_mode_e_t brake);
-        /*
-        * Stops the robot by setting velocity of each motor to 0
-        * @param waitSettle: Block execution until robot is fully stopped
-        */
-        void stop(bool waitSettle = false);
-        /*
-        * Drives forward with internal motor PID; input negative values to go backwards
-        * @param time: duration of maneuver
-        * @param speed: .move_velocity(speed)
-        */
-        void forwardVelocity(int time, int speed);
-        /*
-        * Strafes rightwards with internal motor PID; input negative values to go left
-        * @param time: duration of maneuver
-        * @param speed: .move_velocity(speed)
-        */
-        void strafeVelocity(int time, int speed);
-        /*
-        * Run motors at individual speeds
-        * @param values: {rightFront, rightBack, leftFront, leftBack}
-        */
-        void runMotors(std::array<int, 4> values);
-        
+        XDrive(ThreeTrackerOdom* iOdom, PIDController* iForward, PIDController* iTurn, PIDController* iStraight,
+            pros::ADIEncoder* iRightEnc, pros::ADIEncoder* iLeftEnc, pros::ADIEncoder* iStrafeEnc,  
+            std::array<int, 2> rightPorts, std::array<int, 2> leftPorts, 
+            int acceptableError, double timelimit);
+        //Set the settle time for the drive - for the final section of the path
+        void setTimeLimit(double timelimit);
+        //Set settle range
+        void setErrorBounds(int acceptableError);
+        //Set settling parameters
+        void setParams(int acceptableError, double timelimit);
+        //Set slew parameters
+        void setSlew(int minDiff, int rate);
+        //Move forward until at a point
+        void drivePoint(const Point& iPoint);
+        //Drive forward a defined distance in inches
+        void driveDistance(double dist);
+        //Drive rightwards a defined distance in inches
+        void strafeDistance(double dist);
+        //Turns towards the point
+        void turnPoint(const Point& iPoint);
+        //Turns to a specified angle in degrees
+        void turnAngle(double angle);
+        //Runs motors for the specified time in milliseconds at the set speed
+        void runallMotors(int time, int speed);
 
 };
