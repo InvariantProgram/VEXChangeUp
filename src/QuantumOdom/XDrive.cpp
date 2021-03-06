@@ -19,7 +19,7 @@ XDrive::XDrive(std::array<int, 2> rightPorts, std::array<int, 2> leftPorts) : ri
         leftMotorBack.set_reversed(true);
 }
 
-void XDrive::changeGearset(pros::motor_brake_mode_e_t gearset) {
+void XDrive::changeGearset(pros::motor_gearset_e_t gearset) {
     rightMotorFront.set_gearing(gearset);
     rightMotorBack.set_gearing(gearset);
     leftMotorFront.set_gearing(gearset);
