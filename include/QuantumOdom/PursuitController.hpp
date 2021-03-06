@@ -8,31 +8,18 @@
 #include "XDrive.hpp"
 
 #include <vector>
+#include <math.h>
 
 class PursuitController {
 	private:
-		static Matrix Bezier = new Matrix({
-			{-1, 3, -3, 1},
-			{3, -6, 3, 0},
-			{-3, 3, 0, 0},
-			{1, 0, 0, 0}
-			});
-		static Matrix Hermite = new Matrix({
-			{2, -2, 1, 1},
-			{-3, 3, -2, -1},
-			{0, 0, 1, 0},
-			{1, 0, 0, 0}
-			});
-
-		std::vector<Matrix> splineList;
-		std::vector<State> waypoints;
-
 		XDrive* chassis;
 		ThreeTrackerOdom* odomSys;
 
 		PIDController* distCont;
 		PIDController* angleCont;
 	public:
-		/*
-		*/
+		PursuitController(XDrive* iChassis, ThreeTrackerOdom* iOdom, 
+			PIDController* iForward, PIDController* iTurn);
+
+		void toPoint(State newPoint);
 };

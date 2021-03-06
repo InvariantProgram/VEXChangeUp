@@ -18,6 +18,13 @@ double OdomMath::computeAngle(const Point& iPoint, const State& iState) {
 	return diff;
 }
 
+double OdomMath::computeAngle(const State& iState, const State& rhs) {
+	double diff = rhs.theta - iState.theta;
+	if (diff > PI) diff -= 2 * PI;
+	else if (diff < -PI) diff += 2 * PI;
+	return diff;
+}
+
 std::array<double, 2> OdomMath::computeAngleAndDistance(const Point& iPoint, const State& iState) {
 	return {computeDistance(iPoint, iState), computeAngle(iPoint, iState)};
 }

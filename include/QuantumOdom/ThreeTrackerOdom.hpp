@@ -41,7 +41,7 @@ class ThreeTrackerOdom {
 		*/
 		void setChassis(const Chassis& iChassis);
 		/*
-		* Get the state of the associated odom object:
+		* Get the state of the associated odom object: Theta [0, 2pi]
 		* @return State object: ret.x, ret.y, ret.theta
 		*/
 		State getState();
