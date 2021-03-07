@@ -16,7 +16,7 @@ class XDrive {
 		double settleTime;
 
         int slewDiff = 40;
-        int slewrate = 23;
+        int slewrate = 15;
 
 		pros::ADIEncoder* rightEncoder;
 		pros::ADIEncoder* leftEncoder;

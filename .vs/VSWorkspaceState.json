@@ -2,10 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\include",
-    "\\include\\QuantumOdom",
     "\\src",
     "\\src\\QuantumOdom"
   ],
-  "SelectedNode": "\\src\\initialize.cpp",
+  "SelectedNode": "\\include\\main.h",
   "PreviewInSolutionExplorer": false
 }

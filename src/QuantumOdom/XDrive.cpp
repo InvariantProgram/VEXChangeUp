@@ -64,7 +64,9 @@ void XDrive::driveDistance(double dist) {
     while (isRunning) {
         currentReadings = OdomMath::computeDistance(start, odomObj->getState());
         unifiedOutput = driveCont->step(currentReadings);
-        straightenOutput = straightCont->step(angle - odomObj->getState().theta);
+        if (abs(currentReadings - dist) > 5) straightenOutput = straightCont->step(angle - odomObj->getState().theta);
+        else straightenOutput = 0;
+
         rightOutput = unifiedOutput + straightenOutput;
         leftOutput = unifiedOutput;
 

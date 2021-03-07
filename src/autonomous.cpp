@@ -14,8 +14,6 @@
 
 extern std::string selectedAuton;
 
-pros::Mutex notification;
-
 pros::ADIEncoder rightEnc(RightEncTop, RightEncBot);
 pros::ADIEncoder leftEnc(LeftEncTop, LeftEncBot, true);
 pros::ADIEncoder horEnc(HorEncTop, HorEncBot, true);
@@ -27,14 +25,14 @@ ThreeTrackerOdom odomSys(newChassis);
 
 //------------------
 PIDConsts straight{ 8.5, 0, 0.0001, 0 };
-PIDConsts turn{ 9.33, 0, 0, 0 };
-PIDConsts nonExist{ 3.5, 0, 0, 0 };
+PIDConsts turn{ 9.5, 0, 0, 0 };
+PIDConsts nonExist{ 8, 0, 0, 0 };
 
 PIDConsts strongerStraight{ 8, 0, 0, 0 };
 
 PIDConsts fasterForward{ 10, 0, 0, 0 };
 
-PIDConsts biggerTurns{ 12, 0, 0.0001, 0 };
+PIDConsts biggerTurns{ 9.33, 0, 0, 0 };
 PIDConsts longForward{ 8.75, 0, 0.001, 0 };
 
 PIDController driveCont(straight);
@@ -42,7 +40,7 @@ PIDController turnCont(turn);
 PIDController straightCont(nonExist);
 
 XDrive drive(&odomSys, &driveCont, &turnCont, &straightCont, &rightEnc, &leftEnc, &horEnc,
-    { -FrontRightWheelPort, -BackRightWheelPort }, { FrontLeftWheelPort, BackLeftWheelPort }, 1, 30);
+    { -FrontRightWheelPort, -BackRightWheelPort }, { FrontLeftWheelPort, BackLeftWheelPort }, 1, 50);
 
 pros::Motor LeftIntakeMotor(LeftIntakePort, pros::E_MOTOR_GEARSET_18, 0);
 pros::Motor RightIntakeMotor(RightIntakePort, pros::E_MOTOR_GEARSET_18, 1);
@@ -67,8 +65,6 @@ void runUptake(int power) {
 void flipIntake() {
     runIntake(-600);
     pros::delay(1250);
-    runIntake(-200);
-    pros::delay(250);
     rightIntake.move_velocity(0);
     leftIntake.move_velocity(0);
 }
@@ -108,39 +104,23 @@ void fullIntake() {
 
 void systemTask(void* p) {
     flipIntake();
-
-    if (selectedAuton == "Home Row") {
-        pros::delay(500);
-        notification.take(TIMEOUT_MAX);
-        runIntake(600);
-        pros::delay(750);
-        runIntake(0);
-        notification.give();
-    }
-    else if (selectedAuton == "Two Goal") {
-        pros::delay(500);
-        notification.take(TIMEOUT_MAX);
-        runIntake(600);
-        pros::delay(750);
-        runIntake(0);
-        notification.give();
-    }
 }
 void driveTask(void* p) {
     if (selectedAuton == "Home Row") {
-        notification.take(0);
         drive.driveDistance(15.75);
         drive.turnAngle(-90);
-        drive.driveDistance(12);
+        drive.driveDistance(13.25);
         runUptake(600);
         pros::delay(500);
         runUptake(0);
         pros::delay(150);
-        notification.give();
         driveCont.setGains(straight);
         drive.driveDistance(-10);
+        runIntake(600);
         pros::delay(250);
+        turnCont.setGains(biggerTurns);
         drive.turnAngle(135);
+        runIntake(0);
         driveCont.setGains(longForward);
         pros::delay(50);
         drive.drivePoint({ -4.5, 24 });
@@ -171,7 +151,6 @@ void driveTask(void* p) {
         drive.runallMotors(200, -200);
     }
     else if (selectedAuton == "Two Goal") {
-        notification.take(0);
         drive.driveDistance(15.75);
         drive.turnAngle(-90);
         drive.driveDistance(15);
@@ -179,11 +158,12 @@ void driveTask(void* p) {
         pros::delay(500);
         runUptake(0);
         pros::delay(150);
-        notification.give();
         driveCont.setGains(straight);
         drive.driveDistance(-10);
+        runIntake(600);
         pros::delay(250);
         drive.turnAngle(135);
+        runIntake(0);
         driveCont.setGains(longForward);
         pros::delay(50);
         drive.drivePoint({ -4.5, 24 });
@@ -221,7 +201,7 @@ void odomTask(void* p) {
         odomSys.odomStep(tickDiffs);
         display.setData(odomSys.getState(), valStorage);
 
-        pros::delay(20);
+        pros::delay(15);
     }
 }
 
