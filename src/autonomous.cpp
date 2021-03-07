@@ -131,7 +131,7 @@ void driveTask(void* p) {
         notification.take(0);
         drive.driveDistance(15.75);
         drive.turnAngle(-90);
-        drive.driveDistance(15);
+        drive.driveDistance(12);
         runUptake(600);
         pros::delay(500);
         runUptake(0);
