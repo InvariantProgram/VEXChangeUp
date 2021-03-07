@@ -22,6 +22,8 @@ class Matrix {
 
 		Matrix(const Matrix& input);
 
+		double getSum();
+
 		double operator()(int i, int j);
 
 		Matrix operator*(const Matrix& rhs);

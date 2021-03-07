@@ -7,8 +7,6 @@ leftMotorBack(pros::Motor(4)) {}
 XDrive::XDrive(std::array<int, 2> rightPorts, std::array<int, 2> leftPorts) : rightMotorFront(pros::Motor(abs(rightPorts[0]))), 
     rightMotorBack(pros::Motor(abs(rightPorts[1]))), leftMotorFront(pros::Motor(abs(leftPorts[0]))), 
     leftMotorBack(pros::Motor(abs(leftPorts[1]))) {
-    errorBounds = acceptableError;
-    settleTime = timelimit;
     if (rightPorts[0] < 0)
         rightMotorFront.set_reversed(true);
     if (rightPorts[1] < 0)
@@ -69,4 +67,8 @@ void XDrive::runMotors(std::array<int, 4> values) {
     rightMotorBack.move_velocity(values[1]);
     leftMotorFront.move_velocity(values[2]);
     leftMotorBack.move_velocity(values[3]);
+}
+
+pros::motor_gearset_e_t XDrive::getGearset() {
+    return rightMotorFront.get_gearing();
 }

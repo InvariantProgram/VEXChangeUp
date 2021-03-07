@@ -22,6 +22,16 @@ Matrix::Matrix(std::vector<std::vector<double>> input) {
 	width = mtrx[0].size();
 }
 
+double Matrix::getSum() {
+	double retVal = 0;
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			retVal += mtrx[i][j];
+		}
+	}
+	return retVal;
+}
+
 double Matrix::operator()(int i, int j) {
 	return mtrx[i][j];
 }

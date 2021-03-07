@@ -30,7 +30,7 @@ class XDrive {
         * Stops the robot by setting velocity of each motor to 0
         * @param waitSettle: Block execution until robot is fully stopped
         */
-        void stop(bool waitSettle = false);
+        void stop(bool waitSettle);
         /*
         * Drives forward with internal motor PID; input negative values to go backwards
         * @param time: duration of maneuver
@@ -49,5 +49,5 @@ class XDrive {
         */
         void runMotors(std::array<int, 4> values);
         
-
+        pros::motor_gearset_e_t getGearset();
 };
