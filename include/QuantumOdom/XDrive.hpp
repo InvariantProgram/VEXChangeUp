@@ -48,6 +48,11 @@ class XDrive {
         * @param values: {rightFront, rightBack, leftFront, leftBack}
         */
         void runMotors(std::array<int, 4> values);
-        
+        /*
+        * Run motors at individual speeds (converts double for easier usage)
+        * @param values: {rightFront, rightBack, leftFront, leftBack}
+        */
+        void runMotors(std::array<double, 4> values);
+
         pros::motor_gearset_e_t getGearset();
 };

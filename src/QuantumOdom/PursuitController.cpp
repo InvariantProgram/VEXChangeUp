@@ -17,22 +17,8 @@ PursuitController::PursuitController(XDrive* iChassis, ThreeTrackerOdom* iOdom,
 	distCont(iForward), angleCont(iTurn) {}
 
 
-void PursuitController::toPoint(State newPoint, double speed, double slowRange=-1) {
+void PursuitController::toPoint(State newPoint) {
 	Point targetLocation = { newPoint.x, newPoint.y };
-
-	bool slowEnd = (slowRange > 0);
-
-	bool running = true;
-	State currentState;
-	std::vector<std::vector<double>> input;
-
-	double ds, dtheta, output;
-	double theta, forwardRatio, strafeRatio, total;
-	std::array<double, 4> outputVelocities;
-	std::array<int, 4> driveVelocities;
-
-	double calcSpeed, turnSpeed, max;
-
 	distCont->setTarget(0);
 	angleCont->setTarget(0);
 
@@ -48,7 +34,13 @@ void PursuitController::toPoint(State newPoint, double speed, double slowRange=-
 			break;
 	}
 
-	while (running) {
+	State currentState;
+	std::vector<std::vector<double>> input;
+
+	double translateSpeed, max, rotateSpeed, theta, forwardCoeff, strafeCoeff;
+	std::array<double, 4> output;
+
+	while (true) {
 		currentState = odomSys->getState();
 
 		//Calculate Forward and Strafe ratios
@@ -57,56 +49,38 @@ void PursuitController::toPoint(State newPoint, double speed, double slowRange=-
 		std::vector<double> r2 = { newPoint.y - currentState.y };
 		input = {r1, r2};
 		Matrix diffMat(input);
-		r1 = { -cos(theta), -sin(theta) };
-		r2 = { -sin(theta), -cos(theta) };
+		r1 = { cos(theta), sin(theta) };
+		r2 = { -sin(theta), cos(theta) };
 		input = {r1, r2};
 		Matrix inverseMat(input);
-		inverseMat *= (1 / pow(cos(theta), 2) - pow(sin(theta), 2));
 
 		Matrix coeffMat = inverseMat * diffMat;
 
-		total = coeffMat.getSum();
-		forwardRatio = coeffMat(0, 0) / total;
-		strafeRatio = coeffMat(0, 1) / total;
-
+		forwardCoeff = (inverseMat(0, 0) > 0) ? 1 : -1;
+		strafeCoeff = inverseMat(0, 1) / abs(inverseMat(0, 0));
 
 		//Get Output Velocities
-		ds = OdomMath::computeDistance(targetLocation, currentState);
-		dtheta = OdomMath::computeAngle(currentState, newPoint);
+		translateSpeed = distCont->step(OdomMath::computeDistance(targetLocation, currentState));
+		rotateSpeed = angleCont->step(OdomMath::computeAngle(currentState, newPoint));
 
-		if (ds < errorBounds) {
-			if (slowEnd) chassis->stop(true);
-			running = false;
+		if (abs(translateSpeed < 5)) {
+			chassis->stop();
+			return;
 		}
 
-		if (slowEnd && ds < slowRange) calcSpeed = -distCont->step(ds);
-		else calcSpeed = speed;
+		output = { (forwardCoeff + strafeCoeff) * translateSpeed - rotateSpeed, (forwardCoeff - strafeCoeff) * translateSpeed - rotateSpeed,
+			(forwardCoeff - strafeCoeff) * translateSpeed + rotateSpeed, (forwardCoeff + strafeCoeff) * translateSpeed + rotateSpeed };
 
-		turnSpeed = angleCont->step(dtheta);
-
-		outputVelocities = {forwardRatio - strafeRatio, forwardRatio + strafeRatio,
-			forwardRatio + strafeRatio, forwardRatio - strafeRatio};
-
-		max = abs(*(std::max_element(outputVelocities.begin(), outputVelocities.end(), absComp)));
-
-		for (int i = 0; i < 4; i++) {
-			outputVelocities[i] *= calcSpeed / max;
-			if (i < 2) outputVelocities[i] -= turnSpeed;
-			else outputVelocities[i] += turnSpeed;
-		}
-		max = abs(*(std::max_element(outputVelocities.begin(), outputVelocities.end(), absComp)));
-		if (max > maxMotorVelocity) {
+		max = std::max_element(output.begin(), output.end(), absComp);
+		if (abs(max) > maxMotorVelocity) {
 			for (int i = 0; i < 4; i++) {
-				outputVelocities[i] *= 600 / max;
+				output[i] *= 600 / abs(max);
 			}
 		}
-		for (int i = 0; i < 4; i++) {
-			driveVelocities[i] = (int)outputVelocities[i];
-		}
 
-		chassis->runMotors(driveVelocities);
- 
-		pros::delay(5);
+		chassis->runMotors(output);
+		
+		pros::delay(10);
 	}
 }
 

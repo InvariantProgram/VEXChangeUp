@@ -25,7 +25,7 @@ class PursuitController {
 		PursuitController(XDrive* iChassis, ThreeTrackerOdom* iOdom,
 			PIDController* iForward, PIDController* iTurn);
 
-		void toPoint(State newPoint, double speed, double slowRange);
+		void toPoint(State newPoint);
 
 		void changeError(double iError);
 };

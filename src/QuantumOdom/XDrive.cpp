@@ -69,6 +69,13 @@ void XDrive::runMotors(std::array<int, 4> values) {
     leftMotorBack.move_velocity(values[3]);
 }
 
+void XDrive::runMotors(std::array<double, 4> values) {
+    rightMotorFront.move_velocity((int) values[0]);
+    rightMotorBack.move_velocity((int) values[1]);
+    leftMotorFront.move_velocity((int) values[2]);
+    leftMotorBack.move_velocity((int) values[3]);
+}
+
 pros::motor_gearset_e_t XDrive::getGearset() {
     return rightMotorFront.get_gearing();
 }
