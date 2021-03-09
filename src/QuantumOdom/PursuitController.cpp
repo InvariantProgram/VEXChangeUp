@@ -1,7 +1,7 @@
 #include "QuantumOdom/PursuitController.hpp"
 
 
-bool absComp(const double& a, const double& b)
+bool PursuitController::absComp(const double& a, const double& b)
 {
 	bool FirstLess = false;
 
@@ -21,7 +21,7 @@ double PursuitController::angleClamp(double input) {
 }
 
 PursuitController::PursuitController(XDrive* iChassis, ThreeTrackerOdom* iOdom,
-	PIDController* iForward, PIDController* iTurn) : chassis(iChassis), odomSys(iOdom), 
+	PIDController* iForward, PIDController* iTurn) : chassis(iChassis), odomSys(iOdom),
 	distCont(iForward), angleCont(iTurn) {}
 
 
@@ -85,7 +85,7 @@ void PursuitController::toPoint(State newPoint) {
 		}
 
 		chassis->runMotors(output);
-		
+
 		if (pow(diffMat.getSum(2), 0.5) < errorBounds) {
 			chassis->stop(true);
 			running = false;
@@ -176,28 +176,30 @@ void PursuitController::toAngle(double newAngle) {
 	default:
 		break;
 	}
-	
+
 	double dtheta, power;
 	std::array<double, 4> output;
 
 	bool running;
 	while (running) {
 		dtheta = newAngle - odomSys->getState().theta;
-		
+
 		power = angleCont->step(angleClamp(dtheta));
 
-		if (abs(power) > maxMotorVelocity) 
+/*
+		if (abs(power) > maxMotorVelocity)
 			power = (power > 0) ? maxMotorVelocity : -maxMotorVelocity;
-
-		output = { -power, -power, power, power };
+*/
+		output = { -100, -100, 100, 100 };
 
 		chassis->runMotors(output);
 
+/*
 		if (abs(dtheta) * 180 / 3.14159 < errorBounds) {
 			chassis->stop(true);
 			running = false;
 		}
-
+*/
 		pros::delay(20);
 	}
 }

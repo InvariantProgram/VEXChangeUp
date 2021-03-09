@@ -4,8 +4,8 @@
 XDrive::XDrive() : rightMotorFront(pros::Motor(1)), rightMotorBack(pros::Motor(2)), leftMotorFront(pros::Motor(3)),
 leftMotorBack(pros::Motor(4)) {}
 
-XDrive::XDrive(std::array<int, 2> rightPorts, std::array<int, 2> leftPorts) : rightMotorFront(pros::Motor(abs(rightPorts[0]))), 
-    rightMotorBack(pros::Motor(abs(rightPorts[1]))), leftMotorFront(pros::Motor(abs(leftPorts[0]))), 
+XDrive::XDrive(std::array<int, 2> rightPorts, std::array<int, 2> leftPorts) : rightMotorFront(pros::Motor(abs(rightPorts[0]))),
+    rightMotorBack(pros::Motor(abs(rightPorts[1]))), leftMotorFront(pros::Motor(abs(leftPorts[0]))),
     leftMotorBack(pros::Motor(abs(leftPorts[1]))) {
     if (rightPorts[0] < 0)
         rightMotorFront.set_reversed(true);

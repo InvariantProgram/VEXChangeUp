@@ -22,6 +22,7 @@ class PursuitController {
 		PIDController* distCont;
 		PIDController* angleCont;
 
+		static bool absComp(const double& a, const double& b);
 		double angleClamp(double input);
 	public:
 		PursuitController(XDrive* iChassis, ThreeTrackerOdom* iOdom,

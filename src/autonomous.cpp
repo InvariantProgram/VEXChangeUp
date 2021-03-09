@@ -92,7 +92,7 @@ void subsystemSynchronous(void* p) {
     leftUptake.set_brake_mode(MOTOR_BRAKE_BRAKE);
     flipIntake();
 
-    //Any additional stuff can be here : Abaan, notification???? 
+    //Any additional stuff can be here : Abaan, notification????
     //Pretty sure the issue from before was lack of brake type
 }
 
@@ -136,7 +136,7 @@ void odomTask(void* p) {
     }
 }
 
-void opcontrol() {
+void autonomous() {
     pros::Task subSystems(subsystemSynchronous);
     pros::Task dispOdom(odomTask);
     pros::Task runRobot(robotTask);

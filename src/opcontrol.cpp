@@ -90,7 +90,7 @@ void XDrive(void *p) {
 
     for (int i = 0; i < 4; ++i)
       Voltage[i] += MovementScale * (GoalVoltage[i] - Voltage[i]); // busted?
-    
+
 
     FrontLeftWheelMotor.move(Voltage[0]);
     FrontRightWheelMotor.move(Voltage[1]);
@@ -114,8 +114,9 @@ void intake(void* p) {
 
     bool blocked = false;
 
-    double topVal;
-    double botVal;
+    rightUptake.set_brake_mode(MOTOR_BRAKE_COAST);
+    leftUptake.set_brake_mode(MOTOR_BRAKE_COAST);
+
     while (true) {
         printf("Top: %d\n", topDistance.get());
 
