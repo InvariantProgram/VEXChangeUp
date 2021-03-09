@@ -22,14 +22,24 @@ Matrix::Matrix(std::vector<std::vector<double>> input) {
 	width = mtrx[0].size();
 }
 
-double Matrix::getSum() {
+double Matrix::getSum(double power=1) {
 	double retVal = 0;
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
-			retVal += mtrx[i][j];
+			retVal += pow(mtrx[i][j], power);
 		}
 	}
 	return retVal;
+}
+
+double Matrix::getAbsMax() {
+	double maxVal = -1;
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			if (abs(mtrx[i][j]) > maxVal) maxVal = abs(mtrx[i][j]);
+		}
+	}
+	return maxVal;
 }
 
 double Matrix::operator()(int i, int j) {

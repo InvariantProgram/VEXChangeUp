@@ -37,10 +37,11 @@ void PursuitController::toPoint(State newPoint) {
 	State currentState;
 	std::vector<std::vector<double>> input;
 
-	double translateSpeed, max, rotateSpeed, theta, forwardCoeff, strafeCoeff;
+	double translateSpeed, max, maxCoeff, rotateSpeed, theta, forwardCoeff, strafeCoeff;
 	std::array<double, 4> output;
 
-	while (true) {
+	bool running = true;
+	while (running) {
 		currentState = odomSys->getState();
 
 		//Calculate Forward and Strafe ratios
@@ -56,31 +57,33 @@ void PursuitController::toPoint(State newPoint) {
 
 		Matrix coeffMat = inverseMat * diffMat;
 
-		forwardCoeff = (inverseMat(0, 0) > 0) ? 1 : -1;
-		strafeCoeff = inverseMat(0, 1) / abs(inverseMat(0, 0));
+		maxCoeff = coeffMat.getAbsMax();
+
+		forwardCoeff = coeffMat(0, 0) / maxCoeff;
+		strafeCoeff = coeffMat(1, 0) / maxCoeff;
 
 		//Get Output Velocities
-		translateSpeed = distCont->step(OdomMath::computeDistance(targetLocation, currentState));
+		translateSpeed = -1 * distCont->step(OdomMath::computeDistance(targetLocation, currentState));
 		rotateSpeed = angleCont->step(OdomMath::computeAngle(currentState, newPoint));
-
-		if (abs(translateSpeed < 5)) {
-			chassis->stop();
-			return;
-		}
 
 		output = { (forwardCoeff + strafeCoeff) * translateSpeed - rotateSpeed, (forwardCoeff - strafeCoeff) * translateSpeed - rotateSpeed,
 			(forwardCoeff - strafeCoeff) * translateSpeed + rotateSpeed, (forwardCoeff + strafeCoeff) * translateSpeed + rotateSpeed };
 
-		max = std::max_element(output.begin(), output.end(), absComp);
+		max = *std::max_element(output.begin(), output.end(), absComp);
 		if (abs(max) > maxMotorVelocity) {
 			for (int i = 0; i < 4; i++) {
-				output[i] *= 600 / abs(max);
+				output[i] *= maxMotorVelocity / abs(max);
 			}
 		}
 
 		chassis->runMotors(output);
 		
-		pros::delay(10);
+		if (pow(diffMat.getSum(2), 0.5) < errorBounds) {
+			chassis->stop(true);
+			running = false;
+		}
+
+		pros::delay(20);
 	}
 }
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <math.h>
 
 class Matrix {
 	private:
@@ -22,7 +23,9 @@ class Matrix {
 
 		Matrix(const Matrix& input);
 
-		double getSum();
+		double getSum(double power);
+
+		double getAbsMax();
 
 		double operator()(int i, int j);
 
