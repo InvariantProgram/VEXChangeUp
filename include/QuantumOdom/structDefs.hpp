@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 //ThreeTrackerOdom
 struct Chassis {
 	//All values in inches
@@ -22,6 +24,8 @@ struct Point {
 	//Designed to be used in inch, inch
 	double x;
 	double y;
+
+	std::vector<double> returnVals();
 };
 //PIDController
 struct PIDConsts {

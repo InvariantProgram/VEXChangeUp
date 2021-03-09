@@ -49,6 +49,7 @@
 #include "QuantumOdom/structDefs.hpp"
 #include "QuantumOdom/ThreeTrackerOdom.hpp"
 #include "QuantumOdom/XDrive.hpp"
+#include "QuantomOdom/Matrix.cpp"
 
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do

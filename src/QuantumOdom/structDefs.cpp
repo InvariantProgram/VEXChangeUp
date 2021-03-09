@@ -12,6 +12,10 @@ void Sensor_vals::setVals(int iRight, int iLeft) {
 	hasMiddle = false;
 }
 
+std::vector<double> Point::returnVals() {
+	return { x, y };
+}
+
 bool State::operator==(const State& rhs) const {
 	return (x == rhs.x && y == rhs.y && theta == rhs.theta);
 }
