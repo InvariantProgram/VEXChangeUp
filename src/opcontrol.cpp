@@ -24,7 +24,7 @@ Sensor_vals valStorage{ 0, 0, 0, true };
 ThreeTrackerOdom odomSys(newChassis);
 
 PIDConsts straight{ 9.25, 0, 0, 0 };
-PIDConsts turn{ 175, 0, 0, 0 };
+PIDConsts turn{ 125, 0, 0, 0 };
 PIDController driveCont(straight);
 PIDController turnCont(turn);
 
@@ -49,6 +49,17 @@ void robotTask(void* p) {
     newX.forwardVelocity(650, -200);
     pros::delay(100);
     chassisController.toPoint({-33 , 15 , convertToRadians(270)});
+    pros::delay(100);
+    newX.forwardVelocity(400, 200);
+    pros::delay(1000);
+    chassisController.toPoint({-45 , 35 , convertToRadians(230)});
+    pros::delay(100);
+    chassisController.toPoint({-73.5 , 2.8 , convertToRadians(237)});
+    pros::delay(100);newX.forwardVelocity(500, 200);
+    pros::delay(1000);
+
+
+
 
 
 
