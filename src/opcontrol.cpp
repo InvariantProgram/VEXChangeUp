@@ -23,8 +23,8 @@ Sensor_vals valStorage{ 0, 0, 0, true };
 
 ThreeTrackerOdom odomSys(newChassis);
 
-PIDConsts straight{ 50, 0, 0, 0 };
-PIDConsts turn{ 37, 0, 0, 0 };
+PIDConsts straight{ 9.25, 0, 0, 0 };
+PIDConsts turn{ 175, 0, 0, 0 };
 PIDController driveCont(straight);
 PIDController turnCont(turn);
 
@@ -40,15 +40,54 @@ double convertToRadians(double input) {
 }
 
 void robotTask(void* p) {
-    State targetState{ 30, 0, convertToRadians(90) };
+
+    State targetState{ 8, 13 , convertToRadians(315) };
     chassisController.toPoint(targetState);
-    pros::delay(1500);
-    chassisController.toPoint({ 0, 0, 0 });
+    pros::delay(100);
+    newX.forwardVelocity(500, 200);
+    pros::delay(1000);
+    newX.forwardVelocity(650, -200);
+    pros::delay(100);
+    chassisController.toPoint({-33 , 15 , convertToRadians(270)});
+
+
+
+    //pros::delay(10000);
+    /*
+    State targetState{ 24, 0, 0 };
+    chassisController.toPoint(targetState);
+
+    //State targetState{ 25, -10, convertToRadians(225) };
+    //chassisController.toPoint(targetState);
+    pros::delay(100);
+    //chassisController.toPoint({ 25, -10, convertToRadians(225) });
+    pros::delay(100000);
+    newX.forwardVelocity(500, 200);
+    pros::delay(750);
+    newX.forwardVelocity(650, -200);
+    pros::delay(100);
+    //chassisController.toPoint({ 36, -6, convertToRadians(90) });
+    //pros::delay(100);
+    chassisController.toPoint({ 29, 33, convertToRadians(180) });
+    newX.forwardVelocity(350, 200);
+    pros::delay(750);
+    chassisController.toPoint({ 45, 33, convertToRadians(125) });
+    pros::delay(100);
+    chassisController.toPoint({ 33, 68, convertToRadians(125) });
+    pros::delay(100);
+    chassisController.toPoint({ 12, 84, convertToRadians(155) });
+
+    newX.forwardVelocity(500, 200);
+    pros::delay(750);
+    */
 }
 
 void odomTask(void* p) {
     std::array<int, 3> tickDiffs;
     OdomDebug display(lv_scr_act(), LV_COLOR_ORANGE);
+
+    //odomSys.setState({0, 0, convertToRadians(90)});
+
     while (true) {
         int LVal = leftEnc.get_value(); int RVal = rightEnc.get_value(); int HVal = horEnc.get_value();
         int LDiff = LVal - valStorage.left;
@@ -59,6 +98,8 @@ void odomTask(void* p) {
 
         odomSys.odomStep(tickDiffs);
         display.setData(odomSys.getState(), valStorage);
+
+
 
         pros::delay(20);
     }
