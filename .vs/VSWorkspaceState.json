@@ -5,6 +5,6 @@
     "\\src",
     "\\src\\QuantumOdom"
   ],
-  "SelectedNode": "\\include\\main.h",
+  "SelectedNode": "\\src\\autonomous.cpp",
   "PreviewInSolutionExplorer": false
 }

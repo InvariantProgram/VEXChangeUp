@@ -28,7 +28,8 @@ Sensor_vals valStorage{ 0, 0, 0, true };
 ThreeTrackerOdom odomSys(newChassis);
 
 PIDConsts straight{ 9.25, 0, 0, 0 };
-PIDConsts turn{ 80, 0, 0, 0 };
+PIDConsts straight2{ 8.5, 0, 0, 0 };
+PIDConsts turn{ 95, 0, 0, 0 };
 PIDController driveCont(straight);
 PIDController turnCont(turn);
 
@@ -73,7 +74,7 @@ void intakeToMax(int speed, int timeOut = 1000) {
 }
 void index(int timeOut = 1500) {
     double startTime = pros::millis();
-    runUptake(150);
+    runUptake(125);
     bool run = true;
     while (pros::millis() - startTime < timeOut && run) {
         pros::delay(5);
@@ -97,44 +98,48 @@ void subsystemSynchronous(void* p) {
 }
 
 void robotTask(void* p) {
+    driveCont.setGains(straight2);
 
-
+    flipIntake();
+    pros::delay(510);
     State targetState{ 14, 13 , convertToRadians(315) };
     chassisController.toPoint(targetState);
-    flipIntake();
     pros::delay(100);
-    pros::delay(500);
     runIntake(100);
-    newX.forwardVelocity(850, 100);
-    runUptake(575);
-    pros::delay(500);
-    runIntake(0);
-    runUptake(0);
-    newX.forwardVelocity(650, -200);
-    pros::delay(100);
-    chassisController.toPoint({ -24 , 15 , convertToRadians(270) });
-    pros::delay(100);
-    newX.forwardVelocity(400, 200);
+    newX.forwardVelocity(750, 100);
     runUptake(600);
     pros::delay(750);
-    runUptake(0);
-
-    chassisController.toPoint({ -24 , 35 , convertToRadians(270) });
-    pros::delay(100);
-    chassisController.toPoint({ -66.5 , 2.8 , convertToRadians(180) });
-    pros::delay(10000);
-    chassisController.toPoint({ -38 , 40 , convertToRadians(225) });
-    runIntake(100);
-    pros::delay(100);
-    chassisController.toPoint({ -66.5 , 2.8 , convertToRadians(227) });
-    pros::delay(100);
-    newX.forwardVelocity(800, 100);
-    runUptake(600);
-    pros::delay(1000);
-    newX.forwardVelocity(500, -200);
+    driveCont.setGains(straight);
     runIntake(0);
     runUptake(0);
+    newX.forwardVelocity(650, -125);
+    pros::delay(100);
 
+    runIntake(-100);
+    chassisController.toPoint({ -23.5 , 20 , convertToRadians(270) });
+    pros::delay(100);
+    runIntake(0);
+    newX.forwardVelocity(350, 100);
+    runUptake(600);
+    pros::delay(600);
+    runUptake(0);
+
+    pros::delay(50);
+    chassisController.toPoint({ -23.5 , 29 , convertToRadians(270) });
+    pros::delay(100);
+    chassisController.toPoint({ -50 , 24 , convertToRadians(225) });
+    runIntake(600);
+    pros::delay(100);
+    chassisController.toPoint({ -57.75 , 12 , convertToRadians(227) });
+    pros::delay(100);
+
+
+    newX.forwardVelocity(975, 100);
+    runUptake(600);
+    pros::delay(450);
+    runIntake(0);
+    newX.forwardVelocity(300, -200);
+    runUptake(0);
 }
 
 void odomTask(void* p) {
