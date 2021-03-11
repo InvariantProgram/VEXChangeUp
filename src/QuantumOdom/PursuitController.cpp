@@ -1,7 +1,7 @@
 #include "QuantumOdom/PursuitController.hpp"
 
 
-bool absComp(const double& a, const double& b)
+bool PursuitController::absComp(const double& a, const double& b)
 {
 	bool FirstLess = false;
 
@@ -21,7 +21,7 @@ double PursuitController::angleClamp(double input) {
 }
 
 PursuitController::PursuitController(XDrive* iChassis, ThreeTrackerOdom* iOdom,
-	PIDController* iForward, PIDController* iTurn) : chassis(iChassis), odomSys(iOdom), 
+	PIDController* iForward, PIDController* iTurn) : chassis(iChassis), odomSys(iOdom),
 	distCont(iForward), angleCont(iTurn) {}
 
 
@@ -32,14 +32,14 @@ void PursuitController::toPoint(State newPoint) {
 
 	double maxMotorVelocity = 200;
 	switch (chassis->getGearset()) {
-		case pros::E_MOTOR_GEARSET_36:
-			maxMotorVelocity = 100;
-			break;
-		case pros::E_MOTOR_GEARSET_06:
-			maxMotorVelocity = 600;
-			break;
-		default:
-			break;
+	case pros::E_MOTOR_GEARSET_36:
+		maxMotorVelocity = 100;
+		break;
+	case pros::E_MOTOR_GEARSET_06:
+		maxMotorVelocity = 600;
+		break;
+	default:
+		break;
 	}
 
 	State currentState;
@@ -56,11 +56,11 @@ void PursuitController::toPoint(State newPoint) {
 		theta = currentState.theta;
 		std::vector<double> r1 = { newPoint.x - currentState.x };
 		std::vector<double> r2 = { newPoint.y - currentState.y };
-		input = {r1, r2};
+		input = { r1, r2 };
 		Matrix diffMat(input);
 		r1 = { cos(theta), sin(theta) };
 		r2 = { -sin(theta), cos(theta) };
-		input = {r1, r2};
+		input = { r1, r2 };
 		Matrix inverseMat(input);
 
 		Matrix coeffMat = inverseMat * diffMat;
@@ -85,7 +85,7 @@ void PursuitController::toPoint(State newPoint) {
 		}
 
 		chassis->runMotors(output);
-		
+
 		if (pow(diffMat.getSum(2), 0.5) < errorBounds) {
 			chassis->stop(true);
 			running = false;
@@ -163,6 +163,9 @@ void PursuitController::toPoint(Point newPoint) {
 }
 
 void PursuitController::toAngle(double newAngle) {
+	State newPoint = odomSys->getState();
+	newPoint.theta = newAngle;
+
 	angleCont->setTarget(0);
 
 	double maxMotorVelocity = 200;
@@ -176,24 +179,36 @@ void PursuitController::toAngle(double newAngle) {
 	default:
 		break;
 	}
-	
-	double dtheta, power;
+
+	State currentState;
+	std::vector<std::vector<double>> input;
+
+	double max, rotateSpeed, theta;
 	std::array<double, 4> output;
 
-	bool running;
+	bool running = true;
 	while (running) {
-		dtheta = newAngle - odomSys->getState().theta;
-		
-		power = angleCont->step(angleClamp(dtheta));
+		currentState = odomSys->getState();
 
-		if (abs(power) > maxMotorVelocity) 
-			power = (power > 0) ? maxMotorVelocity : -maxMotorVelocity;
+		//Calculate Forward and Strafe ratios
 
-		output = { -power, -power, power, power };
+		//Get Output Velocities
+		theta = OdomMath::computeAngle(currentState, newPoint);
+		rotateSpeed = angleCont->step(theta);
+
+		output = { -rotateSpeed, -rotateSpeed,
+			rotateSpeed, rotateSpeed };
+
+		max = *std::max_element(output.begin(), output.end(), absComp);
+		if (abs(max) > maxMotorVelocity) {
+			for (int i = 0; i < 4; i++) {
+				output[i] *= maxMotorVelocity / abs(max);
+			}
+		}
 
 		chassis->runMotors(output);
 
-		if (abs(dtheta) * 180 / 3.14159 < errorBounds) {
+		if (abs(theta) * 180 / 3.14159 < errorBounds) {
 			chassis->stop(true);
 			running = false;
 		}
