@@ -4,15 +4,15 @@
 // Broken ports on Brain 2:
 // 4 5 6 9 11 12 15 20
 
-#define FrontLeftWheelPort 5
-#define FrontRightWheelPort 6
-#define BackRightWheelPort 7
-#define BackLeftWheelPort 4
+#define FrontLeftWheelPort 1
+#define FrontRightWheelPort 2
+#define BackRightWheelPort 3
+#define BackLeftWheelPort 7
 
-#define LeftIntakePort 3
+#define LeftIntakePort 13
 #define RightIntakePort 8
 #define rightUptakePort 9
-#define leftUptakePort 2
+#define leftUptakePort 15
 
 #define StrafeDeadzone 20
 #define IntakePower 127   // out of 127
