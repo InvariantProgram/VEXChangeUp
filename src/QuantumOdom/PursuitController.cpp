@@ -95,6 +95,53 @@ void PursuitController::toPoint(State newPoint) {
 	}
 }
 
+void PursuitController::impulsePoint(State newPoint) {
+	double maxMotorVelocity = 200;
+	switch (chassis->getGearset()) {
+	case pros::E_MOTOR_GEARSET_36:
+		maxMotorVelocity = 100;
+		break;
+	case pros::E_MOTOR_GEARSET_06:
+		maxMotorVelocity = 600;
+		break;
+	default:
+		break;
+	}
+
+	std::array<double, 4> output;
+	State currentState = odomSys->getState();
+	
+	double theta = currentState.theta;
+	std::vector<double> r1 = { newPoint.x - currentState.x };
+	std::vector<double> r2 = { newPoint.y - currentState.y };
+	std::vector<std::vector<double>> input = { r1, r2 };
+	Matrix diffMat(input);
+	r1 = { cos(theta), sin(theta) };
+	r2 = { -sin(theta), cos(theta) };
+	input = { r1, r2 };
+	Matrix inverseMat(input);
+
+	Matrix coeffMat = inverseMat * diffMat;
+	double maxCoeff = coeffMat.getAbsMax();
+
+	double forwardCoeff = coeffMat(0, 0) / maxCoeff;
+	double strafeCoeff = coeffMat(1, 0) / maxCoeff;
+
+	double translateSpeed = 
+
+	output = { (forwardCoeff + strafeCoeff) * translateSpeed - rotateSpeed, (forwardCoeff - strafeCoeff) * translateSpeed - rotateSpeed,
+			(forwardCoeff - strafeCoeff) * translateSpeed + rotateSpeed, (forwardCoeff + strafeCoeff) * translateSpeed + rotateSpeed };
+
+	max = *std::max_element(output.begin(), output.end(), absComp);
+	if (abs(max) > maxMotorVelocity) {
+		for (int i = 0; i < 4; i++) {
+			output[i] *= maxMotorVelocity / abs(max);
+		}
+	}
+
+	chassis->runMotors(output);
+}
+
 void PursuitController::toPoint(Point newPoint) {
 	distCont->setTarget(0);
 
@@ -181,7 +228,6 @@ void PursuitController::toAngle(double newAngle) {
 	}
 
 	State currentState;
-	std::vector<std::vector<double>> input;
 
 	double max, rotateSpeed, theta;
 	std::array<double, 4> output;
