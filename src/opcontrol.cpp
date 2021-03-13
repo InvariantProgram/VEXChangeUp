@@ -116,6 +116,8 @@ void intake(void* p) {
 
     rightUptake.set_brake_mode(MOTOR_BRAKE_COAST);
     leftUptake.set_brake_mode(MOTOR_BRAKE_COAST);
+    leftIntake.set_brake_mode(MOTOR_BRAKE_COAST);
+    rightIntake.set_brake_mode(MOTOR_BRAKE_COAST);
 
     while (true) {
         printf("Top: %d\n", topDistance.get());
