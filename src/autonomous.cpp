@@ -116,40 +116,36 @@ void subsystemSynchronous(void* p) {
 
     pros::delay(500);
     notification.take(TIMEOUT_MAX);
+    runIntake(300);
+    pros::delay(650);
     runUptake(600);
-    runIntake(200);
     double initTime = pros::millis();
-    while (ballsIn < 2 && (pros::millis() - initTime) < 1500) {
+    while (ballsIn < 3 && (pros::millis() - initTime) < 2500) {
         pros::delay(20);
     }
-    runIntake(-100);
+    runIntake(-200);
     notification.give();
-    pros::delay(750);
-    runUptake(0);
     
-    pros::delay(300);
+    
+    pros::delay(500);
     notification.take(TIMEOUT_MAX);
-    ballsIn = 0;
+    runIntake(300);
+    pros::delay(650);
     runUptake(600);
-    runIntake(200);
     initTime = pros::millis();
-    while (ballsIn < 2 && (pros::millis() - initTime) < 1000) {
+    while (ballsIn < 2 && (pros::millis() - initTime) < 2000) {
         pros::delay(20);
     }
     runIntake(0);
     notification.give();
-    pros::delay(900);
-    runIntake(-300);
-    pros::delay(500);
-    runIntake(0);
 
 
     notification.take(TIMEOUT_MAX);
-    ballsIn = 0;
+    runIntake(300);
+    pros::delay(650);
     runUptake(600);
-    runIntake(200);
     initTime = pros::millis();
-    while (ballsIn < 2 && (pros::millis() - initTime) < 1500) {
+    while (ballsIn < 3 && (pros::millis() - initTime) < 3500) {
         pros::delay(20);
     }
     runIntake(0);
@@ -162,47 +158,36 @@ void robotTask(void* p) {
     State targetState{ 15, 14 , convertToRadians(315) };
     chassisController.toPoint(targetState);
     pros::delay(100);
-    runIntake(250);
-    newX.forwardVelocity(850, 100);
     notification.give();
-    pros::delay(100);
+    newX.forwardVelocity(975, 100);
     notification.take(TIMEOUT_MAX);
     driveCont.setGains(straight);
-    pros::delay(250);
+    pros::delay(150);
     newX.forwardVelocity(650, -125);
     runUptake(0);
-    runIntake(0);
     pros::delay(100);
 
     driveCont.setGains(straight2);
-
-    chassisController.toPoint({ -23.5 , 20 , convertToRadians(270) });
-    runIntake(0);
-    pros::delay(100);
-    runIntake(200);
-    newX.forwardVelocity(950, 100);
+    chassisController.toPoint({ -23.75 , 20 , convertToRadians(270) });
+    ballsIn = 0;
     notification.give();
+    newX.forwardVelocity(950, 100);
     pros::delay(150);
     notification.take(TIMEOUT_MAX);
-    pros::delay(250);
     runIntake(300);
     runUptake(0);
-
-    pros::delay(50);
+    newX.forwardVelocity(500, -100);
+    runIntake(-300);
+    pros::delay(250);
     runIntake(0);
     turnCont.setGains(turn2);
     chassisController.toPoint({ -29.5 , 38.5 , convertToRadians(215) });
     pros::delay(50);
     driveCont.setGains(straight3);
-    chassisController.toPoint({ -57.5 , 12 , convertToRadians(220) });
-    runIntake(200);
-    pros::delay(100);
-
-    newX.forwardVelocity(975, 100);
+    chassisController.toPoint({ -55.75 , 11 , convertToRadians(223) });
     notification.give();
-    pros::delay(150);
+    newX.forwardVelocity(1050, 100);
     notification.take(TIMEOUT_MAX);
-    pros::delay(250);
     runUptake(0);
     newX.forwardVelocity(300, -200);
 }
