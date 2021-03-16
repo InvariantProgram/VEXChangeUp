@@ -32,6 +32,9 @@ PIDConsts straight2{ 10.75, 0, 0, 0 };
 PIDConsts straight3{ 9.5, 0, 0, 0 };
 PIDConsts turn{ 95, 0, 0, 0 };
 PIDConsts turn2{ 120, 0, 0, 0 };
+
+PIDConsts hardTurn{ 275, 0, 0, 0 };
+
 PIDController driveCont(straight);
 PIDController turnCont(turn);
 
@@ -158,7 +161,44 @@ void subsystemSynchronous(void* p) {
 }
 
 void robotTask(void* p) {
+    double startTime = pros::millis();
     notification.take(0);
+    chassisController.toPoint({ 14, -13, convertToRadians(45) });
+    pros::delay(100);
+    notification.give();
+    newX.forwardVelocity(975, 100);
+    notification.take(TIMEOUT_MAX);
+    pros::delay(150);
+    newX.forwardVelocity(650, -125);
+    runIntake(250);
+    pros::delay(150);
+    runUptake(300);
+    runIntake(-200);
+    pros::delay(750);
+    runUptake(0);
+    runIntake(300);
+    chassisController.toPoint({ 14, -20, convertToRadians(273)});
+    chassisController.toPoint({ 14.5, -30, convertToRadians(273) });
+    newX.forwardVelocity(450, 75);
+    chassisController.toPoint({ 0, -39, convertToRadians(280) });
+    runIntake(0);
+    newX.strafeVelocity(500, 75);
+    pros::delay(350);
+    chassisController.toPoint({ 2, -29, convertToRadians(240) });
+    newX.forwardVelocity(950, 100);
+    runUptake(600);
+    pros::delay(750);
+    runUptake(0);
+    while (pros::millis() - startTime < 14950) {
+        pros::delay(10);
+    }
+    newX.forwardVelocity(50, -100);
+
+
+
+
+    /*
+    notification.take (0);
     pros::delay(250);
     State targetState{ 15, 14 , convertToRadians(315) };
     chassisController.toPoint(targetState);
@@ -203,6 +243,7 @@ void robotTask(void* p) {
     notification.take(TIMEOUT_MAX);
     runUptake(0);
     newX.forwardVelocity(300, -200);
+    */
 }
 
 void odomTask(void* p) {
