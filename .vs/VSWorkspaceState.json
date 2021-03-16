@@ -2,6 +2,7 @@
   "ExpandedNodes": [
     "",
     "\\include",
+    "\\include\\QuantumOdom",
     "\\src",
     "\\src\\QuantumOdom"
   ],
