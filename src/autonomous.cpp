@@ -32,7 +32,8 @@ PIDConsts straight2{ 10.75, 0, 0, 0 };
 PIDConsts straight3{ 9.5, 0, 0, 0 };
 PIDConsts turn{ 95, 0, 0, 0 };
 PIDConsts turn2{ 120, 0, 0, 0 };
-
+PIDConsts skillsStartStraight{ 6, 0, 0, 0 };
+PIDConsts skillsStartTurn{ 90, 0, 0, 0 };
 PIDConsts hardTurn{ 275, 0, 0, 0 };
 
 PIDController driveCont(straight);
@@ -130,7 +131,7 @@ void subsystemSynchronous(void* p) {
     pros::delay(350);
     runUptake(0);
     notification.give();
-    
+
     pros::delay(500);
     notification.take(TIMEOUT_MAX);
     runIntake(200);
@@ -161,7 +162,77 @@ void subsystemSynchronous(void* p) {
 }
 
 void robotTask(void* p) {
-    double startTime = pros::millis();
+  //skills start
+driveCont.setGains(skillsStartStraight);
+turnCont.setGains(skillsStartTurn);
+flipIntake();
+State targetState{ 15, -23 , convertToRadians(70) };
+chassisController.toPoint(targetState);
+runIntake(200);
+pros::delay(10);
+chassisController.toPoint({ 27 , -10 , convertToRadians(90) });
+pros::delay(10);
+newX.forwardVelocity(850, 150); //first goal
+runIntake(0);
+runUptake(600);
+pros::delay(350);
+runIntake(0);
+runUptake(0);
+newX.forwardVelocity(450, -200);
+pros::delay(10);
+chassisController.toPoint({ 38.5 , -4 , convertToRadians(3) });
+runIntake(600);
+pros::delay(250);
+chassisController.toPoint({ 77 , -11.5 , convertToRadians(5) });
+runUptake(300);
+pros::delay(100);
+runUptake(0);
+runIntake(0);
+chassisController.toPoint({ 72 , 0.5 , convertToRadians(47) });
+runUptake(600);
+runIntake(200);
+newX.forwardVelocity(350,200); // second goal
+runIntake(0);//Rmove this once sync movement and move to later
+pros::delay(850);
+newX.forwardVelocity(200, -200);
+pros::delay(10);
+runUptake(0);
+pros::delay(10);
+runIntake(600);
+chassisController.toPoint({53.5,-20,convertToRadians(280)});
+pros::delay(10);
+newX.forwardVelocity(500,150);
+// newX.forwardVelocity(650,200);
+pros::delay(10);
+chassisController.toPoint({64,-46,convertToRadians(10)});
+pros::delay(10);
+newX.forwardVelocity(575,175);
+pros::delay(250);
+runUptake(600);
+runIntake(200);
+pros::delay(750);
+newX.forwardVelocity(300,-200); // third goal
+pros::delay(10);
+runUptake(0);
+runIntake(0);
+chassisController.toPoint({85,-77,convertToRadians(13)});
+pros::delay(10);
+runIntake(600);
+newX.forwardVelocity(450,200);
+pros::delay(300);
+newX.forwardVelocity(325,-200);
+pros::delay(10);
+chassisController.toPoint({96,-82,convertToRadians(325)});
+runUptake(600);
+runIntake(200);
+newX.forwardVelocity(350,200);
+pros::delay(850);
+runUptake(0);
+runIntake(0);
+newX.forwardVelocity(200,-200);
+// +6,-11.5
+
+  /*  double startTime = pros::millis();
     notification.take(0);
     chassisController.toPoint({ 14, -13, convertToRadians(45) });
     pros::delay(100);
@@ -197,7 +268,7 @@ void robotTask(void* p) {
 
 
 
-    /*
+
     notification.take (0);
     pros::delay(250);
     State targetState{ 15, 14 , convertToRadians(315) };
@@ -273,7 +344,7 @@ void odomTask(void* p) {
 
 void autonomous() {
     pros::Task incBalls(ballCounter);
-    pros::Task subSystems(subsystemSynchronous);
+  //  pros::Task subSystems(subsystemSynchronous); //commented back in when we learn how to use lmao
     pros::Task dispOdom(odomTask);
     pros::Task runRobot(robotTask);
 }
