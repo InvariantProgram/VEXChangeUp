@@ -108,7 +108,17 @@ void ballCounter(void* p) {
         pros::delay(20);
     }
 }
-
+void Scoreballs(int balls, int delay){
+  runIntake(300);
+  runUptake(600);
+  double initTime = pros::millis();
+  while (ballsIn < balls && (pros::millis() - initTime) < 1500) {
+      pros::delay(20);
+  }
+  runIntake(0);
+  pros::delay(delay);
+  runUptake(0);
+}
 void subsystemSynchronous(void* p) {
     rightUptake.set_brake_mode(MOTOR_BRAKE_BRAKE);
     leftUptake.set_brake_mode(MOTOR_BRAKE_BRAKE);
@@ -120,7 +130,8 @@ void subsystemSynchronous(void* p) {
 
     pros::delay(500);
     notification.take(TIMEOUT_MAX);
-    runIntake(200);
+    double initTime;
+    /* runIntake(200);
     runUptake(600);
     double initTime = pros::millis();
     while (ballsIn < 1 && (pros::millis() - initTime) < 1500) {
@@ -128,34 +139,52 @@ void subsystemSynchronous(void* p) {
     }
     runIntake(0);
     runUptake(0);
+    */
+    Scoreballs(1,100);
     notification.give();
-
     pros::delay(500);
     notification.take(TIMEOUT_MAX);
-    runUptake(600);
+    Scoreballs(2,175);
+    /* runUptake(600);
     runIntake(300);
     initTime = pros::millis();
     while (ballsIn < 2 && (pros::millis() - initTime) < 2500) {
         pros::delay(20);
     }
     runIntake(-50);
+    pros::delay(600);
     runUptake(0);
+    */
     notification.give();
-
     pros::delay(500);
     notification.take(TIMEOUT_MAX);
-    runIntake(200);
-    pros::delay(450);
-    runUptake(600);
+    Scoreballs(2,80);
+    notification.give();
+    pros::delay(500);
+    notification.take(TIMEOUT_MAX);
+    Scoreballs(2,450);
+    notification.give();
+    /*
     initTime = pros::millis();
     while (ballsIn < 1 && (pros::millis() - initTime) < 2250) {
         pros::delay(20);
     }
     runIntake(0);
-    pros::delay(150);
+    pros::delay(1000);
     runUptake(0);
     notification.give();
-    /*
+    pros::delay(500);
+    notification.take(TIMEOUT_MAX);
+
+    initTime = pros::millis();
+    while(ballsIn<2 && (pros::millis()-initTime)<2250){
+      pros::delay(20);
+    }
+    runIntake(0);
+    pros::delay(1000);
+    runUptake(0);
+    notification.give();
+
     pros::delay(500);
     notification.take(TIMEOUT_MAX);
     runIntake(200);
@@ -217,54 +246,57 @@ void robotTask(void* p) {
     pros::delay(150);
     newX.forwardVelocity(450, -200);
     runIntake(-200);
-    runUptake(600);
+    runUptake(-600);
     pros::delay(850);
     runIntake(200);
     runUptake(0);
     chassisController.toPoint({ 38.5 , -4 , convertToRadians(3) });
-    runIntake(600);
     pros::delay(250);
     chassisController.toPoint({ 77 , -11.5 , convertToRadians(5) });
-    index();
     runIntake(300);
+    index();
     pros::delay(350);
     runUptake(0);
     runIntake(0);
     chassisController.toPoint({ 73 , -0.5 , convertToRadians(47) });
-    newX.forwardVelocity(1150,100); // second goal
+    newX.forwardVelocity(500,75); // second goal
     ballsIn = 0;
     notification.give();
     pros::delay(450);
-    newX.forwardVelocity(150, -100);
+    // newX.forwardVelocity(150, -100);
     pros::delay(150);
-    newX.forwardVelocity(350, 125);
+    // newX.forwardVelocity(350, 125);
     notification.take(TIMEOUT_MAX);
     newX.forwardVelocity(500, -150);
     runIntake(-200);
-    runUptake(600);
+    runUptake(-600);
     pros::delay(800);
     runUptake(0);
-    chassisController.toPoint({52,-20,convertToRadians(284)});
+    chassisController.toPoint({53,-20,convertToRadians(287)});
     runIntake(600);
     runUptake(100);
     pros::delay(10);
     newX.forwardVelocity(600,150);
     pros::delay(150);
     runUptake(0);
-    chassisController.toAngle(convertToRadians(7));
-    chassisController.toPoint({64,-45.25,convertToRadians(7)});
+    chassisController.toAngle(convertToRadians(12));
+    chassisController.toPoint({67,-45.25,convertToRadians(12)});
+    ballsIn = 0;
     newX.forwardVelocity(500, 150);
     pros::delay(10);
-    ballsIn = 0;
-    notification.give();
     newX.forwardVelocity(750,175); // third goal
+    pros::delay(10);
+    notification.give();
     pros::delay(150);
     notification.take(TIMEOUT_MAX);
-    newX.forwardVelocity(300,-200); 
+    newX.forwardVelocity(400,-200);
     pros::delay(10);
+    runUptake(-600);
+    runIntake(-450);
+    pros::delay(400);
     runUptake(0);
     runIntake(0);
-    chassisController.toPoint({80,-78.75, convertToRadians(7)});
+    chassisController.toPoint({80,-78.75, convertToRadians(15)});
     pros::delay(10);
     runIntake(600);
     newX.forwardVelocity(750,200);
@@ -274,10 +306,13 @@ void robotTask(void* p) {
     pros::delay(300);
     newX.forwardVelocity(325,-200);
     pros::delay(10);
-    chassisController.toPoint({96,-82,convertToRadians(325)});
-    runUptake(600);
+    chassisController.toPoint({91.5,-85.5,convertToRadians(320)});
     runIntake(200);
     newX.forwardVelocity(350,200);
+    ballsIn=0;
+    notification.give();
+    pros::delay(500);
+    notification.take(TIMEOUT_MAX);
     pros::delay(850);
     runUptake(0);
     runIntake(0);
