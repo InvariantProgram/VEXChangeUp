@@ -80,7 +80,7 @@ void intakeToMax(int speed, int timeOut = 1000) {
 }
 void index(int timeOut = 1500) {
     double startTime = pros::millis();
-    runUptake(125);
+    runUptake(200);
     bool run = true;
     while (pros::millis() - startTime < timeOut && run) {
         pros::delay(5);
@@ -132,17 +132,10 @@ void subsystemSynchronous(void* p) {
 
     pros::delay(500);
     notification.take(TIMEOUT_MAX);
-    runIntake(200);
-    runUptake(100);
-    index(500);
-    pros::delay(150);
     runUptake(600);
+    runIntake(300);
     initTime = pros::millis();
-    while (ballsIn < 1 && (pros::millis() - initTime) < 1500) {
-        pros::delay(20);
-    }
-    runUptake(0);
-    while (ballsIn < 2 && (pros::millis() - initTime) < 1500) {
+    while (ballsIn < 2 && (pros::millis() - initTime) < 2500) {
         pros::delay(20);
     }
     runIntake(-50);
@@ -232,29 +225,34 @@ void robotTask(void* p) {
     runIntake(600);
     pros::delay(250);
     chassisController.toPoint({ 77 , -11.5 , convertToRadians(5) });
-    runUptake(300);
-    pros::delay(100);
+    index();
+    runIntake(300);
+    pros::delay(350);
     runUptake(0);
     runIntake(0);
     chassisController.toPoint({ 73 , -0.5 , convertToRadians(47) });
-    runUptake(600);
-    runIntake(200);
+    newX.forwardVelocity(1150,100); // second goal
     ballsIn = 0;
     notification.give();
-    newX.forwardVelocity(750,100); // second goal
-    pros::delay(200);
+    pros::delay(450);
+    newX.forwardVelocity(150, -100);
+    pros::delay(150);
+    newX.forwardVelocity(350, 125);
     notification.take(TIMEOUT_MAX);
     newX.forwardVelocity(500, -150);
     runIntake(-200);
     runUptake(600);
     pros::delay(800);
-    runIntake(600);
     runUptake(0);
     chassisController.toPoint({52,-20,convertToRadians(284)});
+    runIntake(600);
+    runUptake(100);
     pros::delay(10);
     newX.forwardVelocity(600,150);
-    pros::delay(10);
-    chassisController.toPoint({64,-47.25,convertToRadians(5)});
+    pros::delay(150);
+    runUptake(0);
+    chassisController.toAngle(convertToRadians(7));
+    chassisController.toPoint({64,-45.25,convertToRadians(7)});
     newX.forwardVelocity(500, 150);
     pros::delay(10);
     ballsIn = 0;
@@ -266,10 +264,13 @@ void robotTask(void* p) {
     pros::delay(10);
     runUptake(0);
     runIntake(0);
-    chassisController.toPoint({80,-78.75,0});
+    chassisController.toPoint({80,-78.75, convertToRadians(7)});
     pros::delay(10);
     runIntake(600);
-    newX.forwardVelocity(450,200);
+    newX.forwardVelocity(750,200);
+    State curState = odomSys.getState();
+    curState.theta = 0;
+    odomSys.setState(curState);
     pros::delay(300);
     newX.forwardVelocity(325,-200);
     pros::delay(10);

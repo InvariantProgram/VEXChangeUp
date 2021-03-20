@@ -202,6 +202,10 @@ void showOdomDriver(void* p) {
     Chassis newChassis{ 2.75, 13, 0.5 };
     ThreeTrackerOdom odomSys(newChassis);
 
+    pros::Distance botDistance(botDist);
+
+    lv_obj_t* label = lv_label_create(lv_scr_act(), NULL);
+
     while (true) {
         int LVal = leftEnc.get_value(); int RVal = rightEnc.get_value(); int HVal = horEnc.get_value();
         int LDiff = LVal - valStorage.left;
@@ -212,6 +216,9 @@ void showOdomDriver(void* p) {
 
         odomSys.odomStep(tickDiffs);
         display.setData(odomSys.getState(), valStorage);
+
+        std::string text = "Bot: " + std::to_string(botDistance.get());
+        lv_label_set_text(label, text.c_str());
 
         pros::delay(20);
     }
