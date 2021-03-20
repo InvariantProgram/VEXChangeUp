@@ -208,7 +208,7 @@ void PursuitController::toAngle(double newAngle) {
 
 		chassis->runMotors(output);
 
-		if (abs(theta) * 180 / 3.14159 < errorBounds) {
+		if (abs(theta) * 180 / 3.14159 < errorBounds * 3) {
 			chassis->stop(true);
 			running = false;
 		}
