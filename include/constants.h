@@ -6,13 +6,13 @@
 
 #define FrontLeftWheelPort 1
 #define FrontRightWheelPort 2
-#define BackRightWheelPort 3
+#define BackRightWheelPort 8
 #define BackLeftWheelPort 7
 
 #define LeftIntakePort 13
-#define RightIntakePort 8
-#define rightUptakePort 9
-#define leftUptakePort 15
+#define RightIntakePort 16
+#define rightUptakePort 17
+#define leftUptakePort 14
 
 #define StrafeDeadzone 20
 #define IntakePower 127   // out of 127
