@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include <queue>
 #include <tuple>
 
 #include "Matrix.hpp"
@@ -16,11 +16,11 @@ class PathFollower {
 	private:
 		PursuitController* chassisController;
 
-		std::vector<std::pair<State, bool>> waypoints;
+		std::queue<std::pair<State, bool>> waypoints;
 	public:
 		PathFollower(PIDController* iCont);
 
-		void insert(Spline iPath, int resolution);
+		void insert(Spline iPath, int resolution, bool doFinalSlow);
 		void insert(State iPoint, bool doSlow);
 
 		void execute();
