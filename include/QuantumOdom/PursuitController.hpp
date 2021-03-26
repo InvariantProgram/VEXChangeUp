@@ -29,10 +29,6 @@ class PursuitController {
 
 		void toPoint(State newPoint);
 
-		void toPoint(Point newPoint);
-
-		void impulsePoint(State newPoint);
-
 		void toAngle(double newAngle);
 
 		void changeError(double iError);

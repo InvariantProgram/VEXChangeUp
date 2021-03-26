@@ -16,12 +16,14 @@ class PathFollower {
 	private:
 		PursuitController* chassisController;
 
-		std::queue<std::pair<State, bool>> waypoints;
+		std::queue<State> waypoints;
 	public:
 		PathFollower(PIDController* iCont);
 
-		void insert(Spline iPath, int resolution, bool doFinalSlow);
-		void insert(State iPoint, bool doSlow);
+		void insert(Spline iPath, int resolution);
+		void insert(State iPoint);
+
+		void changeError(double iError);
 
 		void execute();
 };

@@ -3,24 +3,24 @@
 PathFollower::PathFollower(PIDController* iCont) : chassisController(iCont) { }
 
 
-void PathFollower::insert(Spline iPath, int resolution, bool doFinalSlow=true) {
-	for (int i = 0; i < resolution; i++) {
+void PathFollower::insert(Spline iPath, int resolution) {
+	for (int i = 0; i <= resolution; i++) {
 		double input = (double)i / resolution;
-		waypoints.push(std::make_pair(iPath.getState(input), false));
+		waypoints.push(iPath.getState(input));
 	}
-	waypoints.push(std::make_pair(iPath.getState(1.0), doFinalSlow));
 }
 
-void PathFollower::insert(State iPoint, bool doSlow) {
-	waypoints.push(std::make_pair(iPoint, doSlow));
+void PathFollower::insert(State iPoint) {
+	waypoints.push(iPoint);
 }
 
 void PathFollower::execute() {
-	if (waypoints.empty()) return;
-	else {
-		State target = waypoints.pop();
-		while (!waypoints.empty()) {
-			
-		}
+	while (!waypoints.empty()) {
+		State iterTarget = waypoints.pop();
+		chassisController->toPoint(iterTarget);
 	}
+}
+
+void PathFollower::changeError(double iError) {
+	chassisController->changeError(iError);
 }
