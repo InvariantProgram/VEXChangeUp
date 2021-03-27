@@ -159,25 +159,23 @@ void subsystemSynchronous(void* p) {
     pros::delay(750);
     runUptake(600);
     double initTime = pros::millis();
-    while (ballsIn < 3 && (pros::millis() - initTime) < 1600) {
+    while (ballsIn < 3 && (pros::millis() - initTime) < 1100) {
         pros::delay(20);
     }
     runIntake(0);
-    pros::delay(350);
     runUptake(0);
     notification.give();
 
     pros::delay(500);
     notification.take(TIMEOUT_MAX);
-    runIntake(400);
+    runIntake(200);
     pros::delay(650);
     runUptake(600);
     initTime = pros::millis();
-    while (ballsIn < 2 && (pros::millis() - initTime) < 1000) {
+    while (ballsIn < 2 && (pros::millis() - initTime) < 1200) {
         pros::delay(20);
     }
     runIntake(0);
-    pros::delay(350);
     runUptake(0);
     notification.give();
 
@@ -187,11 +185,10 @@ void subsystemSynchronous(void* p) {
     pros::delay(750);
     runUptake(600);
     initTime = pros::millis();
-    while (ballsIn < 3 && (pros::millis() - initTime) < 1600) {
+    while (ballsIn < 3 && (pros::millis() - initTime) < 1250) {
         pros::delay(20);
     }
     runIntake(0);
-    pros::delay(350);
     runUptake(0);
     notification.give();
 }
@@ -330,11 +327,15 @@ void robotTask(void* p) {
 
     notification.take(0);
     pros::delay(250);
-    State targetState{ 14, 13 , convertToRadians(312) };
+    State targetState{ 15.5, 13.5 , convertToRadians(312) };
     chassisController.toPoint(targetState);
     pros::delay(100);
+    ballsIn = 0;
     notification.give();
     newX.forwardVelocity(975, 220);
+    newX.forwardVelocity(200, -200);
+    pros::delay(100);
+    newX.forwardVelocity(250, 200);
     notification.take(TIMEOUT_MAX);
     driveCont.setGains(straight);
     pros::delay(150);
@@ -345,14 +346,13 @@ void robotTask(void* p) {
 
     driveCont.setGains(straight2);
     turnCont.setGains(turn2);
-    chassisController.toPoint({ -25.5 , 20 , convertToRadians(270) });
+    chassisController.toPoint({ -23.5 , 20 , convertToRadians(270) });
     runUptake(0);
     runIntake(0);
     ballsIn = 0;
     notification.give();
-    newX.forwardVelocity(850, 220);
+    newX.forwardVelocity(850, 170);
     newX.forwardVelocity(200, -200);
-    pros::delay(150);
     newX.forwardVelocity(250, 220);
     notification.take(TIMEOUT_MAX);
     runIntake(600);
@@ -361,12 +361,12 @@ void robotTask(void* p) {
     runIntake(-300);
     runUptake(-300);
     
-    chassisController.toPoint({ -29.5 , 38.5 , convertToRadians(210) });
+    chassisController.toPoint({ -29.5 , 38.5 , convertToRadians(220) });
     runIntake(0);
     runUptake(0);
     pros::delay(50);
     driveCont.setGains(straight3);
-    chassisController.toPoint({ -69  , 11 , convertToRadians(215) });
+    chassisController.toPoint({ -65  , 14 , convertToRadians(215) });
     ballsIn = 0;
     notification.give();
     newX.forwardVelocity(1050, 220);
