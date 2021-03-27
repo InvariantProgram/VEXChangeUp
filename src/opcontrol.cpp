@@ -46,10 +46,10 @@ void XDrive(void *p) {
 
   //Code is written assuming +Power on all motors turns robot clockwise
   //Motor 1: Front left, Motor 2: Front right - Motors named in clockwise direction
-  Motor FrontLeftWheelMotor(FrontLeftWheelPort, E_MOTOR_GEARSET_18, 0);
-  Motor FrontRightWheelMotor(FrontRightWheelPort, E_MOTOR_GEARSET_18, 0);
-  Motor BackRightWheelMotor(BackRightWheelPort, E_MOTOR_GEARSET_18, 0);
-  Motor BackLeftWheelMotor(BackLeftWheelPort, E_MOTOR_GEARSET_18, 0);
+  Motor FrontLeftWheelMotor(FrontLeftWheelPort, E_MOTOR_GEARSET_06, 1);
+  Motor FrontRightWheelMotor(FrontRightWheelPort, E_MOTOR_GEARSET_06, 1);
+  Motor BackRightWheelMotor(BackRightWheelPort, E_MOTOR_GEARSET_06, 1);
+  Motor BackLeftWheelMotor(BackLeftWheelPort, E_MOTOR_GEARSET_06, 1);
 
 /*
   calculate goal voltages from joystick values
@@ -194,7 +194,7 @@ void intake(void* p) {
 void showOdomDriver(void* p) {
     OdomDebug display(lv_scr_act(), LV_COLOR_ORANGE);
 
-    pros::ADIEncoder rightEnc(RightEncTop, RightEncBot);
+    pros::ADIEncoder rightEnc(RightEncTop, RightEncBot, true);
     pros::ADIEncoder leftEnc(LeftEncTop, LeftEncBot, true);
     pros::ADIEncoder horEnc(HorEncTop, HorEncBot, true);
 

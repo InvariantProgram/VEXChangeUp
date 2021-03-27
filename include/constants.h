@@ -4,15 +4,15 @@
 // Broken ports on Brain 2:
 // 4 5 6 9 11 12 15 20
 
-#define FrontLeftWheelPort 5
-#define FrontRightWheelPort 6
-#define BackRightWheelPort 7
-#define BackLeftWheelPort 4
+#define FrontLeftWheelPort 3
+#define FrontRightWheelPort 8
+#define BackRightWheelPort 6
+#define BackLeftWheelPort 5
 
-#define LeftIntakePort 3
-#define RightIntakePort 8
-#define rightUptakePort 9
-#define leftUptakePort 2
+#define LeftIntakePort 2
+#define RightIntakePort 9
+#define rightUptakePort 7
+#define leftUptakePort 4
 
 #define StrafeDeadzone 20
 #define IntakePower 127   // out of 127
@@ -35,9 +35,9 @@
 #define HorEncTop 'C'
 #define HorEncBot 'D'
 
-#define botDist 21 
-#define topDist 10
+#define botDist 10 
+#define topDist 21
 
-#define detectLimit 100
+#define detectLimit 85
 
 #endif
