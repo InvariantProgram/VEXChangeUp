@@ -158,8 +158,8 @@ void subsystemSynchronous(void* p) {
     runIntake(200);
     pros::delay(750);
     runUptake(600);
-    pros::delay(1250);
-    runIntake(0);
+    pros::delay(850);
+    runIntake(-200);
     runUptake(0);
     notification.give();
 
@@ -318,7 +318,7 @@ void robotTask(void* p) {
 
     notification.take(0);
     pros::delay(250);
-    State targetState{ 15.5, 13.5 , convertToRadians(312) };
+    State targetState{ 14.5, -12.5 , convertToRadians(45) };
     chassisController.toPoint(targetState);
     pros::delay(100);
     ballsIn = 0;
@@ -334,7 +334,11 @@ void robotTask(void* p) {
     runUptake(300);
     runIntake(-200);
     pros::delay(100);
+    runUptake(0);
+    runIntake(0);
+    chassisController.toAngle(convertToRadians(270));
 
+    /*
     driveCont.setGains(straight2);
     turnCont.setGains(turn2);
     chassisController.toPoint({ -23.5 , 20 , convertToRadians(270) });
@@ -366,6 +370,7 @@ void robotTask(void* p) {
     notification.take(TIMEOUT_MAX);
     runUptake(0);
     newX.forwardVelocity(300, -200);
+    */
 }
 
 void odomTask(void* p) {
