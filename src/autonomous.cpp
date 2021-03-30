@@ -108,11 +108,11 @@ void ballCounter(void* p) {
         pros::delay(20);
     }
 }
-void Scoreballs(int balls, int delay){
+void Scoreballs(int balls, int delay=1500){
   runIntake(300);
   runUptake(600);
   double initTime = pros::millis();
-  while (ballsIn < balls && (pros::millis() - initTime) < 1500) {
+  while (ballsIn < balls && (pros::millis() - initTime) < delay) {
       pros::delay(20);
   }
   runIntake(0);
@@ -158,7 +158,6 @@ void subsystemSynchronous(void* p) {
     runIntake(200);
     pros::delay(750);
     runUptake(600);
-    pros::delay(850);
     runIntake(-200);
     runUptake(0);
     notification.give();
