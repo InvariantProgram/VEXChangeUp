@@ -87,6 +87,7 @@ void PursuitController::toPoint(State newPoint) {
 		chassis->runMotors(output);
 
 		if (pow(diffMat.getSum(2), 0.5) < errorBounds) {
+			chassis->stop(false);
 			running = false;
 		}
 
@@ -155,7 +156,7 @@ void PursuitController::toPointVel(State newPoint, double endVel) {
 
 		chassis->runMotors(output);
 
-		if (pow(diffMat.getSum(2), 0.5) < errorBounds) {
+		if (pow(diffMat.getSum(2), 0.5) < errorBounds * 5) {
 			running = false;
 		}
 

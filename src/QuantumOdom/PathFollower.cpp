@@ -1,7 +1,7 @@
 #include "QuantumOdom/PathFollower.hpp"
 
 
-PathFollower::PathFollower(PursuitController* iCont) : chassisController(iCont) { distProp = 75; }
+PathFollower::PathFollower(PursuitController* iCont) : chassisController(iCont) { distProp = 10; }
 
 void PathFollower::insert(Spline iPath, int resolution) {
 	for (int i = 0; i <= resolution; i++) {
@@ -22,9 +22,24 @@ void PathFollower::execute() {
 	while (!waypoints.empty()) {
 		State iterTarget = waypoints.front();
 		waypoints.pop();
-		distance -= OdomMath::computeDistance(waypoints.front(), iterTarget);
 		double targetEndVel = distance * distProp;
-		chassisController->toPointVel(iterTarget, targetEndVel);
+		if (waypoints.empty()) chassisController->toPoint(iterTarget);
+		else chassisController->toPointVel(iterTarget, targetEndVel);
+		distance -= OdomMath::computeDistance(waypoints.front(), iterTarget);
+	}
+}
+
+void PathFollower::logStates() {
+	std::queue<State> temp;
+	while (!waypoints.empty()) {
+		State current = waypoints.front();
+		temp.push(current);
+		printf("%f, %f, %f\n", current.x, current.y, current.theta);
+		waypoints.pop();
+	}
+	while (!temp.empty()) {
+		waypoints.push(temp.front());
+		temp.pop();
 	}
 }
 

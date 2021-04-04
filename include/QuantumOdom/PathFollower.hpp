@@ -28,5 +28,7 @@ class PathFollower {
 		void changeError(double iError);
 		void changeDecrementProp(double kP);
 
+		void logStates();
+
 		void execute();
 };

@@ -1,4 +1,5 @@
 #include "main.h"
+#include <array>
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -14,25 +15,23 @@
  * task, not resume it from where it left off.
  */
 
-pros::ADIEncoder rightEnc(RightEncTop, RightEncBot);
+pros::ADIEncoder rightEnc(RightEncTop, RightEncBot, true);
 pros::ADIEncoder leftEnc(LeftEncTop, LeftEncBot, true);
-pros::ADIEncoder horEnc(HorEncTop, HorEncBot);
+pros::ADIEncoder horEnc(HorEncTop, HorEncBot, true);
 
 Chassis newChassis{ 2.75, 12.75, 0.5 };
 Sensor_vals valStorage{ 0, 0, 0, true };
 
 ThreeTrackerOdom odomSys(newChassis);
 
-PIDConsts straight{ 9.25, 0, 0, 0 };
-PIDConsts turn{ 125, 0, 0, 0 };
+PIDConsts straight{ 3, 0, 0, 0 };
+PIDConsts turn{ 80, 0, 0, 0 };
 PIDController driveCont(straight);
 PIDController turnCont(turn);
 
-XDrive newX({ -FrontRightWheelPort, -BackRightWheelPort }, { FrontLeftWheelPort, BackLeftWheelPort });
+XDrive newX({ FrontRightWheelPort, BackRightWheelPort }, { -FrontLeftWheelPort, -BackLeftWheelPort });
 
 PursuitController chassisController(&newX, &odomSys, &driveCont, &turnCont);
-
-pros::Motor endMotor(RightIntakePort);
 
 PathFollower Rohith(&chassisController);
 
@@ -42,8 +41,26 @@ double convertToRadians(double input) {
 }
 
 void robotTask(void* p) {
-    Rohith.insert({ 0, 0, 0 });
-    Rohith.insert({ 40, 0, 0 });
+    newX.changeGearset(pros::E_MOTOR_GEARSET_06);
+
+
+    Rohith.changeDecrementProp(3);
+
+    double initTime = pros::millis();
+    Point p1{ 0, 0 }, p2{ 0, 25 }, p3{ 15, 20 }, p4{ 5,25 };
+    Point p5{ 5, 25 }, p6{ -5, 35 }, p7{ 50, 50 }, p8{ 50, 70 };
+    std::array<Point,4> iPoints =  { p1, p2, p3, p4 };
+    Spline testSpline(iPoints);
+    iPoints = {p5, p6, p7, p8};
+    Spline spline2(iPoints);
+    Rohith.insert(testSpline, 50);
+    Rohith.insert(spline2, 50);
+    double timeTaken = pros::millis() - initTime;
+
+    printf("Time Taken: %f ms\n", timeTaken);
+
+    Rohith.logStates();
+
     Rohith.execute();
 }
 
