@@ -10,13 +10,6 @@
 
 class Spline {
 	private:
-		static Matrix Bezier = new Matrix({
-			{-1, 3, -3, 1},
-			{3, -6, 3, 0},
-			{-3, 3, 0, 0},
-			{1, 0, 0, 0}
-			});
-
 		Matrix coeffs;
 	public:
 		Spline(std::array<Point, 4> iPoints);

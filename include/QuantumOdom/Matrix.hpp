@@ -9,6 +9,8 @@ class Matrix {
 		int height;
 		int width;
 	public:
+		//Default matrix initializtion of dimensions 1x1 with default value 0
+		Matrix();
 		/*
 		* Initialize a matrix of dimensions M x N with default values of 0
 		* @param M: Height of Matrix

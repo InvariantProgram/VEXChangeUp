@@ -17,13 +17,16 @@ class PathFollower {
 		PursuitController* chassisController;
 
 		std::queue<State> waypoints;
+		double distance;
+		double distProp;
 	public:
-		PathFollower(PIDController* iCont);
+		PathFollower(PursuitController* iCont);
 
 		void insert(Spline iPath, int resolution);
 		void insert(State iPoint);
 
 		void changeError(double iError);
+		void changeDecrementProp(double kP);
 
 		void execute();
 };

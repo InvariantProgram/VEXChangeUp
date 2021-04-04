@@ -1,6 +1,14 @@
 #include "QuantumOdom/Spline.hpp"
 
 Spline::Spline(std::array<Point, 4> iPoints) {
+	std::vector<std::vector<double>> bezCoef {
+			{-1, 3, -3, 1},
+			{3, -6, 3, 0},
+			{-3, 3, 0, 0},
+			{1, 0, 0, 0}
+	};
+	Matrix Bezier(bezCoef);
+	
 	std::vector<std::vector<double>> input;
 	for (int i = 0; i < 4; i++) {
 		std::vector<double> insert = { iPoints[i].x, iPoints[i].y };

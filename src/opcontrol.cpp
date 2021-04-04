@@ -34,63 +34,17 @@ PursuitController chassisController(&newX, &odomSys, &driveCont, &turnCont);
 
 pros::Motor endMotor(RightIntakePort);
 
+PathFollower Rohith(&chassisController);
+
 
 double convertToRadians(double input) {
     return input / 180 * 3.14159;
 }
 
 void robotTask(void* p) {
-
-    State targetState{ 8, 13 , convertToRadians(315) };
-    chassisController.toPoint(targetState);
-    pros::delay(100);
-    newX.forwardVelocity(500, 200);
-    pros::delay(1000);
-    newX.forwardVelocity(650, -200);
-    pros::delay(100);
-    chassisController.toPoint({-33 , 15 , convertToRadians(270)});
-    pros::delay(100);
-    newX.forwardVelocity(400, 200);
-    pros::delay(1000);
-    chassisController.toPoint({-45 , 35 , convertToRadians(230)});
-    pros::delay(100);
-    chassisController.toPoint({-73.5 , 2.8 , convertToRadians(237)});
-    pros::delay(100);newX.forwardVelocity(500, 200);
-    pros::delay(1000);
-
-
-
-
-
-
-    //pros::delay(10000);
-    /*
-    State targetState{ 24, 0, 0 };
-    chassisController.toPoint(targetState);
-
-    //State targetState{ 25, -10, convertToRadians(225) };
-    //chassisController.toPoint(targetState);
-    pros::delay(100);
-    //chassisController.toPoint({ 25, -10, convertToRadians(225) });
-    pros::delay(100000);
-    newX.forwardVelocity(500, 200);
-    pros::delay(750);
-    newX.forwardVelocity(650, -200);
-    pros::delay(100);
-    //chassisController.toPoint({ 36, -6, convertToRadians(90) });
-    //pros::delay(100);
-    chassisController.toPoint({ 29, 33, convertToRadians(180) });
-    newX.forwardVelocity(350, 200);
-    pros::delay(750);
-    chassisController.toPoint({ 45, 33, convertToRadians(125) });
-    pros::delay(100);
-    chassisController.toPoint({ 33, 68, convertToRadians(125) });
-    pros::delay(100);
-    chassisController.toPoint({ 12, 84, convertToRadians(155) });
-
-    newX.forwardVelocity(500, 200);
-    pros::delay(750);
-    */
+    Rohith.insert({ 0, 0, 0 });
+    Rohith.insert({ 40, 0, 0 });
+    Rohith.execute();
 }
 
 void odomTask(void* p) {

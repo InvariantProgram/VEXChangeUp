@@ -45,6 +45,7 @@
 #include "QuantumOdom/structDefs.hpp"
 #include "QuantumOdom/ThreeTrackerOdom.hpp"
 #include "QuantumOdom/XDrive.hpp"
+#include "QuantumOdom/PathFollower.hpp"
 
 /**
  * You should add more #includes here
