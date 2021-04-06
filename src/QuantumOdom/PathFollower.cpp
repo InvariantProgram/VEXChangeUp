@@ -37,6 +37,7 @@ void PathFollower::logStates() {
 		printf("%f, %f, %f\n", current.x, current.y, current.theta);
 		waypoints.pop();
 	}
+	printf("Distance: %f", distance);
 	while (!temp.empty()) {
 		waypoints.push(temp.front());
 		temp.pop();

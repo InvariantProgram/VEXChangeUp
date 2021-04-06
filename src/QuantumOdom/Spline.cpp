@@ -28,9 +28,9 @@ State Spline::getState(double iTime) {
 
 	double dy = 0;
 	double dx = 0;
-	for (int i = 0; i < coeffs.get_height(); i++) {
-		dx += coeffs(i, 0) * potencies(0, i);
-		dy += coeffs(i, 1) * potencies(0, i);
+	for (int i = 0; i < coeffs.get_height() - 1; i++) {
+		dx += (3-i) * coeffs(i, 0) * potencies(0, i+1);
+		dy += (3-i) * coeffs(i, 1) * potencies(0, i+1);
 	}
 	double theta = atan2(dy, dx);
 	if (theta < 0) theta += 2 * 3.14159;
