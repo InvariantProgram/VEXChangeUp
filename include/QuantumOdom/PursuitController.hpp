@@ -35,5 +35,7 @@ class PursuitController {
 
 		void toAngle(double newAngle);
 
+		void stop();
+
 		void changeError(double iError);
 };

@@ -217,6 +217,10 @@ void PursuitController::toAngle(double newAngle) {
 	}
 }
 
+void PursuitController::stop() {
+	chassis->stop(false);
+}
+
 void PursuitController::changeError(double iError) {
 	errorBounds = iError;
 }

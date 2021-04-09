@@ -18,7 +18,7 @@ class PathFollower {
 
 		std::queue<State> waypoints;
 		double distance;
-		double distProp;
+		double velTarget;
 	public:
 		PathFollower(PursuitController* iCont);
 
@@ -26,7 +26,7 @@ class PathFollower {
 		void insert(State iPoint);
 
 		void changeError(double iError);
-		void changeDecrementProp(double kP);
+		void changeFloorVel(double speed);
 
 		void logStates();
 

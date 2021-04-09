@@ -24,8 +24,8 @@ Sensor_vals valStorage{ 0, 0, 0, true };
 
 ThreeTrackerOdom odomSys(newChassis);
 
-PIDConsts straight{ 1, 0, 0, 0 };
-PIDConsts turn{ 80, 0, 0, 0 };
+PIDConsts straight{ 8, 0, 0, 0 };
+PIDConsts turn{ 160, 0, 0, 0 };
 PIDController driveCont(straight);
 PIDController turnCont(turn);
 
@@ -43,7 +43,7 @@ double convertToRadians(double input) {
 void robotTask(void* p) {
     newX.changeGearset(pros::E_MOTOR_GEARSET_06);
 
-    Rohith.changeDecrementProp(3);
+    Rohith.changeFloorVel(200);
 
     double initTime = pros::millis();
     Point p1{ 0, 0 }, p2{ 0, 25 }, p3{ 15, 20 }, p4{ 5,25 };
@@ -52,8 +52,8 @@ void robotTask(void* p) {
     Spline testSpline(iPoints);
     iPoints = {p5, p6, p7, p8};
     Spline spline2(iPoints);
-    Rohith.insert(testSpline, 50);
-    Rohith.insert(spline2, 50);
+    Rohith.insert(testSpline, 10);
+    Rohith.insert(spline2, 10);
     double timeTaken = pros::millis() - initTime;
 
     printf("Time Taken: %f ms\n", timeTaken);

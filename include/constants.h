@@ -6,11 +6,11 @@
 #define BackRightWheelPort 6
 #define BackLeftWheelPort 5
 
-#define LeftEncTop 'E'
-#define LeftEncBot 'F'
-#define RightEncTop 'G'
-#define RightEncBot 'H'
-#define HorEncTop 'C'
-#define HorEncBot 'D'
+#define LeftEncTop 'C'
+#define LeftEncBot 'D'
+#define RightEncTop 'E'
+#define RightEncBot 'F'
+#define HorEncTop 'G'
+#define HorEncBot 'H'
 
 #endif
