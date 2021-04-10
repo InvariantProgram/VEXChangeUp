@@ -16,6 +16,13 @@ class OdomMath {
 		*/
 		static double computeDistance(const Point& iPoint, const State& iState);
 		/*
+		* Compute the distance between two states
+		* @param iPoint Odom State 1
+		* @param iState Odom State 2
+		* @return The distance between the state and the point
+		*/
+		static double computeDistance(const State& iState, const State& rhs);
+		/*
 		* Compute the angle between a point and odometry state
 		* All operations in radians, constrained -pi to pi
 		* @param iPoint the point

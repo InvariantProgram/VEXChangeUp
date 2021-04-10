@@ -8,6 +8,11 @@ double OdomMath::computeDistance(const Point& iPoint, const State& iState) {
 	return pow(squareSum, 0.5);
 }
 
+double OdomMath::computeDistance(const State& iState, const State& rhs) {
+	Point convPoint{ rhs.x, rhs.y };
+	return computeDistance(convPoint, iState);
+}
+
 double OdomMath::computeAngle(const Point& iPoint, const State& iState) {
 	std::array<double, 2> diffs = computeDiffs(iPoint, iState);
 	double principalAngle = atan2(diffs[1], diffs[0]);

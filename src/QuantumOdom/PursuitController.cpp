@@ -32,14 +32,14 @@ void PursuitController::toPoint(State newPoint) {
 
 	double maxMotorVelocity = 200;
 	switch (chassis->getGearset()) {
-		case pros::E_MOTOR_GEARSET_36:
-			maxMotorVelocity = 100;
-			break;
-		case pros::E_MOTOR_GEARSET_06:
-			maxMotorVelocity = 600;
-			break;
-		default:
-			break;
+	case pros::E_MOTOR_GEARSET_36:
+		maxMotorVelocity = 100;
+		break;
+	case pros::E_MOTOR_GEARSET_06:
+		maxMotorVelocity = 600;
+		break;
+	default:
+		break;
 	}
 
 	State currentState;
@@ -56,11 +56,11 @@ void PursuitController::toPoint(State newPoint) {
 		theta = currentState.theta;
 		std::vector<double> r1 = { newPoint.x - currentState.x };
 		std::vector<double> r2 = { newPoint.y - currentState.y };
-		input = {r1, r2};
+		input = { r1, r2 };
 		Matrix diffMat(input);
 		r1 = { cos(theta), sin(theta) };
 		r2 = { -sin(theta), cos(theta) };
-		input = {r1, r2};
+		input = { r1, r2 };
 		Matrix inverseMat(input);
 
 		Matrix coeffMat = inverseMat * diffMat;
@@ -87,7 +87,7 @@ void PursuitController::toPoint(State newPoint) {
 		chassis->runMotors(output);
 
 		if (pow(diffMat.getSum(2), 0.5) < errorBounds) {
-			chassis->stop(true);
+			chassis->stop(false);
 			running = false;
 		}
 
@@ -95,8 +95,10 @@ void PursuitController::toPoint(State newPoint) {
 	}
 }
 
-void PursuitController::toPoint(Point newPoint) {
+void PursuitController::toPointVel(State newPoint, double endVel) {
+	Point targetLocation = { newPoint.x, newPoint.y };
 	distCont->setTarget(0);
+	angleCont->setTarget(0);
 
 	double maxMotorVelocity = 200;
 	switch (chassis->getGearset()) {
@@ -113,15 +115,15 @@ void PursuitController::toPoint(Point newPoint) {
 	State currentState;
 	std::vector<std::vector<double>> input;
 
-	double translateSpeed, max, theta, maxCoeff, forwardCoeff, strafeCoeff;
+	double translateSpeed, max, maxCoeff, rotateSpeed, theta, forwardCoeff, strafeCoeff;
 	std::array<double, 4> output;
 
 	bool running = true;
 	while (running) {
 		currentState = odomSys->getState();
 
-		theta = currentState.theta;
 		//Calculate Forward and Strafe ratios
+		theta = currentState.theta;
 		std::vector<double> r1 = { newPoint.x - currentState.x };
 		std::vector<double> r2 = { newPoint.y - currentState.y };
 		input = { r1, r2 };
@@ -139,10 +141,11 @@ void PursuitController::toPoint(Point newPoint) {
 		strafeCoeff = coeffMat(1, 0) / maxCoeff;
 
 		//Get Output Velocities
-		translateSpeed = -1 * distCont->step(OdomMath::computeDistance(newPoint, currentState));
+		translateSpeed = endVel - distCont->step(OdomMath::computeDistance(targetLocation, currentState));
+		rotateSpeed = angleCont->step(OdomMath::computeAngle(currentState, newPoint));
 
-		output = { (forwardCoeff + strafeCoeff) * translateSpeed, (forwardCoeff - strafeCoeff) * translateSpeed,
-			(forwardCoeff - strafeCoeff) * translateSpeed, (forwardCoeff + strafeCoeff) * translateSpeed };
+		output = { (forwardCoeff + strafeCoeff) * translateSpeed - rotateSpeed, (forwardCoeff - strafeCoeff) * translateSpeed - rotateSpeed,
+			(forwardCoeff - strafeCoeff) * translateSpeed + rotateSpeed, (forwardCoeff + strafeCoeff) * translateSpeed + rotateSpeed };
 
 		max = *std::max_element(output.begin(), output.end(), absComp);
 		if (abs(max) > maxMotorVelocity) {
@@ -153,8 +156,7 @@ void PursuitController::toPoint(Point newPoint) {
 
 		chassis->runMotors(output);
 
-		if (pow(diffMat.getSum(2), 0.5) < errorBounds) {
-			chassis->stop(true);
+		if (pow(diffMat.getSum(2), 0.5) < errorBounds * 5) {
 			running = false;
 		}
 
@@ -181,7 +183,6 @@ void PursuitController::toAngle(double newAngle) {
 	}
 
 	State currentState;
-	std::vector<std::vector<double>> input;
 
 	double max, rotateSpeed, theta;
 	std::array<double, 4> output;
@@ -208,13 +209,16 @@ void PursuitController::toAngle(double newAngle) {
 
 		chassis->runMotors(output);
 
-		if (abs(theta) * 180 / 3.14159 < errorBounds * 3) {
-			chassis->stop(true);
+		if (abs(theta) * 180 / 3.14159 < errorBounds) {
 			running = false;
 		}
 
 		pros::delay(20);
 	}
+}
+
+void PursuitController::stop() {
+	chassis->stop(false);
 }
 
 void PursuitController::changeError(double iError) {

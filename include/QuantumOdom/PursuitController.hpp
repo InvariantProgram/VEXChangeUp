@@ -22,17 +22,20 @@ class PursuitController {
 		PIDController* distCont;
 		PIDController* angleCont;
 
-		static bool absComp(const double& a, const double& b);
 		double angleClamp(double input);
+
+		static bool absComp(const double& a, const double& b);
 	public:
 		PursuitController(XDrive* iChassis, ThreeTrackerOdom* iOdom,
 			PIDController* iForward, PIDController* iTurn);
 
 		void toPoint(State newPoint);
 
-		void toPoint(Point newPoint);
+		void toPointVel(State newPoint, double endVel);
 
 		void toAngle(double newAngle);
+
+		void stop();
 
 		void changeError(double iError);
 };

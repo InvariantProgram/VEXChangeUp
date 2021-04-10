@@ -18,8 +18,8 @@ extern std::string selectedAuton;
 
 pros::Mutex notification;
 
-pros::ADIEncoder rightEnc(RightEncTop, RightEncBot, true);
-pros::ADIEncoder leftEnc(LeftEncTop, LeftEncBot, true);
+pros::ADIEncoder rightEnc(RightEncTop, RightEncBot);
+pros::ADIEncoder leftEnc(LeftEncTop, LeftEncBot);
 pros::ADIEncoder horEnc(HorEncTop, HorEncBot, true);
 
 Chassis newChassis{ 2.75, 12.75, 0.5 };
@@ -27,10 +27,10 @@ Sensor_vals valStorage{ 0, 0, 0, true };
 
 ThreeTrackerOdom odomSys(newChassis);
 
-PIDConsts straight{12, 0, 0, 0 };
+PIDConsts straight{8, 0, 0, 0 };
 PIDConsts straight2{ 23, 0, .1, 0 };
 PIDConsts straight3{ 18.5, 0, .02, 0 };
-PIDConsts turn{ 110, 0, 0, 0 };
+PIDConsts turn{ 270, 0, 0, 0 };
 PIDConsts turn2{ 200, 0, .15, 0 };
 PIDConsts skillsStartStraight{ 6, 0, 0, 0 };
 PIDConsts skillsStartTurn{ 90, 0, 0, 0 };
@@ -42,6 +42,8 @@ PIDController turnCont(turn);
 XDrive newX({ FrontRightWheelPort, BackRightWheelPort }, { -FrontLeftWheelPort, -BackLeftWheelPort });
 
 PursuitController chassisController(&newX, &odomSys, &driveCont, &turnCont);
+
+PathFollower fullChassis(&chassisController);
 
 pros::Motor leftIntake(LeftIntakePort, pros::E_MOTOR_GEARSET_06, 0);
 pros::Motor rightIntake(RightIntakePort, pros::E_MOTOR_GEARSET_06, 1);
@@ -95,29 +97,42 @@ double convertToRadians(double input) {
 }
 
 int ballsIn = 0;
+int ballsOut = 0;
 
 void ballCounter(void* p) {
     double lastVal = detectLimit + 50;
     double curVal = 0;
+
+    double lastTop = topDetect + 50;
+    double curTop = 0;
     while (true) {
         curVal = botDistance.get();
+        if (curVal == 0) curVal = lastVal;
         if (curVal < detectLimit && lastVal > detectLimit)
             ballsIn++;
         lastVal = curVal;
 
+        curTop = topDistance.get();
+        if (curTop == 0) curTop = lastTop;
+        if (curTop < topDetect && lastTop > topDetect)
+            ballsOut++;
+        lastTop = curTop;
+
         pros::delay(20);
     }
 }
-void Scoreballs(int balls, int delay=1500){
-  runIntake(300);
-  runUptake(600);
-  double initTime = pros::millis();
-  while (ballsIn < balls && (pros::millis() - initTime) < delay) {
-      pros::delay(20);
-  }
-  runIntake(0);
-  pros::delay(delay);
-  runUptake(0);
+
+void Scoreballs(int shootBalls, int inBalls, int delay=2500) {
+    ballsIn = 0; ballsOut = 0;
+    runIntake(600);
+    runUptake(200);
+    double initTime = pros::millis();
+    while ((pros::millis() - initTime) < delay) {
+        if (ballsIn >= inBalls) runIntake(0);
+        if (ballsOut >= shootBalls) runUptake(0);
+    }
+    runIntake(0);
+    runUptake(0);
 }
 void subsystemSynchronous(void* p) {
     rightUptake.set_brake_mode(MOTOR_BRAKE_BRAKE);
@@ -125,12 +140,26 @@ void subsystemSynchronous(void* p) {
     rightIntake.set_brake_mode(MOTOR_BRAKE_BRAKE);
     leftIntake.set_brake_mode(MOTOR_BRAKE_BRAKE);
 
+
+    fullChassis.changeFloorVel(600);
+
+    Point p1 = { 0, 0 }, p2 = { 10, 0 }, p3 = { 30, 30 }, p4 = { 30, 50 };
+    std::array<Point, 4> input = { p1, p2, p3, p4 };
+    Spline newSpline(input);
+
+    fullChassis.insert(newSpline, 5);
+
+    fullChassis.execute();
+
+    //Scoreballs(2, 1);
+
+    /*
     flipOut();
     pros::delay(500);
     runUptake(-300);
     pros::delay(250);
     runUptake(0);
-
+    */
     /*
     pros::delay(500);
     notification.take(TIMEOUT_MAX);
@@ -152,35 +181,6 @@ void subsystemSynchronous(void* p) {
     Scoreballs(2,450);
     notification.give();
     */
-    
-    pros::delay(500);
-    notification.take(TIMEOUT_MAX);
-    runIntake(200);
-    pros::delay(750);
-    runUptake(600);
-    runIntake(-200);
-    runUptake(0);
-    notification.give();
-
-    pros::delay(500);
-    notification.take(TIMEOUT_MAX);
-    runIntake(200);
-    pros::delay(650);
-    runUptake(600);
-    pros::delay(800);
-    runIntake(0);
-    runUptake(0);
-    notification.give();
-
-    pros::delay(500);
-    notification.take(TIMEOUT_MAX);
-    runIntake(200);
-    pros::delay(750);
-    runUptake(600);
-    pros::delay(1250);
-    runIntake(0);
-    runUptake(0);
-    notification.give();
 }
 
 void robotTask(void* p) {
@@ -314,7 +314,7 @@ void robotTask(void* p) {
 
 
 
-
+    /*
     notification.take(0);
     pros::delay(250);
     State targetState{ 14.5, -12.5 , convertToRadians(45) };
@@ -336,7 +336,7 @@ void robotTask(void* p) {
     runUptake(0);
     runIntake(0);
     chassisController.toAngle(convertToRadians(270));
-
+    */
     /*
     driveCont.setGains(straight2);
     turnCont.setGains(turn2);
@@ -390,7 +390,7 @@ void odomTask(void* p) {
         odomSys.odomStep(tickDiffs);
         display.setData(odomSys.getState(), valStorage);
 
-        std::string text = "Balls: " + std::to_string(ballsIn);
+        std::string text = "ballsIn: " + std::to_string(ballsIn) + " ballsOut: " + std::to_string(ballsOut);
         lv_label_set_text(label, text.c_str());
 
         pros::delay(20);

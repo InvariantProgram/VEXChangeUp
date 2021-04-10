@@ -51,6 +51,8 @@
 #include "QuantumOdom/XDrive.hpp"
 #include "QuantumOdom/Matrix.hpp"
 #include "QuantumOdom/PursuitController.hpp"
+#include "QuantumOdom/Spline.hpp"
+#include "QuantumOdom/PathFollower.hpp"
 
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do

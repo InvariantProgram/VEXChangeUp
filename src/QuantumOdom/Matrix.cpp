@@ -1,5 +1,14 @@
 #include "QuantumOdom/Matrix.hpp"
 
+Matrix::Matrix() {
+	height = 1;
+	width = 1;
+	mtrx.resize(1);
+	for (int i = 0; i < mtrx.size(); i++) {
+		mtrx[i].resize(1, 0);
+	}
+}
+
 Matrix::Matrix(int M, int N)
 {
 	height = M;

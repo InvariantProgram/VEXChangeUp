@@ -194,8 +194,8 @@ void intake(void* p) {
 void showOdomDriver(void* p) {
     OdomDebug display(lv_scr_act(), LV_COLOR_ORANGE);
 
-    pros::ADIEncoder rightEnc(RightEncTop, RightEncBot, true);
-    pros::ADIEncoder leftEnc(LeftEncTop, LeftEncBot, true);
+    pros::ADIEncoder rightEnc(RightEncTop, RightEncBot);
+    pros::ADIEncoder leftEnc(LeftEncTop, LeftEncBot);
     pros::ADIEncoder horEnc(HorEncTop, HorEncBot, true);
 
     Sensor_vals valStorage{ 0, 0, 0, true };
@@ -203,6 +203,7 @@ void showOdomDriver(void* p) {
     ThreeTrackerOdom odomSys(newChassis);
 
     pros::Distance botDistance(botDist);
+    pros::Distance topDistance(topDist);
 
     lv_obj_t* label = lv_label_create(lv_scr_act(), NULL);
 
@@ -217,7 +218,7 @@ void showOdomDriver(void* p) {
         odomSys.odomStep(tickDiffs);
         display.setData(odomSys.getState(), valStorage);
 
-        std::string text = "Bot: " + std::to_string(botDistance.get());
+        std::string text = "Top: " + std::to_string(topDistance.get());
         lv_label_set_text(label, text.c_str());
 
         pros::delay(20);
