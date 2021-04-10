@@ -10,14 +10,14 @@ void PathFollower::insert(Spline iPath, int resolution, int msComplete) {
 		State newState = iPath.getState(input);
 		int newTime = endTime + input * msComplete;
 		if (!waypoints.empty()) 
-			distance += OdomMath::computeDistance(waypoints.back(), newState);
+			distance += OdomMath::computeDistance(waypoints.back().first, newState);
 		waypoints.push(std::make_pair(newState, newTime));
 	}
 }
 
 void PathFollower::insert(State iPoint, int msComplete) {
 	int endTime = waypoints.back().second;
-	if (!waypoints.empty()) distance += OdomMath::computeDistance(waypoints.back(), iPoint);
+	if (!waypoints.empty()) distance += OdomMath::computeDistance(waypoints.back().first, iPoint);
 	waypoints.push(std::make_pair(iPoint, endTime));
 }
 
@@ -34,7 +34,7 @@ void PathFollower::execute() {
 		} while (pros::millis() < iterTime);
 		if (waypoints.empty()) {
 			while (OdomMath::computeDistance(chassisController->getLocation(), iterTarget) > errorbounds) {
-				chassisController->impulsePoint();
+				chassisController->impulsePoint(iterTarget);
 				pros::delay(20);
 			}
 		}
