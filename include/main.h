@@ -38,14 +38,7 @@
 
 #include "constants.h"
 
-#include "QuantumOdom/OdomDebug.hpp"
-#include "QuantumOdom/PursuitController.hpp"
-#include "QuantumOdom/OdomMath.hpp"
-#include "QuantumOdom/PIDController.hpp"
-#include "QuantumOdom/structDefs.hpp"
-#include "QuantumOdom/ThreeTrackerOdom.hpp"
-#include "QuantumOdom/XDrive.hpp"
-#include "QuantumOdom/PathFollower.hpp"
+#include "QuantumOdom/QuantumAPI.hpp"
 
 /**
  * You should add more #includes here

@@ -42,25 +42,6 @@ double convertToRadians(double input) {
 
 void robotTask(void* p) {
     newX.changeGearset(pros::E_MOTOR_GEARSET_06);
-
-    Rohith.changeFloorVel(200);
-
-    double initTime = pros::millis();
-    Point p1{ 0, 0 }, p2{ 0, 25 }, p3{ 15, 20 }, p4{ 5,25 };
-    Point p5{ 5, 25 }, p6{ -5, 35 }, p7{ 50, 50 }, p8{ 50, 40 };
-    std::array<Point,4> iPoints =  { p1, p2, p3, p4 };
-    Spline testSpline(iPoints);
-    iPoints = {p5, p6, p7, p8};
-    Spline spline2(iPoints);
-    Rohith.insert(testSpline, 10);
-    Rohith.insert(spline2, 10);
-    double timeTaken = pros::millis() - initTime;
-
-    printf("Time Taken: %f ms\n", timeTaken);
-
-    Rohith.logStates();
-
-    Rohith.execute();
 }
 
 void odomTask(void* p) {
