@@ -114,8 +114,8 @@ void intake(void* p) {
 
     bool blocked = false;
 
-    rightUptake.set_brake_mode(MOTOR_BRAKE_COAST);
-    leftUptake.set_brake_mode(MOTOR_BRAKE_COAST);
+    rightUptake.set_brake_mode(MOTOR_BRAKE_BRAKE);
+    leftUptake.set_brake_mode(MOTOR_BRAKE_BRAKE);
     leftIntake.set_brake_mode(MOTOR_BRAKE_COAST);
     rightIntake.set_brake_mode(MOTOR_BRAKE_COAST);
 
