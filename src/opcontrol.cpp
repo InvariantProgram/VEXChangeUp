@@ -15,8 +15,8 @@
  * task, not resume it from where it left off.
  */
 
-pros::ADIEncoder rightEnc(RightEncTop, RightEncBot, true);
-pros::ADIEncoder leftEnc(LeftEncTop, LeftEncBot, true);
+pros::ADIEncoder rightEnc(RightEncTop, RightEncBot);
+pros::ADIEncoder leftEnc(LeftEncTop, LeftEncBot);
 pros::ADIEncoder horEnc(HorEncTop, HorEncBot, true);
 
 Chassis newChassis{ 2.75, 12.75, 0.5 };
@@ -42,6 +42,12 @@ double convertToRadians(double input) {
 
 void robotTask(void* p) {
     newX.changeGearset(pros::E_MOTOR_GEARSET_06);
+    
+    Point p1 = { 0, 0 }, p2 = { 10, 0 }, p3 = { 20, 20 }, p4 = { 25, 20 };
+    Spline newspline({ p1, p2, p3, p4 });
+    Rohith.insert(newspline, 20, 2000);
+    
+    Rohith.logStates();
 }
 
 void odomTask(void* p) {
