@@ -14,13 +14,13 @@
 
 class PursuitController {
 	private:
-		double errorBounds = 0.5;
-
 		XDrive* chassis;
 		ThreeTrackerOdom* odomSys;
 
 		PIDController* distCont;
 		PIDController* angleCont;
+
+		double minVel = 100;
 
 		double angleClamp(double input);
 
@@ -29,13 +29,13 @@ class PursuitController {
 		PursuitController(XDrive* iChassis, ThreeTrackerOdom* iOdom,
 			PIDController* iForward, PIDController* iTurn);
 
-		void toPoint(State newPoint);
+		State getLocation();
 
-		void toPointVel(State newPoint, double endVel);
+		void resetPID();
 
-		void toAngle(double newAngle);
+		void changeFloorVel(double iSpeed);
+		
+		void impulsePoint(State newPoint);
 
 		void stop();
-
-		void changeError(double iError);
 };

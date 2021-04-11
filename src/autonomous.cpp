@@ -27,14 +27,9 @@ Sensor_vals valStorage{ 0, 0, 0, true };
 
 ThreeTrackerOdom odomSys(newChassis);
 
-PIDConsts straight{8, 0, 0, 0 };
-PIDConsts straight2{ 23, 0, .1, 0 };
-PIDConsts straight3{ 18.5, 0, .02, 0 };
-PIDConsts turn{ 270, 0, 0, 0 };
-PIDConsts turn2{ 200, 0, .15, 0 };
-PIDConsts skillsStartStraight{ 6, 0, 0, 0 };
-PIDConsts skillsStartTurn{ 90, 0, 0, 0 };
-PIDConsts hardTurn{ 275, 0, 0, 0 };
+PIDConsts straight{15, 0, 0, 0 };
+PIDConsts turn{ 200, 0, 0, 0 };
+
 
 PIDController driveCont(straight);
 PIDController turnCont(turn);
@@ -107,13 +102,13 @@ void ballCounter(void* p) {
     double curTop = 0;
     while (true) {
         curVal = botDistance.get();
-        if (curVal == 0) curVal = lastVal;
+        if (curVal <= 0) curVal = lastVal;
         if (curVal < detectLimit && lastVal > detectLimit)
             ballsIn++;
         lastVal = curVal;
 
         curTop = topDistance.get();
-        if (curTop == 0) curTop = lastTop;
+        if (curTop <= 0) curTop = lastTop;
         if (curTop < topDetect && lastTop > topDetect)
             ballsOut++;
         lastTop = curTop;
@@ -124,252 +119,54 @@ void ballCounter(void* p) {
 
 void Scoreballs(int shootBalls, int inBalls, int delay=2500) {
     ballsIn = 0; ballsOut = 0;
-    runIntake(600);
+    runIntake(400);
     runUptake(200);
     double initTime = pros::millis();
     while ((pros::millis() - initTime) < delay) {
         if (ballsIn >= inBalls) runIntake(0);
-        if (ballsOut >= shootBalls) runUptake(0);
+        if (ballsOut > shootBalls) runUptake(0);
     }
     runIntake(0);
     runUptake(0);
 }
 void subsystemSynchronous(void* p) {
-    rightUptake.set_brake_mode(MOTOR_BRAKE_BRAKE);
-    leftUptake.set_brake_mode(MOTOR_BRAKE_BRAKE);
+    rightUptake.set_brake_mode(MOTOR_BRAKE_HOLD);
+    leftUptake.set_brake_mode(MOTOR_BRAKE_HOLD);
     rightIntake.set_brake_mode(MOTOR_BRAKE_BRAKE);
     leftIntake.set_brake_mode(MOTOR_BRAKE_BRAKE);
-
-
-    fullChassis.changeFloorVel(600);
-
-    Point p1 = { 0, 0 }, p2 = { 10, 0 }, p3 = { 30, 30 }, p4 = { 30, 50 };
-    std::array<Point, 4> input = { p1, p2, p3, p4 };
-    Spline newSpline(input);
-
-    fullChassis.insert(newSpline, 5);
-
-    fullChassis.execute();
-
-    //Scoreballs(2, 1);
-
-    /*
-    flipOut();
-    pros::delay(500);
-    runUptake(-300);
-    pros::delay(250);
-    runUptake(0);
-    */
-    /*
-    pros::delay(500);
-    notification.take(TIMEOUT_MAX);
-    double initTime;
-
-    Scoreballs(1,100);
-    notification.give();
-    pros::delay(500);
-    notification.take(TIMEOUT_MAX);
-    Scoreballs(2,175);
-
-    notification.give();
-    pros::delay(500);
-    notification.take(TIMEOUT_MAX);
-    Scoreballs(2,80);
-    notification.give();
-    pros::delay(500);
-    notification.take(TIMEOUT_MAX);
-    Scoreballs(2,450);
-    notification.give();
-    */
 }
 
 void robotTask(void* p) {
     newX.changeGearset(pros::E_MOTOR_GEARSET_06);
-
-  //skills start
-    /*
-    notification.take(0);
-    driveCont.setGains(skillsStartStraight);
-    turnCont.setGains(skillsStartTurn);
-    State targetState{ 15, -23 , convertToRadians(70) };
-    chassisController.toPoint(targetState);
-    pros::delay(10);
-    chassisController.toPoint({ 27 , -10 , convertToRadians(90) });
-    pros::delay(10);
-    notification.give();
-    newX.forwardVelocity(450, 150); //first goal
-    pros::delay(100);
-    notification.take(TIMEOUT_MAX);
-    pros::delay(150);
-    newX.forwardVelocity(450, -200);
-    runIntake(-200);
-    runUptake(-600);
-    pros::delay(850);
-    runIntake(200);
-    runUptake(0);
-    chassisController.toPoint({ 38.5 , -4 , convertToRadians(3) });
-    pros::delay(250);
-    chassisController.toPoint({ 77 , -11.5 , convertToRadians(5) });
-    runIntake(300);
-    index();
-    pros::delay(350);
-    runUptake(0);
-    runIntake(0);
-    chassisController.toPoint({ 73 , -0.5 , convertToRadians(47) });
-    newX.forwardVelocity(500,75); // second goal
-    ballsIn = 0;
-    notification.give();
-    pros::delay(450);
-    // newX.forwardVelocity(150, -100);
-    pros::delay(150);
-    // newX.forwardVelocity(350, 125);
-    notification.take(TIMEOUT_MAX);
-    newX.forwardVelocity(500, -150);
-    runIntake(-200);
-    runUptake(-600);
-    pros::delay(800);
-    runUptake(0);
-    chassisController.toPoint({53,-20,convertToRadians(287)});
-    runIntake(600);
-    runUptake(100);
-    pros::delay(10);
-    newX.forwardVelocity(600,150);
-    pros::delay(150);
-    runUptake(0);
-    chassisController.toAngle(convertToRadians(12));
-    chassisController.toPoint({67,-45.25,convertToRadians(12)});
-    ballsIn = 0;
-    newX.forwardVelocity(500, 150);
-    pros::delay(10);
-    newX.forwardVelocity(750,175); // third goal
-    pros::delay(10);
-    notification.give();
-    pros::delay(150);
-    notification.take(TIMEOUT_MAX);
-    newX.forwardVelocity(400,-200);
-    pros::delay(10);
-    runUptake(-600);
-    runIntake(-450);
-    pros::delay(400);
-    runUptake(0);
-    runIntake(0);
-    chassisController.toPoint({80,-78.75, convertToRadians(15)});
-    pros::delay(10);
-    runIntake(600);
-    newX.forwardVelocity(750,200);
-    State curState = odomSys.getState();
-    curState.theta = 0;
-    odomSys.setState(curState);
-    pros::delay(300);
-    newX.forwardVelocity(325,-200);
-    pros::delay(10);
-    chassisController.toPoint({91.5,-85.5,convertToRadians(320)});
-    runIntake(200);
-    newX.forwardVelocity(350,200);
-    ballsIn=0;
-    notification.give();
-    pros::delay(500);
-    notification.take(TIMEOUT_MAX);
-    pros::delay(850);
-    runUptake(0);
-    runIntake(0);
-    newX.forwardVelocity(200,-200);
-    */
-    // +6,-11.5
-
-    /*
-    double startTime = pros::millis();
-    notification.take(0);
-    chassisController.toPoint({ 14, -13, convertToRadians(45) });
-    pros::delay(100);
-    notification.give();
-    newX.forwardVelocity(975, 100);
-    notification.take(TIMEOUT_MAX);
-    pros::delay(150);
-    newX.forwardVelocity(650, -125);
-    runIntake(250);
-    pros::delay(150);
-    runUptake(300);
-    runIntake(-200);
-    pros::delay(750);
-    runUptake(0);
-    runIntake(300);
-    chassisController.toPoint({ 14, -20, convertToRadians(273)});
-    chassisController.toPoint({ 14.5, -30, convertToRadians(273) });
-    newX.forwardVelocity(450, 75);
-    chassisController.toPoint({ 0, -39, convertToRadians(280) });
-    runIntake(0);
-    newX.strafeVelocity(500, 75);
-    pros::delay(350);
-    chassisController.toPoint({ 2, -29, convertToRadians(240) });
-    newX.forwardVelocity(950, 100);
-    runUptake(600);
-    pros::delay(750);
-    runUptake(0);
-    while (pros::millis() - startTime < 14950) {
-        pros::delay(10);
-    }
-    newX.forwardVelocity(50, -100);
-    */
-
-
-
-    /*
-    notification.take(0);
-    pros::delay(250);
-    State targetState{ 14.5, -12.5 , convertToRadians(45) };
-    chassisController.toPoint(targetState);
-    pros::delay(100);
-    ballsIn = 0;
-    notification.give();
-    newX.forwardVelocity(975, 220);
-    newX.forwardVelocity(200, -200);
-    pros::delay(100);
-    newX.forwardVelocity(250, 200);
-    notification.take(TIMEOUT_MAX);
-    driveCont.setGains(straight);
-    pros::delay(150);
-    newX.forwardVelocity(650, -125);
-    runUptake(300);
-    runIntake(-200);
-    pros::delay(100);
-    runUptake(0);
-    runIntake(0);
-    chassisController.toAngle(convertToRadians(270));
-    */
-    /*
-    driveCont.setGains(straight2);
-    turnCont.setGains(turn2);
-    chassisController.toPoint({ -23.5 , 20 , convertToRadians(270) });
-    runUptake(0);
-    runIntake(0);
-    ballsIn = 0;
-    notification.give();
-    newX.forwardVelocity(850, 170);
-    newX.forwardVelocity(200, -200);
-    newX.forwardVelocity(250, 220);
-    notification.take(TIMEOUT_MAX);
-    runIntake(600);
-    runUptake(600);
-    newX.forwardVelocity(370, -200);
-    runIntake(-350);
-    runUptake(-350);
-    pros::delay(250);
     
-    chassisController.toPoint({ -29.5 , 38.5 , convertToRadians(220) });
+    
+    newX.forwardVelocity(750, -200);
+    runIntake(600);
+    Point p1 = { 0,0 }, p2 = { 5, 0 }, p3 = { 30, -22 }, p4 = { 36, -22 };
+    Spline spline1({ p1, p2, p3, p4 });
+    fullChassis.insert(spline1, 30, 1750);
+    fullChassis.execute();
+    
+    pros::delay(20);
+
+    fullChassis.insert({ 29, -13.5, convertToRadians(45) }, 500);
+    fullChassis.execute();
+
     runIntake(0);
-    runUptake(0);
-    pros::delay(50);
-    driveCont.setGains(straight3);
-    chassisController.toPoint({ -67  , 14 , convertToRadians(215) });
-    ballsIn = 0;
-    notification.give();
-    newX.forwardVelocity(1050, 220);
-    pros::delay(100);
-    notification.take(TIMEOUT_MAX);
-    runUptake(0);
-    newX.forwardVelocity(300, -200);
-    */
+
+    newX.forwardVelocity(700, 150);
+    Scoreballs(2, 2);
+    newX.forwardVelocity(300, -250);
+
+    fullChassis.insert({ 12, -13, convertToRadians(0) }, 750);
+    fullChassis.insert({ 10, -25, convertToRadians(-60) }, 600);
+    fullChassis.insert({ 14.5, -37, convertToRadians(-90)}, 1250);
+    fullChassis.insert({ 22, -45, convertToRadians(0) }, 750);
+    
+    fullChassis.logStates();
+
+    fullChassis.execute();
+    
 }
 
 void odomTask(void* p) {

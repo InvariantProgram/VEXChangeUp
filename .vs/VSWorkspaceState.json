@@ -6,6 +6,6 @@
     "\\src",
     "\\src\\QuantumOdom"
   ],
-  "SelectedNode": "\\src\\autonomous.cpp",
+  "SelectedNode": "\\include\\QuantumOdom\\PathFollower.hpp",
   "PreviewInSolutionExplorer": false
 }

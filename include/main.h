@@ -37,22 +37,14 @@
 #include "api.h"
 
 #include "constants.h"
+#include "QuantumOdom/QuantumAPI.hpp"
+
 
 /**
  * You should add more #includes here
  */
 //#include "okapi/api.hpp"
 //#include "pros/api_legacy.h"
-#include "QuantumOdom/OdomDebug.hpp"
-#include "QuantumOdom/OdomMath.hpp"
-#include "QuantumOdom/PIDController.hpp"
-#include "QuantumOdom/structDefs.hpp"
-#include "QuantumOdom/ThreeTrackerOdom.hpp"
-#include "QuantumOdom/XDrive.hpp"
-#include "QuantumOdom/Matrix.hpp"
-#include "QuantumOdom/PursuitController.hpp"
-#include "QuantumOdom/Spline.hpp"
-#include "QuantumOdom/PathFollower.hpp"
 
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do
