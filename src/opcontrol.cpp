@@ -24,7 +24,7 @@ Sensor_vals valStorage{ 0, 0, 0, true };
 
 ThreeTrackerOdom odomSys(newChassis);
 
-PIDConsts straight{ 8, 0, 0, 0 };
+PIDConsts straight{ 17, 0, 0, 0 };
 PIDConsts turn{ 160, 0, 0, 0 };
 PIDController driveCont(straight);
 PIDController turnCont(turn);
@@ -45,9 +45,12 @@ void robotTask(void* p) {
     
     Point p1 = { 0, 0 }, p2 = { 10, 0 }, p3 = { 20, 20 }, p4 = { 25, 20 };
     Spline newspline({ p1, p2, p3, p4 });
-    Rohith.insert(newspline, 20, 2000);
+
+    Rohith.insert(newspline, 30, 50);
     
     Rohith.logStates();
+
+    Rohith.execute();
 }
 
 void odomTask(void* p) {
