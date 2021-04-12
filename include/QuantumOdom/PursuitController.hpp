@@ -37,5 +37,7 @@ class PursuitController {
 		
 		void impulsePoint(State newPoint);
 
+		void toAngle(double newAngle);
+
 		void stop();
 };

@@ -82,6 +82,61 @@ void PursuitController::impulsePoint(State newPoint) {
 	chassis->runMotors(output);
 }
 
+void PursuitController::toAngle(double newAngle) {
+	State newPoint = odomSys->getState();
+	newPoint.theta = newAngle;
+
+	angleCont->setTarget(0);
+
+	double maxMotorVelocity = 200;
+	switch (chassis->getGearset()) {
+	case pros::E_MOTOR_GEARSET_36:
+		maxMotorVelocity = 100;
+		break;
+	case pros::E_MOTOR_GEARSET_06:
+		maxMotorVelocity = 600;
+		break;
+	default:
+		break;
+	}
+
+	State currentState;
+	std::vector<std::vector<double>> input;
+
+	double max, rotateSpeed, theta;
+	std::array<double, 4> output;
+
+	bool running = true;
+	while (running) {
+		currentState = odomSys->getState();
+
+		//Calculate Forward and Strafe ratios
+
+		//Get Output Velocities
+		theta = OdomMath::computeAngle(currentState, newPoint);
+		rotateSpeed = angleCont->step(theta);
+
+		output = { -rotateSpeed, -rotateSpeed,
+			rotateSpeed, rotateSpeed };
+
+		max = *std::max_element(output.begin(), output.end(), absComp);
+		if (abs(max) > maxMotorVelocity) {
+			for (int i = 0; i < 4; i++) {
+				output[i] *= maxMotorVelocity / abs(max);
+			}
+		}
+
+		chassis->runMotors(output);
+
+		if (abs(theta) * 180 / 3.14159 < 2) {
+			chassis->stop(true);
+			running = false;
+		}
+
+		pros::delay(20);
+	}
+}
+
 State PursuitController::getLocation() {
 	return odomSys->getState();
 }
