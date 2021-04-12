@@ -30,15 +30,15 @@
 
 #define LeftEncTop 'E'
 #define LeftEncBot 'F'
-#define RightEncTop 'G'
-#define RightEncBot 'H'
+#define RightEncTop 'A'
+#define RightEncBot 'B'
 #define HorEncTop 'C'
 #define HorEncBot 'D'
 
 #define botDist 20 
 #define topDist 21
 
-#define detectLimit 85
+#define detectLimit 100
 #define topDetect 60
 
 #endif

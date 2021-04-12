@@ -196,7 +196,7 @@ void showOdomDriver(void* p) {
 
     pros::ADIEncoder rightEnc(RightEncTop, RightEncBot);
     pros::ADIEncoder leftEnc(LeftEncTop, LeftEncBot);
-    pros::ADIEncoder horEnc(HorEncTop, HorEncBot, true);
+    pros::ADIEncoder horEnc(HorEncTop, HorEncBot);
 
     Sensor_vals valStorage{ 0, 0, 0, true };
     Chassis newChassis{ 2.75, 13, 0.5 };
@@ -218,7 +218,7 @@ void showOdomDriver(void* p) {
         odomSys.odomStep(tickDiffs);
         display.setData(odomSys.getState(), valStorage);
 
-        std::string text = "Top: " + std::to_string(topDistance.get());
+        std::string text = "Bot: " + std::to_string(botDistance.get());
         lv_label_set_text(label, text.c_str());
 
         pros::delay(20);

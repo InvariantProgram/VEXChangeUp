@@ -20,14 +20,14 @@ pros::Mutex notification;
 
 pros::ADIEncoder rightEnc(RightEncTop, RightEncBot);
 pros::ADIEncoder leftEnc(LeftEncTop, LeftEncBot);
-pros::ADIEncoder horEnc(HorEncTop, HorEncBot, true);
+pros::ADIEncoder horEnc(HorEncTop, HorEncBot);
 
 Chassis newChassis{ 2.75, 12.75, 0.5 };
 Sensor_vals valStorage{ 0, 0, 0, true };
 
 ThreeTrackerOdom odomSys(newChassis);
 
-PIDConsts straight{15, 0, 0, 0 };
+PIDConsts straight{ 12, 0, 0, 0 };
 PIDConsts turn{ 200, 0, 0, 0 };
 
 
@@ -61,8 +61,7 @@ void runUptake(int power) {
 void flipOut() {
     runIntake(-600);
     pros::delay(250);
-    runIntake(0);
-    
+    runIntake(0);    
 }
 //Adjust detectLimit as necessary
 void intakeToMax(int speed, int timeOut = 1000) {
@@ -85,7 +84,24 @@ void index(int timeOut = 1500) {
     }
     runUptake(0);
 }
-
+void outtake(int time = 750) {
+    runIntake(-300);
+    runUptake(-300);
+    pros::delay(time);
+    runIntake(0);
+    runUptake(0);
+}
+void outtakeToBall(int balls, int timeout=1250) {
+    ballsIn = 0;
+    runIntake(-200);
+    runUptake(-300);
+    int startTime = pros::millis();
+    while (ballsIn < balls && pros::millis() - startTime < timeout) {
+        pros::delay(20);
+    }
+    runIntake(0);
+    runUptake(0);
+}
 
 double convertToRadians(double input) {
     return input / 180 * 3.14159;
@@ -122,51 +138,68 @@ void Scoreballs(int shootBalls, int inBalls, int delay=2500) {
     runIntake(400);
     runUptake(200);
     double initTime = pros::millis();
-    while ((pros::millis() - initTime) < delay) {
-        if (ballsIn >= inBalls) runIntake(0);
-        if (ballsOut > shootBalls) runUptake(0);
+    bool intGo = true, outGo = true;
+    while ((pros::millis() - initTime) < delay && (intGo || outGo)) {
+        if (ballsIn >= inBalls) {
+            runIntake(0);
+            intGo = false;
+        }
+        if (ballsOut > shootBalls) {
+            runUptake(0);
+            outGo = false;
+        }
     }
     runIntake(0);
     runUptake(0);
 }
 void subsystemSynchronous(void* p) {
+}
+
+void robotTask(void* p) {
     rightUptake.set_brake_mode(MOTOR_BRAKE_HOLD);
     leftUptake.set_brake_mode(MOTOR_BRAKE_HOLD);
     rightIntake.set_brake_mode(MOTOR_BRAKE_BRAKE);
     leftIntake.set_brake_mode(MOTOR_BRAKE_BRAKE);
-}
 
-void robotTask(void* p) {
     newX.changeGearset(pros::E_MOTOR_GEARSET_06);
     
     
-    newX.forwardVelocity(750, -200);
+    flipOut();
+    pros::delay(50);
+
     runIntake(600);
-    Point p1 = { 0,0 }, p2 = { 5, 0 }, p3 = { 30, -22 }, p4 = { 36, -22 };
+    Point p1 = { 0,0 }, p2 = { 17, 0 }, p3 = { 33, -18 }, p4 = { 42, -18 };
     Spline spline1({ p1, p2, p3, p4 });
-    fullChassis.insert(spline1, 30, 1750);
+    fullChassis.insert(spline1, 30, 1250);
     fullChassis.execute();
     
     pros::delay(20);
 
-    fullChassis.insert({ 29, -13.5, convertToRadians(45) }, 500);
+    fullChassis.insert({ 34, -13.5, convertToRadians(45) }, 750);
     fullChassis.execute();
 
     runIntake(0);
 
-    newX.forwardVelocity(700, 150);
+    newX.forwardVelocity(750, 200);
     Scoreballs(2, 2);
-    newX.forwardVelocity(300, -250);
+    pros::delay(100);
+    newX.forwardVelocity(500, -250);  
 
-    fullChassis.insert({ 12, -13, convertToRadians(0) }, 750);
-    fullChassis.insert({ 10, -25, convertToRadians(-60) }, 600);
-    fullChassis.insert({ 14.5, -37, convertToRadians(-90)}, 1250);
-    fullChassis.insert({ 22, -45, convertToRadians(0) }, 750);
-    
-    fullChassis.logStates();
+    outtake(1000);
 
+    runIntake(600);
+    fullChassis.insert({ 10, -38, convertToRadians(300) }, 500);
+    fullChassis.insert({2.5, -36, convertToRadians(300)}, 700);
+    p1 = { -1, -36.5 }; p2 = { 0, -38.5 }; p3 = { 18, -55 }; p4 = { 31, -55 };
+    Spline spline2({ p1, p2, p3, p4 });
+    fullChassis.insert(spline2, 30, 1000);
     fullChassis.execute();
-    
+
+    runIntake(0);
+    newX.forwardVelocity(700, 200);
+    Scoreballs(2, 1);
+    pros::delay(100);
+    newX.forwardVelocity(300, -200);
 }
 
 void odomTask(void* p) {
