@@ -17,7 +17,7 @@
 #define StrafeDeadzone 20
 #define IntakePower 127   // out of 127
 #define reversePower 127  // out of 127
-#define UptakePower 600   // out of 127
+#define UptakePower 600   // out of 600
 
 #define MovementScale 0.5
 #define VoltageDiffDeadzone 5
@@ -35,10 +35,10 @@
 #define HorEncTop 'C'
 #define HorEncBot 'D'
 
-#define botDist 20 
+#define botDist 20
 #define topDist 21
 
-#define detectLimit 100
+#define detectLimit 120
 #define topDetect 60
 
 #endif

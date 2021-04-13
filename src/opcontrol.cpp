@@ -154,14 +154,12 @@ void intake(void* p) {
             rightUptake.move_velocity(UptakePower);
             leftUptake.move_velocity(UptakePower);
         }
+
         else if (Right) {
             rightUptake.move_velocity(-UptakePower / 2);
             leftUptake.move_velocity(-UptakePower / 2);
         }
-        else if (B) {
-            rightUptake.move_velocity(UptakePower / 2);
-            leftUptake.move_velocity(UptakePower / 2);
-        }
+
         else if (R1) {
             rightUptake.move(-reversePower);
             leftUptake.move(-reversePower);
@@ -175,6 +173,10 @@ void intake(void* p) {
             double intakeVal = IntakePower * L2 - reversePower * (L1 || R1);
             rightIntake.move(intakeVal);
             leftIntake.move(intakeVal);
+        }
+        else if (B) {
+          rightIntake.move_velocity(250);
+          leftIntake.move_velocity(250);
         }
         else if (Down) {
             rightIntake.move_velocity(-150);
@@ -218,7 +220,8 @@ void showOdomDriver(void* p) {
         odomSys.odomStep(tickDiffs);
         display.setData(odomSys.getState(), valStorage);
 
-        std::string text = "Bot: " + std::to_string(botDistance.get());
+        std::string text = "Top: " + std::to_string(topDistance.get());
+        text += " Bot: " + std::to_string(botDistance.get());
         lv_label_set_text(label, text.c_str());
 
         pros::delay(20);
