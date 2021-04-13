@@ -198,6 +198,7 @@ void subsystemSynchronous(void* p) {
 void robotTask(void* p) {
   newX.changeGearset(pros::E_MOTOR_GEARSET_06);
 
+/*
   driveCont.setGains(auto1);
   chassisController.changeFloorVel(50);
 
@@ -237,10 +238,15 @@ void robotTask(void* p) {
   fullChassis.insert({-44, 41, convertToRadians(90)}, 1200);
   fullChassis.insert({-30.5, 38.75, convertToRadians(80)}, 300);
   fullChassis.execute();
-
+*/
 
  //Skills
-/*
+
+    flipOut();
+    pros::delay(100);
+
+    runIntake(600);
+
     Point p1 = { 0,0 }, p2 = { 17, 0 }, p3 = { 38, -18 }, p4 = { 42, -18 };
     Spline spline1({ p1, p2, p3, p4 });
     fullChassis.insert(spline1, 30, 1250);
@@ -249,7 +255,7 @@ void robotTask(void* p) {
 
     pros::delay(20);
 
-    fullChassis.insert({ 32.5, -12, convertToRadians(41) }, 750);
+    fullChassis.insert({ 34, -14, convertToRadians(41) }, 750);
     fullChassis.execute();
 
     runIntake(0);
@@ -273,7 +279,7 @@ void robotTask(void* p) {
     index();
 
     //GOAL 4
-    newX.forwardVelocity(700, 200);
+    newX.forwardVelocity(500, 200);
     scoreBalls(2, 1, 1000);
     pros::delay(100);
     newX.forwardVelocity(400, -200);
@@ -283,18 +289,56 @@ void robotTask(void* p) {
     pros::delay(100);
 
     runIntake(600);
+    fullChassis.insert({49, -67, convertToRadians(310)}, 700);
+    fullChassis.execute();
+    pros::delay(100);
+
+    newX.forwardVelocity(400, 500);
+
+
+
+
+/*
+    runIntake(600);
     fullChassis.insert({17, -81, convertToRadians(295)}, 700);
     fullChassis.execute();
     pros::delay(100);
 
+
+
+
     driveCont.setGains(skillsStraight);
     turnCont.setGains(skillsTurn);
-    p1 = { 17, -81 }; p2 = { 30, -109 }; p3 = { 35, -90 }; p4 = { 44, -90 };
+    p1 = { 17, -81 }; p2 = { 20, -101 }; p3 = { 29, -96 }; p4 = { 37, -84 };
     Spline spline3({ p1, p2, p3, p4 });
+    Point p5 = { 37, -84 }, p6 = { 42, -77 }, p7 = { 49, -78 }, p8 = { 56, -84 };
+    Spline spline4({ p5, p6, p7, p8 });
     fullChassis.insert(spline3, 30, 1250);
+    fullChassis.insert(spline4, 30, 1000);
     chassisController.changeFloorVel(100);
     fullChassis.execute();
     index();
+*/
+    /*
+        Point p1 = { 0,0 }, p2 = { 8, -20 }, p3 = { 12, -15 }, p4 = { 20, -3 };
+        Spline spline1({ p1, p2, p3, p4 });
+        Point p5= { 20,-3 }, p6 = { 30, 9 }, p7 = { 35, 4 }, p8 = { 46, 4 };
+        Spline spline5({ p5, p6, p7, p8 });
+        fullChassis.insert(spline1, 30, 1250);
+        fullChassis.insert(spline5, 30, 750);
+        chassisController.changeFloorVel(75);
+        fullChassis.execute();
+
+        pros::delay(10000);
+
+        fullChassis.insert({49, -67, convertToRadians(303)}, 700);
+        fullChassis.execute();
+        pros::delay(100);
+
+*/
+
+
+
 
     fullChassis.insert({ 44, -95, convertToRadians(310) }, 500);
     fullChassis.execute();
@@ -303,11 +347,21 @@ void robotTask(void* p) {
     newX.forwardVelocity(700, 200);
     scoreBalls(1, 2, 1000);
     pros::delay(100);
-    newX.forwardVelocity(400, -200);
+
+    fullChassis.insert({ 46, -93, convertToRadians(290) }, 500);
+    fullChassis.execute();
+
 
     outtake(750);
     pros::delay(100);
 
+    fullChassis.insert({ 46, -93, convertToRadians(220) }, 500);
+    fullChassis.execute();
+
+    runIntake(600);
+
+
+    pros::delay(10000);
 
     driveCont.setGains(skillsStraight2);
     turnCont.setGains(skillsTurn2);
@@ -332,7 +386,7 @@ void robotTask(void* p) {
     //TURN TO ANGLE FOR STRAIGHT LINE TO 3
     fullChassis.insert({ 10, -65, convertToRadians(210) }, 500);
     fullChassis.execute();
-    */
+
 
 
 
