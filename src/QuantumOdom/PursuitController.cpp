@@ -116,6 +116,8 @@ void PursuitController::toAngle(double newAngle) {
 		theta = OdomMath::computeAngle(currentState, newPoint);
 		rotateSpeed = angleCont->step(theta);
 
+		if (abs(rotateSpeed) < minVel) rotateSpeed *= minVel / abs(rotateSpeed);
+
 		output = { -rotateSpeed, -rotateSpeed,
 			rotateSpeed, rotateSpeed };
 
@@ -153,4 +155,3 @@ void PursuitController::resetPID() {
 void PursuitController::stop() {
 	chassis->stop(false);
 }
-

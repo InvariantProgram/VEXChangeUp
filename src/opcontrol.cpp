@@ -59,6 +59,11 @@ void XDrive(void *p) {
   std::array <int, 4> Voltage = {0};
   std::array <int, 4> GoalVoltage = {0};
 
+  FrontLeftWheelMotor.move(0);
+  FrontRightWheelMotor.move(0);
+  BackLeftWheelMotor.move(0);
+  BackRightWheelMotor.move(0);
+
   while (true)
   {
     int leftY = cont.get_analog(ANALOG_LEFT_Y);
