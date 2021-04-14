@@ -38,7 +38,7 @@
 #define botDist 20
 #define topDist 21
 
-#define detectLimit 120
+#define detectLimit 85
 #define topDetect 60
 
 #endif

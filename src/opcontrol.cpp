@@ -156,8 +156,8 @@ void intake(void* p) {
             leftUptake.move_velocity(0);
 ;        }
         if (R2) {
-            rightUptake.move_velocity(UptakePower);
-            leftUptake.move_velocity(UptakePower);
+            rightUptake.move_velocity(600);
+            leftUptake.move_velocity(600);
         }
 
         else if (Right) {
