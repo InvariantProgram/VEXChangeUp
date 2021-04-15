@@ -192,7 +192,7 @@ void intake(void* p) {
             leftIntake.move(0);
         }
 
-        pros::delay(1);
+        pros::delay(5);
     }
 
 
@@ -211,6 +211,7 @@ void showOdomDriver(void* p) {
 
     pros::Distance botDistance(botDist);
     pros::Distance topDistance(topDist);
+    pros::Distance shotDistance(shotDist);
 
     lv_obj_t* label = lv_label_create(lv_scr_act(), NULL);
 
@@ -227,6 +228,8 @@ void showOdomDriver(void* p) {
 
         std::string text = "Top: " + std::to_string(topDistance.get());
         text += " Bot: " + std::to_string(botDistance.get());
+        text += " Shot: " + std::to_string(shotDistance.get());
+
         lv_label_set_text(label, text.c_str());
 
         pros::delay(20);
