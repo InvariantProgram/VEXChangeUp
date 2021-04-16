@@ -112,6 +112,16 @@ void outtake(int time = 750) {
     runIntake(0);
     runUptake(0);
 }
+
+void outtakeGoal2(int time = 750) {
+    runIntake(-600);
+    runUptake(-600);
+    pros::delay(time);
+    runIntake(0);
+    runUptake(0);
+}
+
+
 void outtop(int time=750) {
   runIntake(-600);
   runUptake(600);
@@ -255,6 +265,8 @@ void delayUntilPhase(int waitUntil) {
   }
 }
 
+
+
 void subsystemSynchronous(void* p) {
   rightUptake.set_brake_mode(MOTOR_BRAKE_BRAKE);
   leftUptake.set_brake_mode(MOTOR_BRAKE_BRAKE);
@@ -270,8 +282,8 @@ void subsystemSynchronous(void* p) {
   outtake(1000);
 
   delayUntilPhase(3);
-  pros::delay(200);
-  outtop(1000);
+  pros::delay(350);
+  outtakeGoal2(1250);
   pros::delay(100);
   runIntake(600);
 
@@ -296,13 +308,13 @@ void subsystemSynchronous(void* p) {
 void robotTask(void* p) {
   newX.changeGearset(pros::E_MOTOR_GEARSET_06);
 
-  /*
   double startTime = pros::millis();
 
   driveCont.setGains(auto1);
   chassisController.changeFloorVel(50);
 
-  fullChassis.insert({20.5, -11.5, convertToRadians(50)}, 200);
+  //Coordinated Auto (10B)
+  fullChassis.insert({21.5, -11.5, convertToRadians(50)}, 200);
   fullChassis.execute();
 
   phase = 1;
@@ -330,7 +342,7 @@ void robotTask(void* p) {
 
   runIntake(0);
   shoot(2);
-  */
+
 
   /*
   while (pros::millis() - startTime < 14600) {
@@ -352,10 +364,9 @@ void robotTask(void* p) {
 
 
   //Home Row
-  driveCont.setGains(auto1);
-  chassisController.changeFloorVel(50);
+  /*
 
-  fullChassis.insert({18.5, 10.5, convertToRadians(310)}, 200);
+  fullChassis.insert({18.5, 11.25, convertToRadians(310)}, 200);
   fullChassis.execute();
 
   phase = 1;
@@ -365,7 +376,7 @@ void robotTask(void* p) {
 
   driveCont.setGains(auto2);
   turnCont.setGains(turn2);
-  fullChassis.insert({-21, 16.5, convertToRadians(270)}, 500);
+  fullChassis.insert({-21, 17.5, convertToRadians(270)}, 500);
   fullChassis.execute();
 
   newX.forwardVelocity(500, 200);
@@ -373,10 +384,12 @@ void robotTask(void* p) {
 
   phase = 3;
   newX.forwardVelocity(500, -200);
+  pros::delay(350);
+
 
   runIntake(600);
   driveCont.setGains(auto1);
-  fullChassis.insert({-38, 45, convertToRadians(240)}, 400);
+  fullChassis.insert({-38, 45, convertToRadians(265)}, 400);
   Point p1={-33, 45}, p2={-42, 45}, p3={-56.75, 20.5}, p4={-60.8, 17.25};
   Spline spline1({p1, p2, p3, p4});
   fullChassis.insert(spline1, 30, 700);
@@ -387,10 +400,16 @@ void robotTask(void* p) {
   delayUntilPhase(5);
   newX.forwardVelocity(300, -200);
 
-  fullChassis.insert({ -33, 38, convertToRadians(90) }, 500);
+  if ((pros::millis() - startTime) > 13000) {
+    pros::delay(7000);
+  }
+
+  fullChassis.insert({ -33, 37, convertToRadians(90) }, 500);
   fullChassis.execute();
 
   newX.strafeVelocity(350, 200);
+  */
+
 
  //Skills
     /*
@@ -514,7 +533,7 @@ void robotTask(void* p) {
     fullChassis.insert({-45.5, -89, convertToRadians(180) }, 1000);
 
     newX.forwardVelocity(150, 75);
-    
+
     driveCont.setGains(skillsStraight3);
     turnCont.setGains(skillsTurn3);
 
@@ -561,7 +580,7 @@ void robotTask(void* p) {
     runUptake(15);
     runIntake(450);
     pros::delay(1000);
-    
+
     runIntake(-150);
     newX.forwardVelocity(650, -200);
 
