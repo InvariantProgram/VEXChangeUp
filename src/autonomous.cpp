@@ -39,6 +39,7 @@ PIDConsts skillsTurn{ 250, 0, .2, 0 };
 PIDConsts skillsStraight2{ 11, 0, 0.05, 0 };
 PIDConsts skillsTurn2{ 250, 0, .2, 0 };
 
+PIDConsts skillsStraight3{ 12, 0, 0, 0 };
 PIDConsts skillsTurn3{ 270, 0, .1, 0 };
 
 PIDConsts auto1{18, 0, 0.00001, 0};
@@ -260,8 +261,8 @@ void subsystemSynchronous(void* p) {
   rightIntake.set_brake_mode(MOTOR_BRAKE_BRAKE);
   leftIntake.set_brake_mode(MOTOR_BRAKE_BRAKE);
 
-  //flipOut();
-  /*
+  flipOut();
+
   delayUntilPhase(1);
   scoreAuto(3);
   phase = 2;
@@ -277,8 +278,8 @@ void subsystemSynchronous(void* p) {
   delayUntilPhase(4);
   scoreAuto(3);
   phase = 5;
-  */
-  
+
+  /*
   delayUntilPhase(1);
   pros::delay(450);
   outtake(1000);
@@ -289,6 +290,7 @@ void subsystemSynchronous(void* p) {
   outtop(1000);
   pros::delay(100);
   runIntake(600);
+  */
 }
 
 void robotTask(void* p) {
@@ -350,7 +352,6 @@ void robotTask(void* p) {
 
 
   //Home Row
-  /*
   driveCont.setGains(auto1);
   chassisController.changeFloorVel(50);
 
@@ -390,7 +391,6 @@ void robotTask(void* p) {
   fullChassis.execute();
 
   newX.strafeVelocity(350, 200);
-  */
 
  //Skills
     /*
@@ -510,22 +510,24 @@ void robotTask(void* p) {
     outtake(1000);
     pros::delay(100);
 
-
     runIntake(600);
     fullChassis.insert({-45.5, -89, convertToRadians(180) }, 1000);
-    */
+
+    newX.forwardVelocity(150, 75);
+    
+    driveCont.setGains(skillsStraight3);
+    turnCont.setGains(skillsTurn3);
+
     chassisController.changeFloorVel(50);
-    Point p1, p2, p3, p4;
 
     odomSys.setState({ -46, -89, convertToRadians(180) });
-    runIntake(600);
     fullChassis.insert({ -30, -89, convertToRadians(135) }, 300);
-    fullChassis.insert({-36.5, -61, convertToRadians(90) }, 500);
+    fullChassis.insert({-39, -70, convertToRadians(90) }, 500);
     fullChassis.execute();
 
-    pros::delay(250);
+    driveCont.setGains(straight);
 
-    fullChassis.insert({-36.5, -51.25, convertToRadians(180) }, 500);
+    fullChassis.insert({-37.85, -53.75, convertToRadians(180) }, 500);
     fullChassis.execute();
     runUptake(15);
 
@@ -533,7 +535,9 @@ void robotTask(void* p) {
     scoreBalls(2, 2, 1000);
     pros::delay(100);
 
-    fullChassis.insert({-30.5, -51.5, convertToRadians(225) }, 500);
+    newX.forwardVelocity(100, -100);
+
+    fullChassis.insert({-33.5, -48.5, convertToRadians(225) }, 500);
     fullChassis.execute();
 
     outtake(1000);
@@ -542,11 +546,10 @@ void robotTask(void* p) {
 
     chassisController.toAngle(0);
 
-    turnCont.setGains(skillsTurn3);
-
     pros::delay(250);
-    fullChassis.insert({-24.5, -51.25, 0 }, 500);
+    fullChassis.insert({-24.5, -51.25, convertToRadians(5) }, 500);
     fullChassis.execute();
+
     index();
 
     //MID GOAL
@@ -554,9 +557,15 @@ void robotTask(void* p) {
     newX.forwardVelocity(750, 100);
 
     shoot(1);
+
+    runUptake(15);
+    runIntake(450);
+    pros::delay(1000);
     
     runIntake(-150);
     newX.forwardVelocity(650, -200);
+
+    odomSys.setState({ -35, -50.5, 0 });
 
     chassisController.toAngle(convertToRadians(330));
 
@@ -564,9 +573,9 @@ void robotTask(void* p) {
     pros::delay(250);
     runIntake(600);
 
-    p1 = { -18, -64 }; p2 = { 3, -56 }; p3 = { -21.5, -50 }; p4 = { -22.5, -12.5 };
+    p1 = { -35, -47 }; p2 = { -10, -38 }; p3 = { -7.5, -40 }; p4 = { -8, -12.5 };
     Spline spline5({ p1, p2, p3, p4 });
-    fullChassis.insert(spline5, 35, 1100);
+    fullChassis.insert(spline5, 35, 1500);
     fullChassis.execute();
 
     newX.forwardVelocity(500, 150);
@@ -583,16 +592,19 @@ void robotTask(void* p) {
     chassisController.toAngle(convertToRadians(180));
 
     fullChassis.insert({ -30, -10, convertToRadians(180) }, 700);
-    p1 = { -30, -10 }; p2 = { -40, -10 }; p3 = { -40, -22 }; p4 = { -50, -22 };
+    p1 = { -30, -10 }; p2 = { -40, -10 }; p3 = { -40, -22 }; p4 = { -52.5, -22 };
     Spline spline6({ p1, p2, p3, p4 });
-    fullChassis.insert(spline6, 30, 1100);
+    fullChassis.insert(spline6, 30, 700);
     fullChassis.execute();
 
-    fullChassis.insert({ -35, -18, convertToRadians(135) }, 700);
+    fullChassis.insert({ -50.75, -17.86, convertToRadians(135) }, 700);
     fullChassis.execute();
 
-    newX.forwardVelocity(600, 200);
+    newX.forwardVelocity(700, 200);
     scoreBalls(2, 2);
+
+    newX.forwardVelocity(300, -150);
+    */
 }
 
 void odomTask(void* p) {

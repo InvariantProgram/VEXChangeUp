@@ -24,6 +24,7 @@ void PathFollower::insert(State iPoint, int msComplete) {
 }
 
 void PathFollower::execute() {
+	double totalTime = waypoints.back().second + 2500;
 	chassisController->resetPID();
 
 	int startTime = pros::millis();
