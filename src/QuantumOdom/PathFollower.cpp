@@ -24,7 +24,7 @@ void PathFollower::insert(State iPoint, int msComplete) {
 }
 
 void PathFollower::execute() {
-	double totalTime = waypoints.back().second + 2500;
+	double endTimer = waypoints.back().second + 2000;
 	chassisController->resetPID();
 
 	int startTime = pros::millis();
@@ -37,7 +37,9 @@ void PathFollower::execute() {
 			pros::delay(20);
 		} while (pros::millis() - startTime < iterTime);
 		if (waypoints.empty()) {
+			double finalStart = pros::millis();
 			while (OdomMath::computeDistance(chassisController->getLocation(), iterTarget) > errorbounds) {
+				if (pros::millis() - finalStart > endTimer) break;
 				chassisController->impulsePoint(iterTarget);
 				pros::delay(10);
 			}

@@ -27,7 +27,6 @@ Sensor_vals valStorage{ 0, 0, 0, true };
 
 ThreeTrackerOdom odomSys(newChassis);
 
-
 PIDConsts turnless{ 150, 0, 0, 0 };
 
 PIDConsts straight{ 12, 0, 0, 0 };
@@ -343,7 +342,6 @@ void robotTask(void* p) {
   runIntake(0);
   shoot(2);
 
-
   /*
   while (pros::millis() - startTime < 14600) {
       pros::delay(20);
@@ -526,13 +524,19 @@ void robotTask(void* p) {
     pros::delay(100);
     newX.forwardVelocity(400, -200);
 
+    chassisController.toAngle(convertToRadians(230));
+
     outtake(1000);
     pros::delay(100);
 
     runIntake(600);
     fullChassis.insert({-45.5, -89, convertToRadians(180) }, 1000);
+    fullChassis.execute();
+    runIntake(0);
 
-    newX.forwardVelocity(150, 75);
+    newX.forwardVelocity(400, 150);
+
+    pros::delay(150);
 
     driveCont.setGains(skillsStraight3);
     turnCont.setGains(skillsTurn3);
@@ -540,6 +544,7 @@ void robotTask(void* p) {
     chassisController.changeFloorVel(50);
 
     odomSys.setState({ -46, -89, convertToRadians(180) });
+
     fullChassis.insert({ -30, -89, convertToRadians(135) }, 300);
     fullChassis.insert({-39, -70, convertToRadians(90) }, 500);
     fullChassis.execute();
@@ -591,6 +596,8 @@ void robotTask(void* p) {
     outtake(1750);
     pros::delay(250);
     runIntake(600);
+
+    chassisController.toAngle(convertToRadians(10));
 
     p1 = { -35, -47 }; p2 = { -10, -38 }; p3 = { -7.5, -40 }; p4 = { -8, -12.5 };
     Spline spline5({ p1, p2, p3, p4 });

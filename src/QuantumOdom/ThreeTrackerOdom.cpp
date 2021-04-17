@@ -29,7 +29,7 @@ void ThreeTrackerOdom::odomStep(std::array<int, 3> tickDiffs) {
 		deltaArr[i] = tickDiffs[i];
 	}
 	for (int i = 0; i < 3; i++) {
-		if (abs(deltaArr[i]) > maxDiff) deltaArr[i] = deltaArr[i] / abs(deltaArr[i]) * maxDiff;
+		if (abs(deltaArr[i]) > maxDiff) return;
 		deltaArr[i] = deltaArr[i] / 360 * scales.WheelDiam * PI;
 	}
 	double dTheta = (deltaArr[1] - deltaArr[0]) / scales.width;
