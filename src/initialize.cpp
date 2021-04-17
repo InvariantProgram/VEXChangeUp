@@ -9,8 +9,8 @@
  static lv_res_t btnm_action(lv_obj_t * btnm, const char * txt);
 
  std::string selectedAuton = "None";
- const char * btnarr_map[] = {"Home Row", "Two Goal", "\n",
-                               "10B Grind", "[Unused]", "\n",
+ const char * btnarr_map[] = {"Home Row", "10B Grind", "\n",
+                               "Home Row: Surface", "Home Row: No Mid", "\n",
                                "Skills", "None", ""};
 
 void initialize() {
