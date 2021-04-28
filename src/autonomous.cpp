@@ -344,23 +344,18 @@ void robotTask(void* p) {
       fullChassis.execute();
 
       pros::delay(400);
+      runIntake(0);
 
       turnCont.setGains(turn);
-      fullChassis.insert({0.2, -27.5, convertToRadians(230) }, 200);
-      fullChassis.execute();
-      newX.forwardVelocity(475, 100);
 
-      runIntake(0);
-      newX.forwardVelocity(500, -200);
-
-      phase = 3;
+      index(1000);
 
       fullChassis.insert({ -14, -21, convertToRadians(270) }, 300);
-      fullChassis.insert({ -21.5, -23, convertToRadians(270) }, 500);
+      fullChassis.insert({ -21.75, -23.75, convertToRadians(270) }, 500);
       fullChassis.execute();
 
       runIntake(600);
-      newX.forwardVelocity(550, 150);
+      newX.forwardVelocity(650, 150);
 
       pros::delay(800);
 
