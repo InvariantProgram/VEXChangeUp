@@ -24,12 +24,14 @@ double ThreeTrackerOdom::angleClamp() {
 
 void ThreeTrackerOdom::odomStep(std::array<int, 3> tickDiffs) {
 	//deltaArr = dL, dR, dS - format
+	if (scales.width == 0) return;
+
 	std::array<double, 3> deltaArr;
 	for (int i = 0; i < 3; i++) {
 		deltaArr[i] = tickDiffs[i];
 	}
 	for (int i = 0; i < 3; i++) {
-		if (abs(deltaArr[i]) > maxDiff) deltaArr[i] = deltaArr[i] / abs(deltaArr[i]) * maxDiff;
+		if (abs(deltaArr[i]) > maxDiff) return;
 		deltaArr[i] = deltaArr[i] / 360 * scales.WheelDiam * PI;
 	}
 	double dTheta = (deltaArr[1] - deltaArr[0]) / scales.width;
@@ -42,9 +44,10 @@ void ThreeTrackerOdom::odomStep(std::array<int, 3> tickDiffs) {
 		shiftX = (deltaArr[0] + deltaArr[1]) * sin(dTheta / 2) / dTheta;
 		shiftY = (deltaArr[2] / dTheta - scales.midlineOffset) * 2 * sin(dTheta / 2);
 	}
+	double averageState = storedState.theta + dTheta / 2;
 	storedState.theta += dTheta; storedState.theta = angleClamp();
-	storedState.y += shiftX * sin(storedState.theta) + shiftY * cos(storedState.theta);
-	storedState.x += shiftX * cos(storedState.theta) - shiftY * sin(storedState.theta);
+	storedState.y += shiftX * sin(averageState) + shiftY * cos(averageState);
+	storedState.x += shiftX * cos(averageState) - shiftY * sin(averageState);
 }
 
 void ThreeTrackerOdom::setState(const State& iState) {
