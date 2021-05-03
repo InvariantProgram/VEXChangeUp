@@ -35,25 +35,31 @@ PursuitController chassisController(&newX, &odomSys, &driveCont, &turnCont);
 
 PathFollower Rohith(&chassisController);
 
+pros::Vision camera(visionPort, pros::E_VISION_ZERO_CENTER);
+pros::Imu inertial(13);
+
 
 double convertToRadians(double input) {
+
     return input / 180 * 3.14159;
 }
 
 void robotTask(void* p) {
-    newX.changeGearset(pros::E_MOTOR_GEARSET_06);
-    
-    Point p1 = { 0, 0 }, p2 = { 10, 0 }, p3 = { 20, 20 }, p4 = { 25, 20 };
-    Spline newspline({ p1, p2, p3, p4 });
-
-    Rohith.insert(newspline, 30, 50);
-    
-    Rohith.logStates();
-
-    Rohith.execute();
 }
 
 void odomTask(void* p) {
+    lv_obj_t* label = lv_label_create(lv_scr_act(), NULL);
+
+    while (true) {
+        pros::c::imu_accel_s_t accelData = inertial.get_accel();
+        std::string text = "ax: " + std::to_string(accelData.x) + " ay: " + std::to_string(accelData.y) +
+            " az: " + std::to_string(accelData.z);
+
+        lv_label_set_text(label, text.c_str());
+
+        pros::delay(20);
+    }
+    /*
     std::array<int, 3> tickDiffs;
     OdomDebug display(lv_scr_act(), LV_COLOR_ORANGE);
 
@@ -70,10 +76,9 @@ void odomTask(void* p) {
         odomSys.odomStep(tickDiffs);
         display.setData(odomSys.getState(), valStorage);
 
-
-
         pros::delay(20);
     }
+    */
 }
 
 void opcontrol() {

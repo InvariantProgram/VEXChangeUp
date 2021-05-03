@@ -1,7 +1,6 @@
 #pragma once
 
 #include "QuantumOdom/structDefs.hpp"
-#include "QuantumOdom/OdomMath.hpp"
 #include <array>
 
 class ThreeTrackerOdom {
