@@ -1,5 +1,13 @@
 #include "QuantumOdom/Matrix.hpp"
 
+Matrix Matrix::eye(int N) {
+	Matrix retVal(N, N);
+	for (int i = 0; i < N; i++) {
+		retVal.changeIndex(i, i, 1);
+	}
+	return retVal;
+}
+
 Matrix::Matrix() {
 	height = 1;
 	width = 1;
@@ -29,6 +37,66 @@ Matrix::Matrix(std::vector<std::vector<double>> input) {
 	mtrx = input;
 	height = mtrx.size();
 	width = mtrx[0].size();
+}
+
+void Matrix::changeIndex(int i, int j, double input) {
+	mtrx[i][j] = input;
+}
+
+Matrix Matrix::Transpose()
+{
+	Matrix temp(this->width, this->height);
+	for (int i = 0; i < this->height; i++) {
+		for (int j = 0; j < this->width; j++) {
+			temp.changeIndex(j, i, mtrx[i][j]);
+		}
+	}
+	return temp;
+}
+
+Matrix Matrix::getMinor(int row, int col) {
+	Matrix retVal(this->width - 1, this->height - 1);
+	int columnCount = 0, rowCount = 0;
+	for (int i = 0; i < this->height; i++) {
+		columnCount = 0;
+		if (i == row) continue;
+		for (int j = 0; j < this->width; j++) {
+			if (j == col) continue;
+			retVal.changeIndex(rowCount, columnCount, this->mtrx[i][j]);
+			columnCount++;
+		}
+		rowCount++;
+	}
+	return retVal;
+}
+
+double Matrix::calcDeterminant(Matrix src, int ord) {
+	if (ord < 1) throw "Non-Positive Dimension";
+	if (ord == 1) return src(0, 0);
+	double tot = 0;
+	for (int i = 0; i < src.get_width(); i++) {
+		tot += pow(-1, i) * src(0, i) * calcDeterminant(src.getMinor(0, i), ord - 1);
+	}
+	return tot;
+}
+double Matrix::calcDeterminant() {
+	if (this->width != this->height) throw "Not Square Matrix";
+	Matrix cpy(*this);
+	return calcDeterminant(cpy, this->height);
+}
+
+Matrix Matrix::inverse() {
+	if (this->width != this->height) throw "Not Square Matrix";
+	Matrix retVal(this->height, this->width);
+	for (int i = 0; i < retVal.get_height(); i++) {
+		for (int j = 0; j < retVal.get_width(); j++) {
+			double val = pow(-1, i + j) * this->getMinor(j, i).calcDeterminant();
+			retVal.changeIndex(i, j, val);
+		}
+	}
+	if (this->calcDeterminant() == 0) throw "Singular/Degenerate Matrix";
+	retVal *= 1 / this->calcDeterminant();
+	return retVal;
 }
 
 double Matrix::getSum(double power=1) {

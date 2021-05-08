@@ -8,7 +8,16 @@ class Matrix {
 		std::vector<std::vector<double>> mtrx;
 		int height;
 		int width;
+
+		double calcDeterminant(Matrix src, int ord);
 	public:
+		/*
+		* Generate an identity matrix of size NxN
+		* @param N: Matrix dimensions
+		* @return: Identity Matrix of size NxN
+		*/
+		static Matrix eye(int N);
+
 		//Default matrix initializtion of dimensions 1x1 with default value 0
 		Matrix();
 		/*
@@ -24,6 +33,14 @@ class Matrix {
 		Matrix(std::vector<std::vector<double>> input);
 
 		Matrix(const Matrix& input);
+
+		void changeIndex(int i, int j, double input);
+
+		Matrix Transpose();
+
+		Matrix getMinor(int row, int col);
+		double calcDeterminant();
+		Matrix inverse();
 
 		double getSum(double power);
 

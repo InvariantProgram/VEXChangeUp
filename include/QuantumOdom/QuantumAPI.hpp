@@ -3,6 +3,7 @@
 #include "QuantumOdom/Matrix.hpp"
 #include "QuantumOdom/Spline.hpp"
 #include "QuantumOdom/PIDController.hpp"
+#include "QuantumOdom/KalmanFilter.hpp"
 
 //Odometry Files
 #include "QuantumOdom/ThreeTrackerOdom.hpp"
