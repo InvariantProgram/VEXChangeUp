@@ -18,8 +18,8 @@ extern std::string selectedAuton;
 
 int phase=0;
 
-pros::ADIEncoder rightEnc(RightEncTop, RightEncBot);
-pros::ADIEncoder leftEnc(LeftEncTop, LeftEncBot);
+pros::ADIEncoder rightEnc(RightEncTop, RightEncBot, 1);
+pros::ADIEncoder leftEnc(LeftEncTop, LeftEncBot, 1);
 pros::ADIEncoder horEnc(HorEncTop, HorEncBot);
 
 Chassis newChassis{ 2.75, 12.75, 3.5 };

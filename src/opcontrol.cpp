@@ -201,8 +201,8 @@ void intake(void* p) {
 void showOdomDriver(void* p) {
     OdomDebug display(lv_scr_act(), LV_COLOR_ORANGE);
 
-    pros::ADIEncoder rightEnc(RightEncTop, RightEncBot);
-    pros::ADIEncoder leftEnc(LeftEncTop, LeftEncBot);
+    pros::ADIEncoder rightEnc(RightEncTop, RightEncBot, 1);
+    pros::ADIEncoder leftEnc(LeftEncTop, LeftEncBot, 1);
     pros::ADIEncoder horEnc(HorEncTop, HorEncBot);
 
     Sensor_vals valStorage{ 0, 0, 0, true };
