@@ -3,8 +3,9 @@
     "",
     "\\include",
     "\\include\\QuantumOdom",
+    "\\src",
     "\\src\\QuantumOdom"
   ],
-  "SelectedNode": "\\include\\QuantumOdom\\OdomDebug.hpp",
+  "SelectedNode": "\\src\\opcontrol.cpp",
   "PreviewInSolutionExplorer": false
 }

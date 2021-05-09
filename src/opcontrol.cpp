@@ -201,12 +201,12 @@ void intake(void* p) {
 void showOdomDriver(void* p) {
     OdomDebug display(lv_scr_act(), LV_COLOR_ORANGE);
 
-    pros::ADIEncoder rightEnc(RightEncTop, RightEncBot, 1);
-    pros::ADIEncoder leftEnc(LeftEncTop, LeftEncBot, 1);
+    pros::ADIEncoder rightEnc(RightEncTop, RightEncBot, 0);
+    pros::ADIEncoder leftEnc(LeftEncTop, LeftEncBot, 0);
     pros::ADIEncoder horEnc(HorEncTop, HorEncBot);
 
     Sensor_vals valStorage{ 0, 0, 0, true };
-    Chassis newChassis{ 2.75, 13, 0.5 };
+    Chassis newChassis{ 2.75, 13.4, 6.25 };
     ThreeTrackerOdom odomSys(newChassis);
 
     pros::Distance botDistance(botDist);
