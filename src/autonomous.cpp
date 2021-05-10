@@ -18,7 +18,7 @@ extern std::string selectedAuton;
 
 int phase=0;
 
-pros::ADIEncoder rightEnc(RightEncTop, RightEncBot);
+pros::ADIEncoder rightEnc(RightEncTop, RightEncBot, true);
 pros::ADIEncoder leftEnc(LeftEncTop, LeftEncBot);
 pros::ADIEncoder horEnc(HorEncTop, HorEncBot);
 
@@ -35,11 +35,18 @@ PIDConsts turn{ 185, 0, 0, 0 };
 PIDConsts skillsStraight{ 22, 0, 0.0002, 0 };
 PIDConsts skillsTurn{ 200, 0, .2, 0 };
 
-PIDConsts skillsStraight2{ 11, 0, 0.05, 0 };
-PIDConsts skillsTurn2{ 250, 0, .2, 0 };
+PIDConsts skillsStraight2{ 17, 0, 0.075, 0 };
+PIDConsts skillsTurn2{ 200, 0, .2, 0 };
 
-PIDConsts skillsStraight3{ 12, 0, 0, 0 };
+PIDConsts skillsStraight3{ 16, 0, 0.0001, 0 };
 PIDConsts skillsTurn3{ 270, 0, .1, 0 };
+
+PIDConsts skillsStraight4{ 21, 0, 0.0002, 0 };
+PIDConsts skillsTurn4{ 275, 0, .2, 0 };
+
+PIDConsts skillsStraight5{ 19.5, 0, 0.0002, 0 };
+PIDConsts skillsTurn5{ 235, 0, .2, 0 };
+
 
 PIDConsts auto1{18, 0, 0.00001, 0};
 PIDConsts auto2{19.75, 0, 0, 0};
@@ -64,7 +71,7 @@ pros::Distance botDistance(botDist);
 pros::Distance topDistance(topDist);
 pros::Distance shotDistance(shotDist);
 
-std::array<double, 4> forwardVel = { 250, 250, 250, 250 };
+std::array<double, 4> forwardVel = { 150, 150, 150, 150 };
 std::array<double, 4> slowerForward = { 100, 100, 100, 100 };
 
 
@@ -277,7 +284,7 @@ void subsystemSynchronous(void* p) {
 
   flipOut();
 
-  
+
   delayUntilPhase(1);
   pros::delay(450);
   outtake(1000);
@@ -307,15 +314,59 @@ void robotTask(void* p) {
     Spline spline1({ p1, p2, p3, p4 });
     fullChassis.insert(spline1, 30, 1250);
     fullChassis.insert({ 44.25, -17, 0 }, 250);
-    fullChassis.insert({ 40, -2, convertToRadians(44) }, 750);
+    fullChassis.execute();
+
+
+    driveCont.setGains(skillsStraight2);
+    fullChassis.insert({ 40, -3, convertToRadians(44) }, 750);
+    chassisController.changeFloorVel(85);
     fullChassis.execute();
     newX.runMotors(forwardVel);
     pros::delay(500);
     runIntake(0);
     //GOAL 7
     score3Balls(2000);
+    newX.forwardVelocity(0, 50);
+    odomSys.setState({0,0,convertToRadians(45)});
+    pros::delay(10);
+
+    driveCont.setGains(skillsStraight3);
+    fullChassis.insert({-21.5, -18, convertToRadians(40)}, 0);
+    fullChassis.execute();
+    outtake(1500);
+
+
+    fullChassis.insert({-34.8, -37, convertToRadians(266.5)}, 0);
+    fullChassis.execute();
+
+    driveCont.setGains(skillsStraight4);
+    turnCont.setGains(skillsTurn4);
+    runIntake(600);
+    fullChassis.insert({-35, -52, convertToRadians(270)}, 0);
+    fullChassis.insert({-35, -61, convertToRadians(270)}, 750);
+    fullChassis.execute();
+
+    driveCont.setGains(skillsStraight5);
+    turnCont.setGains(skillsTurn5);
+    fullChassis.insert({-28, -56, convertToRadians(0)}, 750);
+    fullChassis.insert({-12.5, -55.5, convertToRadians(0)}, 250);
+    fullChassis.insert({-8, -55, convertToRadians(0)}, 500);
+    fullChassis.execute();
+
+
+    newX.runMotors(forwardVel);
+    //GOAL 4
+    score3Balls(2000);
+    newX.forwardVelocity(0, 50);
+    odomSys.setState({0,0,convertToRadians(0)});
+    pros::delay(10);
+
+
+
+
+
     //newX.forwardVelocity(600, -150);
-    
+
 
     /*
     outtake(1000);
