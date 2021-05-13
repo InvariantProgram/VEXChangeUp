@@ -115,7 +115,7 @@ void intakeToMax(int speed, int timeOut = 1000) {
 }
 void index(int timeOut = 1500) {
     double startTime = pros::millis();
-    runUptake(175);
+    runUptake(150);
     bool run = true;
     while (pros::millis() - startTime < timeOut && run) {
         pros::delay(5);
@@ -154,10 +154,10 @@ double convertToRadians(double input) {
 
 void ballCounter(void* p) {
     double lastVal = detectLimit + 50;
-    double curVal = 1;
+    double curVal = 0;
 
-    double lastTop = detectLimit + 50;
-    double curTop = 1;
+    double lastTop = shotDetect + 50;
+    double curTop = 0;
     while (true) {
         curVal = botDistance.get();
         if (curVal <= 0) curVal = lastVal;
@@ -175,24 +175,21 @@ void ballCounter(void* p) {
     }
 }
 
-void scoreBalls(int shootBalls, int inBalls, int delay=2500) {
-    ballsOut = 0; ballsIn = 0;
+void scoreIntakes(int inBalls, int delay=2500) {
+    ballsIn = 0;
     runIntake(300);
-    runUptake(200);
+    runUptake(600);
     double initTime = pros::millis();
-    bool intGo = true, upGo = true;
-    while ((intGo || upGo) && (pros::millis() - initTime) < delay) {
+    bool intGo = true;
+    while (intGo && (pros::millis() - initTime) < delay) {
         if (ballsIn >= inBalls) {
             runIntake(0);
             intGo = false;
         }
-        if (ballsOut >= shootBalls) {
-            runUptake(0);
-            upGo = false;
-        }
         pros::delay(10);
     }
     runIntake(0);
+    pros::delay(200);
     runUptake(0);
 }
 void shoot(int shootBalls, int delay = 1000) {
@@ -211,7 +208,7 @@ void shoot(int shootBalls, int delay = 1000) {
 void score3Balls(int delay=2500) {
     ballsIn = 0; ballsOut = 0;
     runIntake(300);
-    runUptake(200);
+    runUptake(600);
     double initTime = pros::millis();
     bool intGo = true, upGo = true;
     while ((intGo || upGo) && (pros::millis() - initTime) < delay) {
@@ -228,10 +225,10 @@ void score3Balls(int delay=2500) {
     runUptake(0);
 }
 
-void scoreBallsSkills(int shootBalls, int inBalls, int delay=2500) {
+void scoreBalls(int shootBalls, int inBalls, int delay=2500) {
     ballsIn = 0; ballsOut = 0;
     runIntake(300);
-    runUptake(175);
+    runUptake(165);
     double initTime = pros::millis();
     bool intGo = true, upGo = true;
     while ((intGo || upGo) && (pros::millis() - initTime) < delay) {
@@ -239,29 +236,34 @@ void scoreBallsSkills(int shootBalls, int inBalls, int delay=2500) {
             runIntake(0);
             intGo = false;
         }
-        if (ballsOut > shootBalls) {
+        if (ballsOut >= shootBalls) {
             runUptake(0);
             upGo = false;
         }
     }
     runIntake(0);
+    pros::delay(150);
     runUptake(0);
 }
 
-
-void scoreAuto(int inBalls, int beforeShot=700, int timeOut = 2000) {
-  ballsIn = 0;
-  runIntake(300);
-  runUptake(600);
-  pros::delay(beforeShot);
-  bool intGo = true;
-  double initTime = pros::millis();
-  while (intGo && (pros::millis() - initTime) < timeOut) {
-      if (ballsIn >= inBalls) intGo = false;
-  }
-  runIntake(0);
-  pros::delay(200);
-  runUptake(0);
+void midSkills() {
+    ballsIn = 0; ballsOut = 0;
+    runIntake(400);
+    runUptake(150);
+    double initTime = pros::millis();
+    bool intGo = true, upGo = true;
+    while ((intGo || upGo) && (pros::millis() - initTime) < 3000) {
+        if (ballsIn >= 3) {
+            runIntake(0);
+            intGo = false;
+        }
+        if (ballsOut >= 1) {
+            runUptake(30);
+            upGo = false;
+        }
+    }
+    runIntake(0);
+    runUptake(0);
 }
 
 void outtakeToBall(int balls, int timeout=1250) {
@@ -291,9 +293,14 @@ void subsystemSynchronous(void* p) {
   rightIntake.set_brake_mode(MOTOR_BRAKE_BRAKE);
   leftIntake.set_brake_mode(MOTOR_BRAKE_BRAKE);
 
+<<<<<<< HEAD
 
   flipOut();
 
+=======
+  //flipOut();
+  scoreBalls(1, 2);
+>>>>>>> e46e605e79bbc9d46dc52297318668da6d061be2
 
   delayUntilPhase(1);
   pros::delay(450);
@@ -307,7 +314,16 @@ void subsystemSynchronous(void* p) {
   runIntake(600);
 }
 
+/*
+* 7: Score3Balls OR scoreBalls(3, 2) - meh?
+* 4: scoreIntakes(1)
+* 1: scoreBalls(1, 2)
+* 2: scoreBalls(1, 1)
+*/
+
+
 void robotTask(void* p) {
+    /*
     newX.changeGearset(pros::E_MOTOR_GEARSET_06);
 
     double startTime = pros::millis();
@@ -385,6 +401,7 @@ void robotTask(void* p) {
     newX.forwardVelocity(0, 50);
     odomSys.setState({0,0,convertToRadians(0)});
     pros::delay(10);
+<<<<<<< HEAD
 
     driveCont.setGains(skillsStraight6);
     fullChassis.insert({-5, 0, convertToRadians(45)}, 500);
@@ -462,6 +479,9 @@ fullChassis.execute();
   newX.forwardVelocity(0, 50);
   odomSys.setState({0,0,convertToRadians(0)});
   pros::delay(10);
+=======
+    */
+>>>>>>> e46e605e79bbc9d46dc52297318668da6d061be2
 
 
 
@@ -503,6 +523,7 @@ void odomTask(void* p) {
         display.setData(odomSys.getState(), valStorage);
 
         std::string text = "ballsIn: " + std::to_string(ballsIn) + " ballsOut: " + std::to_string(ballsOut);
+
         lv_label_set_text(label, text.c_str());
 
         pros::delay(20);
