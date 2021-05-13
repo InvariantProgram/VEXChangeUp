@@ -293,14 +293,14 @@ void subsystemSynchronous(void* p) {
   rightIntake.set_brake_mode(MOTOR_BRAKE_BRAKE);
   leftIntake.set_brake_mode(MOTOR_BRAKE_BRAKE);
 
-<<<<<<< HEAD
+
 
   flipOut();
 
-=======
+
   //flipOut();
-  scoreBalls(1, 2);
->>>>>>> e46e605e79bbc9d46dc52297318668da6d061be2
+  //scoreBalls(1, 2);
+
 
   delayUntilPhase(1);
   pros::delay(450);
@@ -425,7 +425,7 @@ void robotTask(void* p) {
     fullChassis.insert({3.5, -53, convertToRadians(314)}, 1000);
     fullChassis.execute();
 
-  */
+
 
 
   newX.runMotors(forwardVel);
@@ -441,6 +441,9 @@ void robotTask(void* p) {
   fullChassis.insert({-44.5, -36 , convertToRadians(315)}, 1250);
   fullChassis.execute();
 
+*/
+
+  driveCont.setGains({18.5, 0, 0.0002, 0 });
   newX.runMotors(forwardVel);
   //GOAL 2
   score3Balls(750);
@@ -464,6 +467,9 @@ void robotTask(void* p) {
   fullChassis.insert({-17, -21, convertToRadians(310)}, 750);
   fullChassis.insert({-4, -36 , convertToRadians(310)}, 1000);
   fullChassis.insert({-14, -55, convertToRadians(270)}, 500);
+  fullChassis.execute();
+
+  fullChassis.insert({10, -54, convertToRadians(320)}, 500);
   fullChassis.execute();
 
 pros::delay(100000);
