@@ -479,9 +479,7 @@ fullChassis.execute();
   newX.forwardVelocity(0, 50);
   odomSys.setState({0,0,convertToRadians(0)});
   pros::delay(10);
-=======
-    */
->>>>>>> e46e605e79bbc9d46dc52297318668da6d061be2
+
 
 
 
