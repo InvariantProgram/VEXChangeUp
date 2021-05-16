@@ -82,6 +82,7 @@ pros::Distance shotDistance(shotDist);
 
 std::array<double, 4> forwardVel = { 75, 75, 75, 75 };
 std::array<double, 4> slowerForward = { 100, 100, 100, 100 };
+std::array<double, 4> fasterForwardVel = { 150, 150, 150, 150 };
 
 
 int ballsIn = 0;
@@ -297,9 +298,10 @@ void subsystemSynchronous(void* p) {
 
   //flipOut();
 
-  delayUntilPhase(1);
-  pros::delay(450);
+  delayUntilPhase(1);             //Goal 1 Outtake
+  pros::delay(750);
   outtake(1000);
+  pros::delay(100);
   runIntake(600);
 
   delayUntilPhase(2);
@@ -326,9 +328,10 @@ void robotTask(void* p) {
     chassisController.changeFloorVel(50);
 
     fullChassis.changeError(0.25);
-    /*
+
     pros::delay(800);
-    /*
+
+/*
     runIntake(600);
     runUptake(15);
 
@@ -359,6 +362,7 @@ void robotTask(void* p) {
     fullChassis.execute();
     outtake(1500);
 
+    pros::delay(100000000);
 
     driveCont.setGains({ 16, 0, 0.001, 0 });
     fullChassis.insert({-35, -39, convertToRadians(270)}, 0);
@@ -412,37 +416,47 @@ void robotTask(void* p) {
 
     fullChassis.insert({3.5, -53, convertToRadians(314)}, 1000);
     fullChassis.execute();
+*/
+  /*
 
+    //pros::delay(100000000);
 
     newX.runMotors(forwardVel);
     //GOAL 1
-    score3Balls(1000);
+    scoreBalls(1, 2);
     newX.forwardVelocity(0, 50);
+    pros::delay(150);
     odomSys.setState({0,0,convertToRadians(0)});
-    pros::delay(10);
+    pros::delay(150);
 
+
+    newX.forwardVelocity(350, -300);
     driveCont.setGains({18.5, 0, 0.0002, 0 });
-    fullChassis.insert({-12.5, 0, convertToRadians(0)}, 500);
-    fullChassis.insert({-29.5, -25 , convertToRadians(315)}, 250);
+    //fullChassis.insert({-14,  0, convertToRadians(0)}, 1000);
+    fullChassis.insert({-43, -35 , convertToRadians(315)}, 250);
+    fullChassis.execute();
 
 
 
-
-    driveCont.setGains({15, 0, 0.0002, 0 });
-    newX.runMotors(forwardVel);
+    newX.runMotors(fasterForwardVel);
     //GOAL 2
-    score3Balls(750);
+    scoreBalls(1, 1);
     newX.forwardVelocity(0, 50);
+    pros::delay(150);
     odomSys.setState({0,0,convertToRadians(0)});
-    pros::delay(10);
+    pros::delay(150);
 
 
+    driveCont.setGains({17.5, 0, 0.0002, 0 });
     fullChassis.insert({-5.5, 2, convertToRadians(35)}, 750);
+    chassisController.changeFloorVel(35);
     fullChassis.execute();
     outtake(2000);
     pros::delay(10);
 
     runIntake(600);
+
+    chassisController.changeFloorVel(50);
 
     driveCont.setGains({19.5, 0, 0.0002, 0 });
     chassisController.toAngle(convertToRadians(182));
@@ -455,26 +469,25 @@ void robotTask(void* p) {
     fullChassis.insert({-14, -55, convertToRadians(270)}, 350);
     fullChassis.execute();
 
+    index();
+
     driveCont.setGains({14.25, 0, 0.001, 0 });
-    fullChassis.insert({6, -52.5, convertToRadians(315)}, 500);
+    fullChassis.insert({5, -55, convertToRadians(315)}, 500);
     fullChassis.execute();
+
 
 
     newX.runMotors(forwardVel);
     //GOAL 3
-    score3Balls(500);
+    score3Balls(2500);
     newX.forwardVelocity(0, 50);
+    pros::delay(150);
     odomSys.setState({0,0,convertToRadians(45)});
-    pros::delay(10);
+    pros::delay(150);
 
 
-    newX.runMotors(forwardVel);
-    pros::delay(1000);
-    newX.forwardVelocity(0, 50);
-    odomSys.setState({0,0,convertToRadians(45)});
-    pros::delay(10);
 
-
+    //newX.forwardVelocity(350, -350);
 
     driveCont.setGains({19, 0, 0.001, 0 });
     turnCont.setGains({ 270, 0, .2, 0 });
@@ -504,13 +517,15 @@ void robotTask(void* p) {
 
     driveCont.setGains({ 19.5, 0, 0.0002, 0 });
     turnCont.setGains({ 235, 0, .2, 0 });
-    fullChassis.insert({-29, -54, convertToRadians(0)}, 750);
-    fullChassis.insert({-12.5, -54, convertToRadians(0)}, 250);
-    fullChassis.insert({-8, -53.5, convertToRadians(0)}, 500);
+    fullChassis.insert({-29, -55, convertToRadians(0)}, 750);
+    fullChassis.insert({-12.5, -55, convertToRadians(0)}, 250);
+    fullChassis.insert({-8, -55, convertToRadians(0)}, 500);
     chassisController.changeFloorVel(75);
     fullChassis.execute();
+
     */
-    
+
+
     chassisController.changeFloorVel(40);
     driveCont.setGains({ 19.5, 0, 0.0002, 0 });
 
@@ -518,44 +533,48 @@ void robotTask(void* p) {
     pros::delay(150);
     //GOAL 6
     scoreIntakes(1);
-    odomSys.setState({ 0,0,convertToRadians(0) });
-    pros::delay(350);
+    pros::delay(150);
+    odomSys.setState({0,0,convertToRadians(0)});
+    pros::delay(150);
 
-    
-    driveCont.setGains(skillsStraight6);
-    fullChassis.insert({ -15, 0, 0} , 300);
-    fullChassis.insert({ -15, 0, convertToRadians(30) }, 300);
+
+    driveCont.setGains({ 15, 0, 0.0002, 0 });
+    fullChassis.insert({ -8, 0, 0} , 300);
+    fullChassis.insert({ -8, -8, convertToRadians(50) }, 300);
     fullChassis.execute();
     outtake(800); //MAKE SYNC
     pros::delay(10);
 
-    driveCont.setGains({16.5, 0, 0.0002, 0 });
-    turnCont.setGains({ 250, 0, .2, 0 });
+    //17,-35,270
+
     runIntake(600);
 
     chassisController.changeFloorVel(40);
-    driveCont.setGains({13.5, 0, 0.0002, 0 });
-    turnCont.setGains({ 275, 0, .2, 0 });
-    fullChassis.insert({ -13.5, -30, convertToRadians(270) }, 500);
-    fullChassis.insert({ -13.5, -44.75, convertToRadians(270)}, 1200); 
-    fullChassis.insert({ 3.15, -34.5, convertToRadians(0)}, 1000);
+    driveCont.setGains({15, 0, 0.0002, 0 });
+    turnCont.setGains({ 250, 0, .2, 0 });
+    fullChassis.insert({ -13.5, -31.5, convertToRadians(270) }, 1000);
+    fullChassis.insert({ -13.5, -40, convertToRadians(270)}, 500);
+    fullChassis.insert({ 3.75, -35, convertToRadians(0)}, 500);
     fullChassis.execute();
 
-    fullChassis.insert({ -13, -46.5, convertToRadians(330) }, 400);
-    fullChassis.insert({ 4.25, -53.25, convertToRadians(320)}, 400);
+    //fullChassis.insert({ -13, -46.5, convertToRadians(330) }, 400);
+    fullChassis.insert({ 4.25, -54, convertToRadians(310)}, 750);
     fullChassis.execute();
 
     newX.runMotors(forwardVel);
     pros::delay(350);
     //GOAL 9
     scoreBalls(1, 2);
+    pros::delay(150);
     odomSys.setState({0,0,convertToRadians(0)});
-    pros::delay(350);
+    pros::delay(150);
 
+    newX.forwardVelocity(350, -300);
     driveCont.setGains({18.5, 0, 0.0002, 0 });
-    fullChassis.insert({-39,  0, convertToRadians(0)}, 1000);
-    fullChassis.insert({-42, -38.75 , convertToRadians(324)}, 250);
+    //fullChassis.insert({-14,  0, convertToRadians(0)}, 1000);
+    fullChassis.insert({-43, -35 , convertToRadians(315)}, 250);
     fullChassis.execute();
+
 
     chassisController.changeFloorVel(40);
     driveCont.setGains({19, 0, 0.0002, 0});
@@ -563,8 +582,9 @@ void robotTask(void* p) {
     pros::delay(150);
     //GOAL 8
     scoreBalls(1, 1);
+    pros::delay(150);
     odomSys.setState({0,0,convertToRadians(0)});
-    pros::delay(350);
+    pros::delay(150);
 
     turnCont.setGains({ 275, 0, 0.0001, 0 });
     chassisController.changeFloorVel(30);
@@ -603,7 +623,7 @@ void robotTask(void* p) {
     fullChassis.insert({2.5, -36, convertToRadians(295)}, 700);
     p1 = { -2, -36.5 }; p2 = { -1, -38.5 }; p3 = { 18, -55.25 }; p4 = { 39.55, -55 };
     Spline spline2({ p1, p2, p3, p4 });
-    fullChassis.insert(spline2, 30, 1100);
+    fullChassis.insert(splinee2, 30, 1100);
     chassisController.changeFloorVel(85);
     fullChassis.execute();
     runUptake(15);
