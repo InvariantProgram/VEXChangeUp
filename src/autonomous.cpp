@@ -296,16 +296,16 @@
 
     flipOut();
 
-    delayUntilPhase(1);             //Goal 1 Outtake
+    delayUntilPhase(1);
     pros::delay(350);
-    outtake(1000);
+    outtake(1150);
     pros::delay(100);
     runIntake(600);
     runUptake(30);
 
     delayUntilPhase(2);
     pros::delay(500);
-    outtake(500);
+    outtake(650);
     pros::delay(100);
     runIntake(600);
 
@@ -323,6 +323,37 @@
     outtake(600);
     pros::delay(100);
     runIntake(600);
+
+    delayUntilPhase(5);
+    pros::delay(350);
+    outtake(1000);
+    pros::delay(100);
+    runIntake(600);
+    runUptake(30);
+
+    delayUntilPhase(6);
+    pros::delay(500);
+    outtake(650);
+    pros::delay(100);
+    runIntake(600);
+
+    delayUntilPhase(7);
+    pros::delay(325);
+    runUptake(-200);
+    runIntake(-600);
+    pros::delay(200);
+    runUptake(0);
+    pros::delay(500);
+    runIntake(0);
+
+
+    delayUntilPhase(8);
+    pros::delay(200);
+    outtake(850);
+    pros::delay(100);
+    runIntake(600);
+
+
   }
 
   /*
@@ -339,7 +370,7 @@
 
       double startTime = pros::millis();
 
-      driveCont.setGains({ 20.75, 0, 0.0005, 0 });
+      driveCont.setGains({ 21.25, 0, 0.0005, 0 });
       chassisController.changeFloorVel(25);
 
       fullChassis.changeError(0.25);
@@ -358,24 +389,25 @@
 
       driveCont.setGains({ 18.25, 0, 0.01, 0 });
       turnCont.setGains({ 205, 0, .2, 0 });
-      fullChassis.insert({ 40, -3, convertToRadians(44) }, 750);
+      fullChassis.insert({ 38, -6, convertToRadians(44) }, 750);
       fullChassis.execute();
       runIntake(0);
       newX.runMotors(forwardVel);
-      pros::delay(500);
+      pros::delay(750);
       //GOAL 7
       score3Balls(1400);
-      newX.stop(true);
+      //newX.stop(true);
       pros::delay(350);
       odomSys.setState({0,0,convertToRadians(0)});
       pros::delay(350);
 
       phase = 1;
+      driveCont.setGains({ 19, 0, 0.01, 0 });
       fullChassis.insert({ -18, 0, convertToRadians(0) }, 150);
       fullChassis.execute();
 
-      fullChassis.insert({ -61, 5, convertToRadians(250) }, 1200);
-      p1 = { -62.5, 0 }, p2 = { -74.55, -24 }, p3 = { -53, -27.25 }, p4 = { -43.25, -35.25 };
+      fullChassis.insert({ -60, 5, convertToRadians(250) }, 1200);
+      p1 = { -61.5, 0 }, p2 = { -74.55, -24 }, p3 = { -53, -27 }, p4 = { -43.25, -35 };
       Spline seventofour({ p1, p2, p3, p4 });
       fullChassis.insert(seventofour, 45, 1750);
       fullChassis.execute();
@@ -394,27 +426,29 @@
       pros::delay(100);
 
       phase = 2;
-      driveCont.setGains({ 13.5, 0, 0.0002, 0 });
+      driveCont.setGains({ 15, 0, 0.0002, 0 });
       fullChassis.insert({ -8, 0, 0} , 300);
       fullChassis.insert({ -8, -8, convertToRadians(50) }, 300);
       fullChassis.execute();
 
-      driveCont.setGains({14.75, 0, 0.001, 0 });
-      turnCont.setGains({ 250, 0, .2, 0 });
+      driveCont.setGains({16, 0, 0.001, 0 });
+      turnCont.setGains({ 255, 0, .2, 0 });
       fullChassis.insert({-17, -30, convertToRadians(270)}, 1000);
-      fullChassis.insert({ -17, -42.5, convertToRadians(270) }, 500);
+      fullChassis.insert({ -17, -42, convertToRadians(270) }, 500);
       fullChassis.execute();
 
-      driveCont.setGains({15.25, 0, 0.001, 0 });
+      driveCont.setGains({15.5, 0, 0.001, 0 });
       turnCont.setGains({ 260, 0, .15, 0 });
-      fullChassis.insert({2.5, -32.5, convertToRadians(0)}, 1000);
-      fullChassis.execute();
-
-      driveCont.setGains({10, 0, 0.001, 0 });
-      fullChassis.insert({3.5, -51, convertToRadians(315)}, 500);
+      fullChassis.insert({2, -33.5, convertToRadians(0)}, 1000);
       fullChassis.execute();
 
       index();
+
+      driveCont.setGains({12, 0, 0.001, 0 });
+      fullChassis.insert({ -13, -46.5, convertToRadians(330) }, 400);
+      fullChassis.insert({ 1.5, -51.5, convertToRadians(315)}, 500);
+      fullChassis.execute();
+
       newX.runMotors(forwardVel);
       //GOAL 1
       scoreBalls(1, 2);
@@ -430,7 +464,7 @@
       fullChassis.insert({ -40, -27, convertToRadians(340)}, 300);
       fullChassis.insert({ -52, -30, convertToRadians(320) }, 300);
       fullChassis.insert({ -47, -33.5 , convertToRadians(315)}, 400);
-      fullChassis.insert({ -42, -36.75, convertToRadians(315) }, 200);
+      fullChassis.insert({ -43, -36, convertToRadians(315) }, 200);
       fullChassis.execute();
 
 
@@ -451,7 +485,7 @@
       driveCont.setGains({19.5, 0, 0.0002, 0 });
       turnCont.setGains({ 270, 0, .2, 0 });
       chassisController.toAngle(convertToRadians(180));
-      fullChassis.insert({-23.5, 3.5, convertToRadians(180)}, 500);
+      fullChassis.insert({-23.5, -6, convertToRadians(180)}, 500);
       fullChassis.execute();
 
       turnCont.setGains({ 250, 0, .2, 0 });
@@ -478,19 +512,18 @@
 
       driveCont.setGains({19, 0, 0.001, 0 });
       turnCont.setGains({ 180, 0, .2, 0 });
-      
+
+      phase = 5;
       fullChassis.insert({-18, 0, convertToRadians(0)}, 150);
       fullChassis.execute();
-      outtake(1000);
 
-      runIntake(600);
-      runUptake(30);
+
       fullChassis.insert({ -61, 5, convertToRadians(250) }, 1200);
       p1 = { -62.5, 0 }, p2 = { -79, -24 }, p3 = { -53, -25.5 }, p4 = { -41, -34.5 };
       Spline threetosix({ p1, p2, p3, p4 });
       fullChassis.insert(threetosix, 45, 1750);
       fullChassis.execute();
-      
+
       runIntake(0);
       runUptake(0);
       newX.runMotors(forwardVel);
@@ -505,16 +538,13 @@
       pros::delay(350);
 
 
-      driveCont.setGains({ 15, 0, 0.0002, 0 });
+      phase = 6;
+      driveCont.setGains({ 16, 0, 0.0002, 0 });
       fullChassis.insert({ -8, 0, 0} , 300);
       fullChassis.insert({ -8, -8, convertToRadians(50) }, 300);
       fullChassis.execute();
-      outtake(800); //MAKE SYNC
-      pros::delay(10);
 
-      //17,-35,270
 
-      runIntake(600);
 
       driveCont.setGains({15, 0, 0.0002, 0 });
       turnCont.setGains({ 250, 0, .2, 0 });
@@ -536,6 +566,7 @@
       odomSys.setState({0,0,convertToRadians(0)});
       pros::delay(350);
 
+      phase = 7;
       newX.forwardVelocity(350, -300);
       driveCont.setGains({ 18.5, 0, 0.0002, 0 }); //18.5, 0, 0.0002
       fullChassis.insert({ -18,  0, convertToRadians(0) }, 200);
@@ -545,30 +576,30 @@
       fullChassis.insert({ -42, -36.75, convertToRadians(315) }, 200);
       fullChassis.execute();
 
-
-      driveCont.setGains({19, 0, 0.0002, 0});
-      newX.runMotors(forwardVel);
-      pros::delay(150);
+      newX.runMotors(fasterForwardVel);
       //GOAL 8
       scoreBalls(1, 1);
-      pros::delay(150);
+      newX.stop(true);
+      pros::delay(350);
       odomSys.setState({0,0,convertToRadians(0)});
-      pros::delay(150);
+      pros::delay(350);
 
+
+      phase = 8;
+      driveCont.setGains({19, 0, 0.0002, 0});
       turnCont.setGains({ 275, 0, 0.0001, 0 });
       fullChassis.insert({ -2, 0, convertToRadians(0) }, 200);
       fullChassis.insert({-5.5, 0, convertToRadians(35)}, 100);
       fullChassis.execute();
-      outtake(1000);
-      pros::delay(10);
 
-      runIntake(600);
+
+
 
       driveCont.setGains({ 19, 0, 0.004, 0 });
       fullChassis.insert({ -19, -0.25, convertToRadians(180) }, 500);
       fullChassis.insert({-25, 0.25, convertToRadians(180)}, 300);
-      fullChassis.insert({ -32.5, 0, convertToRadians(180) }, 200);
-      fullChassis.insert({ -34.25, 0, convertToRadians(180) }, 500);
+      fullChassis.insert({ -32.5, -2, convertToRadians(180) }, 200);
+      fullChassis.insert({ -34.25, -4.25, convertToRadians(180) }, 500);
       fullChassis.execute();
 
       newX.runMotors(forwardVel);
