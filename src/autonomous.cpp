@@ -324,7 +324,7 @@
 
       double startTime = pros::millis();
 
-      driveCont.setGains({ 23.5, 0, 0.0005, 0 });
+      driveCont.setGains({ 19, 0, 0.0005, 0 });
       chassisController.changeFloorVel(35);
 
       fullChassis.changeError(0.25);
@@ -393,7 +393,8 @@
       odomSys.setState({0,0, convertToRadians(0)});
 
       fullChassis.insert({15, 0, convertToRadians(0)}, 250);
-      fullChassis.insert({22, 0, convertToRadians(0)}, 750);
+      fullChassis.insert({17, 2, convertToRadians(0)}, 250);
+      fullChassis.insert({22, 2, convertToRadians(0)}, 750);
       fullChassis.execute();
 
 /*
@@ -418,6 +419,7 @@
       pros::delay(150);
       //GOAL 4
       scoreIntakes(1);
+      newX.forwardVelocity(0, 50);
       pros::delay(150);
       newX.forwardVelocity(125, 500);
       pros::delay(100);
@@ -435,18 +437,18 @@
       driveCont.setGains({13.5, 0, 0.001, 0 });
       turnCont.setGains({ 250, 0, .2, 0 });
       runIntake(600);
-      fullChassis.insert({-17.5, -30, convertToRadians(270)}, 1000);
+      fullChassis.insert({-16.5, -30, convertToRadians(270)}, 1000);
       chassisController.changeFloorVel(50);
       fullChassis.execute();
 
       driveCont.setGains({14.5, 0, 0.001, 0 });
       turnCont.setGains({ 260, 0, .2, 0 });
-      fullChassis.insert({-17.5, -42.5, convertToRadians(270)}, 500);
+      fullChassis.insert({-17, -42.5, convertToRadians(270)}, 500);
       fullChassis.insert({2.5, -32.5, convertToRadians(0)}, 1000);
       fullChassis.execute();
 
       driveCont.setGains({10, 0, 0.001, 0 });
-      fullChassis.insert({2.5, -52.5, convertToRadians(315)}, 1000);
+      fullChassis.insert({3.5, -51, convertToRadians(315)}, 500);
       fullChassis.execute();
   /*
 
@@ -489,7 +491,7 @@
       newX.forwardVelocity(350, -300);
       driveCont.setGains({18.5, 0, 0.0002, 0 });
       //fullChassis.insert({-14,  0, convertToRadians(0)}, 1000);
-      fullChassis.insert({-43, -35 , convertToRadians(315)}, 250);
+      fullChassis.insert({-43, -34 , convertToRadians(315)}, 750);
       fullChassis.execute();
 
 
@@ -516,13 +518,13 @@
 
       driveCont.setGains({19.5, 0, 0.0002, 0 });
       chassisController.toAngle(convertToRadians(182));
-      fullChassis.insert({-23.5, -1, convertToRadians(182)}, 500);
+      fullChassis.insert({-23.5, 4.5, convertToRadians(182)}, 500);
       fullChassis.execute();
 
       turnCont.setGains({ 250, 0, .2, 0 });
       fullChassis.insert({-17, -21, convertToRadians(310)}, 750);
       fullChassis.insert({-4, -37 , convertToRadians(310)}, 1000);
-      fullChassis.insert({-14, -55, convertToRadians(270)}, 350);
+      fullChassis.insert({-13, -55, convertToRadians(270)}, 350);
       fullChassis.execute();
 
       index();
