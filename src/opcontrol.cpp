@@ -140,7 +140,7 @@ void intake(void* p) {
         bool X = cont.get_digital_new_press(E_CONTROLLER_DIGITAL_X);
 
         if (Y) {
-            double startTime = pros::millis();
+        /*    double startTime = pros::millis();
             rightIntake.move_velocity(150);
             leftIntake.move_velocity(150);
             rightUptake.move_velocity(170);
@@ -154,6 +154,7 @@ void intake(void* p) {
             leftIntake.move_velocity(0);
             rightUptake.move_velocity(0);
             leftUptake.move_velocity(0);
+            */
 ;        }
         if (R2) {
             rightUptake.move_velocity(600);
