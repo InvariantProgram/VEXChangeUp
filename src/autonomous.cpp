@@ -22,7 +22,7 @@
   pros::ADIEncoder leftEnc(LeftEncTop, LeftEncBot);
   pros::ADIEncoder horEnc(HorEncTop, HorEncBot);
 
-  Chassis newChassis{ 2.75, 13.4, 6.25 };
+  Chassis newChassis{ 2.75, 13.1675, 6.25 };
   Sensor_vals valStorage{ 0, 0, 0, true };
 
   ThreeTrackerOdom odomSys(newChassis);
@@ -280,6 +280,20 @@
       runUptake(0);
   }
 
+  void scoreAuto(int inBalls, int beforeShot=700, int timeOut = 2000) {
+    ballsIn = 0;
+    runIntake(300);
+    runUptake(600);
+    pros::delay(beforeShot);
+    bool intGo = true;
+    double initTime = pros::millis();
+    while (intGo && (pros::millis() - initTime) < timeOut) {
+        if (ballsIn >= inBalls) intGo = false;
+    }
+    runIntake(0);
+    pros::delay(200);
+    runUptake(0);
+  }
 
   void delayUntilPhase(int waitUntil) {
     while (phase < waitUntil) {
@@ -298,120 +312,78 @@
 
     flipOut();
 
+/* //Full Cycle 9 and 6
     delayUntilPhase(1);
-    index();
-    pros::delay(50);
-    runIntake(-5);
-
-    delayUntilPhase(2);
+    pros::delay(125);
+    scoreAuto(3, 1100);
+    phase = 2;
     pros::delay(350);
-    outtake(1350);
-    pros::delay(50);
-    runIntake(600);
-    runUptake(30);
+    outtake(1000);
 
-    delayUntilPhase(3);
-    pros::delay(500);
-    outtake(650);
-    pros::delay(300);
-    runIntake(600);
+    */
 
-    delayUntilPhase(4);
-    pros::delay(2750);
-    index();
-    runUptake(-35);
-    pros::delay(275);
-    runUptake(-5);
-
-
-    delayUntilPhase(5);
-    runIntake(-200);
-    pros::delay(150);
-    runIntake(0);
-    pros::delay(325);
-    runUptake(-200);
-    runIntake(-600);
-    pros::delay(225);
-    runUptake(0);
-    pros::delay(500);
-    runIntake(0);
-
-
-    delayUntilPhase(6);
-    pros::delay(200);
-    outtake(600);
-    pros::delay(100);
-    runIntake(600);
-
-    delayUntilPhase(7);
-    pros::delay(1500);
-    index();
-    pros::delay(50);
-    runIntake(600);
-
-    delayUntilPhase(8);
-    pros::delay(350);
+/* // 7 then 2 ball clamp mid
+    delayUntilPhase(1);
+    pros::delay(125);
+    scoreAuto(3, 1100);
+    phase = 2;
+    pros::delay(475);
     outtake(1000);
     pros::delay(100);
     runIntake(600);
-    runUptake(30);
-    pros::delay(2750);
-    runIntake(0);
 
-    delayUntilPhase(9);
-    pros::delay(500);
-    outtake(700);
-    pros::delay(100);
+    delayUntilPhase(3);
     runIntake(600);
-
-    delayUntilPhase(10);
-    pros::delay(2750);
-    index();
-
-    delayUntilPhase(11);
-    runIntake(-200);
-    pros::delay(150);
+    runUptake(50);
+    pros::delay(250);
     runIntake(0);
-    pros::delay(325);
-    runUptake(-200);
-    runIntake(-600);
-    pros::delay(200);
     runUptake(0);
-    pros::delay(500);
-    runIntake(0);
 
-    delayUntilPhase(12);
-    pros::delay(300);
-    outtake(750);
-    pros::delay(50);
-    runIntake(600);
-
-    delayUntilPhase(13);
+    delayUntilPhase(4);
     index();
-    pros::delay(300);
-    runIntake(-600);
-
-
-/*
-    delayUntilPhase(6);
-    pros::delay(500);
-    outtake(650);
-    pros::delay(100);
-    runIntake(600);
-    delayUntilPhase(7);
-    pros::delay(325);
-    runUptake(-200);
-    runIntake(-600);
-    pros::delay(200);
-    runUptake(0);
-    pros::delay(500);
-    runIntake(0);
-    delayUntilPhase(8);
-    pros::delay(200);
-    outtake(850);
-    pros::delay(100);
-    runIntake(600);
 */
+
+
+
+/* //60833d but better (incomplete)
+    delayUntilPhase(1);
+    pros::delay(650);
+    scoreAuto(3, 1100);
+    phase = 2;
+    pros::delay(475);
+    outtake(1000);
+    pros::delay(100);
+    runIntake(600);
+
+    delayUntilPhase(3);
+    index();
+
+*/
+
+     //HOME ROW w/ MID
+
+    delayUntilPhase(1);
+    pros::delay(150);
+    scoreAuto(3, 1100);
+    phase = 2;
+    pros::delay(600);
+    outtake(1000);
+
+    delayUntilPhase(3);
+    pros::delay(350);
+    outtakeGoal2(1250);
+    pros::delay(100);
+    runIntake(600);
+
+    delayUntilPhase(4);
+    scoreAuto(3);
+    phase = 5;
+    pros::delay(350);
+    runIntake(600);
+    runUptake(35);
+    pros::delay(450);
+    runIntake(0);
+    runUptake(0);
 
   }
 
@@ -424,10 +396,219 @@
 
 
   void robotTask(void* p) {
-      Point p1, p2, p3, p4;
+
+      driveCont.setGains({18.5, 0, 0.00001, 0});
+      turnCont.setGains({ 180, 0, 0, 0 });
+
       newX.changeGearset(pros::E_MOTOR_GEARSET_06);
 
       double startTime = pros::millis();
+
+      /* Full Cycle 9 and 6
+
+      driveCont.setGains({18.5, 0, 0.00001, 0});
+      turnCont.setGains({ 180, 0, 0, 0 });
+
+      fullChassis.insert({ 12.5, 14.5, convertToRadians(311) }, 500);
+      fullChassis.insert({ 16.25, 8.5, convertToRadians(313) }, 200); //15,6
+      chassisController.changeFloorVel(50);
+      fullChassis.execute();
+
+
+      phase = 1;
+      newX.forwardVelocity(750, 200);
+      delayUntilPhase(2);
+      newX.forwardVelocity(300, -200);
+
+      driveCont.setGains({16, 0, 0.00001, 0});
+      turnCont.setGains({ 207, 0, .2, 0 });
+      fullChassis.insert({ 9, 16.5, convertToRadians(313) }, 200);
+      fullChassis.execute();
+
+      driveCont.setGains({16, 0, 0.00001, 0});
+      turnCont.setGains({ 207, 0, .2, 0 });
+      fullChassis.insert({ 9, 16.5, convertToRadians(50) }, 500);
+      Point p1 = { 9, 16.5 }, p2 = { 11, 28 }, p3 = { 18.5, 37 }, p4 = { 24.75, 45 }; //59
+      Spline spline1({ p1, p2, p3, p4 });
+      fullChassis.insert(spline1, 30, 700);
+      fullChassis.execute();
+
+      pros::delay(100);
+      newX.forwardVelocity(325, 100);
+
+      scoreBalls(2, 4, 5000);
+
+      newX.forwardVelocity(325, -100);
+
+*/
+
+
+
+/*    ///7 then 2 ball clamp mid
+      driveCont.setGains({18.5, 0, 0.00001, 0});
+      turnCont.setGains({ 180, 0, 0, 0 });
+
+      fullChassis.insert({ 12.5, -14.5, convertToRadians(49) }, 500);
+      fullChassis.insert({ 14.5, -8.5, convertToRadians(45) }, 200); //15,6
+      chassisController.changeFloorVel(50);
+      fullChassis.execute();
+
+      phase = 1;
+      newX.forwardVelocity(750, 200);
+      delayUntilPhase(2);
+      newX.forwardVelocity(300, -200);
+
+      driveCont.setGains({15, 0, 0.00001, 0});
+      turnCont.setGains({ 207, 0, .2, 0 });
+      fullChassis.insert({ 0, -10, convertToRadians(300) }, 200);
+      Point p1 = { 0, -12 }, p2 = { 3,-15 }, p3 = { 9.75, -18.5 }, p4 = { 9.75, -45 };
+      Spline spline1({ p1, p2, p3, p4 });
+      fullChassis.insert(spline1, 30, 700);
+      fullChassis.execute();
+
+      phase = 3;
+      pros::delay(250);
+      driveCont.setGains({12, 0, 0.00001, 0});
+      fullChassis.insert({ -7, -47.25, convertToRadians(275) }, 500);
+      fullChassis.execute();
+
+      newX.strafeVelocity(350, 150);
+
+      phase = 4;
+      fullChassis.insert({ -14.5, -31.5, convertToRadians(240) }, 500);
+      fullChassis.insert({ -28, -34, convertToRadians(278) }, 650);
+      fullChassis.execute();
+
+      runIntake(600);
+      fullChassis.insert({ -29, -40.5, convertToRadians(280) }, 650);
+      fullChassis.execute();
+
+
+      runIntake(600);
+      newX.forwardVelocity(650, 150);
+
+      //pros::delay(800);
+
+      runIntake(0);
+      shoot(1);
+      pros::delay(150);
+      shoot(1);
+
+
+
+      while (pros::millis() - startTime < 14600) {
+         pros::delay(20);
+     }
+     runIntake(-100);
+     newX.forwardVelocity(300, -350);
+     runIntake(0);
+*/
+
+/* /// 60833D but better (INCOMPLETE AND POINTLESS)
+      driveCont.setGains({18.5, 0, 0.00001, 0});
+      turnCont.setGains({ 180, 0, 0, 0 });
+
+      fullChassis.insert({ 12.5, -14.5, convertToRadians(49) }, 200);
+      fullChassis.insert({ 14, -8.5, convertToRadians(45) }, 200); //15,6
+      chassisController.changeFloorVel(50);
+      fullChassis.execute();
+
+      phase = 1;
+      newX.forwardVelocity(750, 200);
+      delayUntilPhase(2);
+      newX.forwardVelocity(300, -200);
+
+      driveCont.setGains({15, 0, 0.00001, 0});
+      turnCont.setGains({ 207, 0, .2, 0 });
+      fullChassis.insert({ 0, -10, convertToRadians(300) }, 200);
+      Point p1 = { 0, -12 }, p2 = { 3,-15 }, p3 = { 9.75, -18.5 }, p4 = { 9.75, -45 };
+      Spline spline1({ p1, p2, p3, p4 });
+      fullChassis.insert(spline1, 30, 700);
+      fullChassis.execute();
+
+      phase = 3;
+      driveCont.setGains({12, 0, 0.00001, 0});
+      fullChassis.insert({ -7, -47.25, convertToRadians(275) }, 500);
+      fullChassis.execute();
+
+      newX.strafeVelocity(350, 150);
+
+      fullChassis.insert({ -14.5, -31.5, convertToRadians(240) }, 500);
+      fullChassis.insert({ -26, -33, convertToRadians(184) }, 650);
+      fullChassis.insert({ -75, -37, convertToRadians(240) }, 750);
+      fullChassis.execute();
+
+      //fullChassis.insert({ -86.5, -51.5, convertToRadians(236) }, 200); -83.5,-46,237
+      fullChassis.insert({ -90, -44.5, convertToRadians(264) }, 500);
+      fullChassis.execute();
+
+      outtake(1000);
+
+      newX.forwardVelocity(100, -300);
+
+*/
+
+ ///HOME ROW w/ MID
+
+      driveCont.setGains({18.5, 0, 0.00001, 0});
+      turnCont.setGains({ 180, 0, 0, 0 });
+
+      fullChassis.insert({ 12.5, 14.5, convertToRadians(311) }, 500);
+      fullChassis.insert({ 16.25, 8.5, convertToRadians(313) }, 200); //15,6
+      chassisController.changeFloorVel(50);
+      fullChassis.execute();
+
+
+      phase = 1;
+      newX.forwardVelocity(750, 200);
+      delayUntilPhase(2);
+      newX.forwardVelocity(300, -200);
+
+      driveCont.setGains(auto2);
+      turnCont.setGains(turn2);
+      fullChassis.insert({ -29, 7, convertToRadians(270) }, 500);
+      chassisController.changeFloorVel(100);
+      fullChassis.execute();
+
+      newX.forwardVelocity(500, 200);
+      scoreBalls(1, 2, 1500);
+
+      phase = 3;
+      newX.forwardVelocity(500, -200);
+      pros::delay(350);
+
+      runIntake(600);
+      fullChassis.insert({ -38, 25, convertToRadians(265) }, 400);
+      fullChassis.insert({ -65, 25, convertToRadians(240) }, 400);
+      fullChassis.insert({ -76.5, 6.5, convertToRadians(225) }, 400);
+      fullChassis.execute();
+
+
+      phase = 4;
+      newX.forwardVelocity(600, 200);
+      delayUntilPhase(5);
+      newX.forwardVelocity(300, -200);
+
+
+/*
+      if ((pros::millis() - startTime) > 13000) {
+          pros::delay(7000);
+      }
+*/
+
+
+      driveCont.setGains({16, 0, 0, 0});
+      turnCont.setGains({225, 0, 0, 0});
+      fullChassis.insert({ -52, 44.5, convertToRadians(93.5) }, 750);
+      chassisController.changeFloorVel(50);
+      fullChassis.execute();
+
+
+
+      newX.strafeVelocity(350, 200);
+
+
+/*
 
       driveCont.setGains({ 21, 0, 0.002, 0 });
       turnCont.setGains({ 205, 0, 0, 0 });
@@ -667,6 +848,7 @@
       phase = 13;
       newX.forwardVelocity(750, -450);
       runIntake(0);
+      */
   }
 
   void odomTask(void* p) {
