@@ -207,7 +207,7 @@ void showOdomDriver(void* p) {
     pros::ADIEncoder horEnc(HorEncTop, HorEncBot);
 
     Sensor_vals valStorage{ 0, 0, 0, true };
-    Chassis newChassis{ 2.75, 13.1675, 6.25 };
+    Chassis newChassis{ 2.75, 13.4, 6.25 };
     ThreeTrackerOdom odomSys(newChassis);
 
     pros::Distance botDistance(botDist);
