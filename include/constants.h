@@ -40,7 +40,7 @@
 #define shotDist 11
 
 #define shotDetect 180
-#define detectLimit 40
+#define detectLimit 30
 #define topDetect 70
 
 #define deltaLimit 6

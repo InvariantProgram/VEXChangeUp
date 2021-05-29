@@ -229,7 +229,7 @@ void score3Balls(int delay = 2500) {
 
 void scoreBalls(int shootBalls, int inBalls, int delay = 2500) {
     ballsIn = 0; ballsOut = 0;
-    runIntake(300);
+    runIntake(450);
     runUptake(200);
     double initTime = pros::millis();
     bool intGo = true, upGo = true;
@@ -283,8 +283,9 @@ void outtakeToBall(int balls, int timeout = 1250) {
 void scoreAuto(int inBalls, int beforeShot = 700, int timeOut = 2000) {
     ballsIn = 0;
     runIntake(300);
-    runUptake(600);
+    runUptake(30);
     pros::delay(beforeShot);
+    runUptake(600);
     bool intGo = true;
     double initTime = pros::millis();
     while (intGo && (pros::millis() - initTime) < timeOut) {
@@ -323,10 +324,10 @@ void subsystemSynchronous(void* p) {
     else if (selectedAuton == "Left to Mid (7, MID)") {
         delayUntilPhase(1);
         pros::delay(125);
-        scoreAuto(3, 1100);
+        scoreAuto(3, 800, 1500);
         phase = 2;
-        pros::delay(475);
-        outtake(1000);
+        pros::delay(275);
+        outtake(1500);
         pros::delay(100);
         runIntake(600);
 
@@ -338,9 +339,9 @@ void subsystemSynchronous(void* p) {
         runUptake(0);
 
         delayUntilPhase(4);
-        index();
+        index(2000);
     }
-    else if (selectedAuton == "Right Side (9, 6)") {
+    else if (selectedAuton == "Home Row") {
         delayUntilPhase(1);
         pros::delay(150);
         scoreAuto(3, 1100);
@@ -355,7 +356,7 @@ void subsystemSynchronous(void* p) {
         runIntake(600);
 
         delayUntilPhase(4);
-        scoreAuto(3);
+        scoreAuto(3, 700, 1000);
         phase = 5;
         pros::delay(350);
         runIntake(600);
@@ -363,6 +364,56 @@ void subsystemSynchronous(void* p) {
         pros::delay(450);
         runIntake(0);
         runUptake(0);
+    }
+    else if (selectedAuton == "Home Row Jiggle") {
+        delayUntilPhase(1);
+        scoreBalls(1, 1);
+        phase = 2;
+        pros::delay(300);
+        runIntake(500);
+        runUptake(30);
+        pros::delay(600);
+        runIntake(0);
+        runUptake(0);
+
+        delayUntilPhase(3);
+        scoreBalls(1, 0);
+        phase = 4;
+
+        delayUntilPhase(5);
+        pros::delay(350);
+        outtakeGoal2(1250);
+        pros::delay(100);
+        runIntake(600);
+
+        delayUntilPhase(6);
+        intakeToMax(400, 1000);
+        scoreBalls(1, 0);
+        phase = 7;
+        pros::delay(350);
+        runIntake(600);
+        runUptake(35);
+        pros::delay(450);
+        runIntake(0);
+        runUptake(0);
+    }
+    else if (selectedAuton == "9 to 8") {
+        delayUntilPhase(1);
+        pros::delay(150);
+        scoreAuto(3, 1300);
+        phase = 2;
+        pros::delay(600);
+        outtake(1000);
+
+        delayUntilPhase(3);
+        scoreAuto(2, 750, 2500);
+        phase = 4;
+
+        delayUntilPhase(5);
+        pros::delay(350);
+        outtakeGoal2(1250);
+        pros::delay(100);
+        runIntake(600);
     }
     else {
         delayUntilPhase(1);
@@ -408,18 +459,22 @@ void robotTask(void* p) {
     double startTime = pros::millis();
 
     //Full Cycle 9 and 6
-    if (selectedAuton == "Right Side (9, 6)") {
+    if (selectedAuton == "Right Side (9,6)") {
         driveCont.setGains({ 18.5, 0, 0.00001, 0 });
         turnCont.setGains({ 180, 0, 0, 0 });
 
         fullChassis.insert({ 12.5, 14.5, convertToRadians(311) }, 500);
-        fullChassis.insert({ 16.25, 8.5, convertToRadians(313) }, 200); //15,6
+        fullChassis.insert({ 15, 8.5, convertToRadians(313) }, 200); //15,6
         chassisController.changeFloorVel(50);
         fullChassis.execute();
 
 
         phase = 1;
         newX.forwardVelocity(750, 200);
+        newX.forwardVelocity(250, -100);
+        newX.forwardVelocity(250, 100);
+        newX.forwardVelocity(250, -100);
+        newX.forwardVelocity(250, 100);
         delayUntilPhase(2);
         newX.forwardVelocity(300, -200);
 
@@ -456,15 +511,22 @@ void robotTask(void* p) {
 
         phase = 1;
         newX.forwardVelocity(750, 200);
+        pros::delay(350);
+        newX.forwardVelocity(250, -100);
+        newX.forwardVelocity(250, 100);
+        newX.forwardVelocity(250, -100);
+        newX.forwardVelocity(250, 100);
         delayUntilPhase(2);
         newX.forwardVelocity(300, -200);
+
+        pros::delay(200);
 
         driveCont.setGains({ 15, 0, 0.00001, 0 });
         turnCont.setGains({ 207, 0, .2, 0 });
         fullChassis.insert({ 0, -10, convertToRadians(300) }, 200);
-        Point p1 = { 0, -12 }, p2 = { 3,-15 }, p3 = { 9.75, -18.5 }, p4 = { 9.75, -45 };
+        Point p1 = { 0, -12 }, p2 = { 3,-15 }, p3 = { 8.65, -18.5 }, p4 = { 8.65, -45 };
         Spline spline1({ p1, p2, p3, p4 });
-        fullChassis.insert(spline1, 30, 700);
+        fullChassis.insert(spline1, 35, 700);
         fullChassis.execute();
 
         phase = 3;
@@ -477,30 +539,30 @@ void robotTask(void* p) {
 
         phase = 4;
         fullChassis.insert({ -14.5, -31.5, convertToRadians(240) }, 500);
-        fullChassis.insert({ -28, -34, convertToRadians(278) }, 650);
+        fullChassis.insert({ -26.75, -38, convertToRadians(278) }, 650);
         fullChassis.execute();
 
         runIntake(600);
-        fullChassis.insert({ -29, -40.5, convertToRadians(280) }, 650);
+        fullChassis.insert({ -27, -40.5, convertToRadians(280) }, 150);
         fullChassis.execute();
 
 
-        runIntake(600);
+        runIntake(300);
         newX.forwardVelocity(650, 150);
 
-        //pros::delay(800);
+        runUptake(100);
+        pros::delay(800);
 
-        runIntake(0);
+        runIntake(-50);
         shoot(1);
         pros::delay(150);
         shoot(1);
 
-
-
+        
         while (pros::millis() - startTime < 14600) {
             pros::delay(20);
         }
-        runIntake(-100);
+        runIntake(-200);
         newX.forwardVelocity(300, -350);
         runIntake(0);
     }
@@ -524,7 +586,7 @@ void robotTask(void* p) {
 
         driveCont.setGains(auto2);
         turnCont.setGains(turn2);
-        fullChassis.insert({ -29, 7, convertToRadians(270) }, 500);
+        fullChassis.insert({ -28.75, 10.5, convertToRadians(270) }, 500);
         chassisController.changeFloorVel(100);
         fullChassis.execute();
 
@@ -537,23 +599,103 @@ void robotTask(void* p) {
 
         runIntake(600);
         fullChassis.insert({ -38, 25, convertToRadians(265) }, 400);
-        fullChassis.insert({ -65, 25, convertToRadians(240) }, 400);
-        fullChassis.insert({ -76.5, 6.5, convertToRadians(225) }, 400);
+        fullChassis.insert({ -60, 25, convertToRadians(240) }, 400);
+        fullChassis.insert({ -76.5, 6.5, convertToRadians(225) }, 400); //-76.5
         fullChassis.execute();
 
 
         phase = 4;
         newX.forwardVelocity(600, 200);
         delayUntilPhase(5);
-        newX.forwardVelocity(300, -200);
+        newX.forwardVelocity(500, -200);
+
+        if (pros::millis() - startTime > 13300) {
+            chassisController.toAngle(convertToRadians(90));
+            pros::delay(3000);
+        }
 
         driveCont.setGains({ 16, 0, 0, 0 });
         turnCont.setGains({ 225, 0, 0, 0 });
-        fullChassis.insert({ -52, 44.5, convertToRadians(93.5) }, 750);
+        fullChassis.insert({ -52, 45.5, convertToRadians(93.5) }, 750); //-52, 45.5, 93.5
         chassisController.changeFloorVel(50);
         fullChassis.execute();
 
         newX.strafeVelocity(350, 200);
+    }
+    //Jiggle at goals; no mid
+    else if (selectedAuton == "Home Row Jiggle") {
+        driveCont.setGains({ 18.5, 0, 0.00001, 0 });
+        turnCont.setGains({ 180, 0, 0, 0 });
+
+        fullChassis.insert({ 12.5, 14.5, convertToRadians(311) }, 500);
+        fullChassis.insert({ 16.25, 8.5, convertToRadians(313) }, 200); //15,6
+        chassisController.changeFloorVel(50);
+        fullChassis.execute();
+
+        phase = 1;
+        newX.forwardVelocity(750, 200);
+        delayUntilPhase(2);
+        newX.forwardVelocity(300, -200);
+
+        driveCont.setGains(auto2);
+        turnCont.setGains(turn2);
+        fullChassis.insert({ -29, 10.5, convertToRadians(270) }, 500);
+        chassisController.changeFloorVel(100);
+        fullChassis.execute();
+
+        phase = 3;
+        newX.forwardVelocity(600, 200);
+        delayUntilPhase(4);
+        newX.forwardVelocity(300, -200);
+        phase = 5;
+
+        fullChassis.insert({ -38, 25, convertToRadians(265) }, 400);
+        fullChassis.insert({ -60, 25, convertToRadians(240) }, 400);
+        fullChassis.insert({ -76.5, 6.5, convertToRadians(225) }, 400); //-76.5
+        fullChassis.execute();
+
+        phase = 6;
+        newX.forwardVelocity(700, 200);
+        delayUntilPhase(7);
+        newX.forwardVelocity(600, -200);
+    }
+    else if (selectedAuton == "9 to 8") {
+        driveCont.setGains({ 18.5, 0, 0.00001, 0 });
+        turnCont.setGains({ 180, 0, 0, 0 });
+
+        fullChassis.insert({ 12.5, 14.5, convertToRadians(311) }, 500);
+        fullChassis.insert({ 16.25, 8.5, convertToRadians(313) }, 200); //15,6
+        chassisController.changeFloorVel(50);
+        fullChassis.execute();
+
+        phase = 1;
+        newX.forwardVelocity(750, 200);
+        newX.forwardVelocity(250, 100);
+        newX.forwardVelocity(250, -100);
+        newX.forwardVelocity(350, 100);
+        delayUntilPhase(2);
+        newX.forwardVelocity(300, -200);
+
+        driveCont.setGains(auto2);
+        turnCont.setGains(turn2);
+        fullChassis.insert({ -29, 10.5, convertToRadians(270) }, 500);
+        chassisController.changeFloorVel(100);
+        fullChassis.execute();
+
+        phase = 3;
+        newX.forwardVelocity(600, 200);
+        pros::delay(300);
+        newX.forwardVelocity(250, -100);
+        newX.forwardVelocity(250, 100);
+        newX.forwardVelocity(250, -100);
+        newX.forwardVelocity(250, 100);
+        delayUntilPhase(4);
+        newX.forwardVelocity(300, -200);
+        phase = 5;
+
+        fullChassis.insert({ -5, 20, convertToRadians(90) }, 100);
+        fullChassis.execute();
+        runIntake(0);
     }
     else {
         driveCont.setGains({ 18.5, 0, 0.00001, 0 });
@@ -597,7 +739,7 @@ void robotTask(void* p) {
 
         driveCont.setGains({ 16, 0, 0, 0 });
         turnCont.setGains({ 225, 0, 0, 0 });
-        fullChassis.insert({ -52, 44.5, convertToRadians(93.5) }, 750);
+        fullChassis.insert({ -52, 45.5, convertToRadians(93.5) }, 750);
         chassisController.changeFloorVel(50);
         fullChassis.execute();
 
