@@ -9,7 +9,7 @@
  static lv_res_t btnm_action(lv_obj_t * btnm, const char * txt);
 
  std::string selectedAuton = "None";
- const char * btnarr_map[] = {"Home Row", "Home Row Jiggle", "\n",
+ const char * btnarr_map[] = {"Left Top Off", "Home Row", "\n",
                                "Left to Mid (7, MID)", "Right Side (9,6)", "\n",
                                "9 to 8", "None", ""};
 
