@@ -3,8 +3,7 @@
     "",
     "\\include",
     "\\include\\QuantumOdom",
-    "\\src",
-    "\\src\\QuantumOdom"
+    "\\src"
   ],
   "SelectedNode": "\\src\\autonomous.cpp",
   "PreviewInSolutionExplorer": false

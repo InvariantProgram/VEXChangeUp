@@ -9,9 +9,9 @@
  static lv_res_t btnm_action(lv_obj_t * btnm, const char * txt);
 
  std::string selectedAuton = "None";
- const char * btnarr_map[] = {"Home Row", "10B Grind", "\n",
-                               "Home Row: Surface", "Home Row: No Mid", "\n",
-                               "Skills", "None", ""};
+ const char * btnarr_map[] = {"Home Row", "Cap Home Row", "\n",
+                               "7 to Mid", "7-Mid Cap", "\n",
+                               "8-7-Mid", "9 and 6", ""};
 
 void initialize() {
 }
@@ -47,7 +47,7 @@ void competition_initialize() {
   lv_obj_align(btnm1, label, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 5);
   lv_btnm_set_toggle(btnm1, true, 5);
 
-  //Styles, yay!
+  //Styles
   static lv_style_t style_bg;
   lv_style_copy(&style_bg, &lv_style_plain);
   style_bg.body.main_color = LV_COLOR_BLACK;
