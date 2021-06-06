@@ -323,13 +323,21 @@ void subsystemSynchronous(void* p) {
 
     flipOut();
 
-    if (selectedAuton == "Right Side (9, 6)") {
+    if (selectedAuton == "7-8-Mid") {
         delayUntilPhase(1);
-        pros::delay(125);
-        scoreAuto(3, 1100);
+        scoreAuto(3, 1100, 1700);
         phase = 2;
-        pros::delay(350);
+        pros::delay(475);
         outtake(1000);
+        pros::delay(50);
+        runIntake(600);
+
+        delayUntilPhase(3);
+        runIntake(600);
+        runUptake(50);
+        pros::delay(250);
+        runIntake(0);
+        runUptake(0);
     }
     else if (selectedAuton == "Left to Mid (7, MID)") {
         delayUntilPhase(1);
@@ -389,23 +397,26 @@ void subsystemSynchronous(void* p) {
         scoreBalls(1, 0);
         phase = 6;
     }
-    else if (selectedAuton == "9 to 8") {
+    else if (selectedAuton == "7-8 Safe") {
         delayUntilPhase(1);
-        pros::delay(150);
-        scoreAuto(3, 1300);
+        pros::delay(300);
+        shoot(1);
         phase = 2;
-        pros::delay(600);
-        outtake(1000);
 
         delayUntilPhase(3);
-        scoreAuto(2, 750, 2500);
+        scoreAuto(3, 1100, 1500);
         phase = 4;
+        pros::delay(475);
+        outtake(1000);
+        pros::delay(50);
+        runIntake(600);
 
         delayUntilPhase(5);
-        pros::delay(350);
-        outtakeGoal2(1250);
-        pros::delay(100);
         runIntake(600);
+        runUptake(100);
+        pros::delay(450);
+        runIntake(0);
+        runUptake(0);
     }
     else {
         scoreAuto(2, 0, 2900);
@@ -429,47 +440,7 @@ void robotTask(void* p) {
     double startTime = pros::millis();
 
     //Full Cycle 9 and 6
-    if (selectedAuton == "Right Side (9,6)") {
-        driveCont.setGains({ 18.5, 0, 0.00001, 0 });
-        turnCont.setGains({ 180, 0, 0, 0 });
-
-        fullChassis.insert({ 12.5, 14.5, convertToRadians(311) }, 500);
-        fullChassis.insert({ 15, 8.5, convertToRadians(313) }, 200); //15,6
-        chassisController.changeFloorVel(50);
-        fullChassis.execute();
-
-        phase = 1;
-        newX.forwardVelocity(750, 200);
-        newX.forwardVelocity(250, -100);
-        newX.forwardVelocity(250, 100);
-        newX.forwardVelocity(250, -100);
-        newX.forwardVelocity(250, 100);
-        delayUntilPhase(2);
-        newX.forwardVelocity(300, -200);
-
-        driveCont.setGains({ 16, 0, 0.00001, 0 });
-        turnCont.setGains({ 207, 0, .2, 0 });
-        fullChassis.insert({ 9, 16.5, convertToRadians(313) }, 200);
-        fullChassis.execute();
-
-        driveCont.setGains({ 16, 0, 0.00001, 0 });
-        turnCont.setGains({ 207, 0, .2, 0 });
-        fullChassis.insert({ 9, 16.5, convertToRadians(50) }, 500);
-        Point p1 = { 9, 16.5 }, p2 = { 11, 28 }, p3 = { 18.5, 37 }, p4 = { 24.75, 45 }; //59
-        Spline spline1({ p1, p2, p3, p4 });
-        fullChassis.insert(spline1, 30, 700);
-        fullChassis.execute();
-
-        pros::delay(100);
-        newX.forwardVelocity(325, 100);
-
-        scoreBalls(2, 4, 5000);
-
-        newX.forwardVelocity(325, -100);
-    }
-
-     //7 then 2 ball clamp mid
-    else if (selectedAuton == "Left to Mid (7, MID)") {
+    if (selectedAuton == "7-8-Mid") {
         driveCont.setGains({ 18.5, 0, 0.00001, 0 });
         turnCont.setGains({ 180, 0, 0, 0 });
 
@@ -501,6 +472,52 @@ void robotTask(void* p) {
 
         newX.strafeVelocity(500, 150);
 
+        fullChassis.insert({ -33, -11.5, convertToRadians(90) }, 200);
+        fullChassis.execute();
+
+        newX.forwardVelocity(500, 150);
+        shoot(1);
+
+        newX.forwardVelocity(400, -200);
+
+        if (pros::millis() - startTime < 14200) {
+            chassisController.toAngle(convertToRadians(270));
+        }
+    }
+
+     //7 then 2 ball clamp mid
+    else if (selectedAuton == "Left to Mid (7, MID)") {
+        driveCont.setGains({ 18.5, 0, 0.00001, 0 });
+        turnCont.setGains({ 180, 0, 0, 0 });
+
+        fullChassis.insert({ 12.5, -14.5, convertToRadians(49) }, 500);
+        fullChassis.insert({ 14.5, -8.5, convertToRadians(45) }, 200); //14.5, -8.5
+        chassisController.changeFloorVel(50);
+        fullChassis.execute();
+
+        phase = 1;
+        newX.forwardVelocity(1050, 125);
+        delayUntilPhase(2);
+        newX.forwardVelocity(300, -200);
+
+        pros::delay(200);
+
+        driveCont.setGains({ 15, 0, 0.00001, 0 });
+        turnCont.setGains({ 207, 0, .2, 0 });
+        fullChassis.insert({ 0, -10, convertToRadians(300) }, 200);
+        Point p1 = { 0, -12 }, p2 = { 3,-15 }, p3 = { 8.25, -18.5 }, p4 = { 8.25, -45 };
+        Spline spline1({ p1, p2, p3, p4 });
+        fullChassis.insert(spline1, 35, 700);
+        fullChassis.execute();
+
+        phase = 3;
+        pros::delay(250);
+        driveCont.setGains({ 12, 0, 0.00001, 0 });
+        fullChassis.insert({ -8, -47.25, convertToRadians(275) }, 500);
+        fullChassis.execute();
+
+        newX.strafeVelocity(500, 150);
+
         phase = 4;
         fullChassis.insert({ -14.5, -31.5, convertToRadians(240) }, 500);
         fullChassis.insert({ -27.5, -38, convertToRadians(278) }, 650);
@@ -509,7 +526,6 @@ void robotTask(void* p) {
         runIntake(600);
         fullChassis.insert({ -28.1, -40.5, convertToRadians(273) }, 150);
         fullChassis.execute();
-
 
         runIntake(300);
         newX.forwardVelocity(650, 150);
@@ -650,42 +666,69 @@ void robotTask(void* p) {
 
         newX.strafeVelocity(350, 200);
     }
-    else if (selectedAuton == "9 to 8") {
+    else if (selectedAuton == "7-8 Safe") {
+        odomSys.setState({ -16.5, -2.5, convertToRadians(90) });
+
+        chassisController.changeFloorVel(35);
+
+        driveCont.setGains({ 19.5, 0, 0.00001, 0 });
+        turnCont.setGains({ 180, 0, 0, 0 });
+
+        fullChassis.insert({ -26, -15, convertToRadians(90) }, 200);
+        fullChassis.insert({ -32, -10.5, convertToRadians(90) }, 50);
+        fullChassis.execute();
+
+        newX.forwardVelocity(500, 150);
+        phase = 1;
+        delayUntilPhase(2);
+
+        newX.forwardVelocity(300, -200);
+
         driveCont.setGains({ 18.5, 0, 0.00001, 0 });
         turnCont.setGains({ 180, 0, 0, 0 });
 
-        fullChassis.insert({ 12.5, 14.5, convertToRadians(311) }, 500);
-        fullChassis.insert({ 16.25, 8.5, convertToRadians(313) }, 200); //15,6
+        chassisController.changeFloorVel(50);
+
+        fullChassis.insert({ 12.5, -14.5, convertToRadians(49) }, 500);
+        fullChassis.insert({ 13, -10, convertToRadians(45) }, 200); //14.5, -8.5
         chassisController.changeFloorVel(50);
         fullChassis.execute();
 
-        phase = 1;
-        newX.forwardVelocity(750, 200);
-        newX.forwardVelocity(250, 100);
-        newX.forwardVelocity(250, -100);
-        newX.forwardVelocity(350, 100);
-        delayUntilPhase(2);
-        newX.forwardVelocity(300, -200);
-
-        driveCont.setGains(auto2);
-        turnCont.setGains(turn2);
-        fullChassis.insert({ -29, 10.5, convertToRadians(270) }, 500);
-        chassisController.changeFloorVel(100);
-        fullChassis.execute();
-
         phase = 3;
-        newX.forwardVelocity(600, 200);
-        pros::delay(300);
-        newX.forwardVelocity(250, -100);
-        newX.forwardVelocity(250, 100);
-        newX.forwardVelocity(250, -100);
-        newX.forwardVelocity(250, 100);
+        newX.forwardVelocity(1050, 125);
         delayUntilPhase(4);
         newX.forwardVelocity(300, -200);
-        phase = 5;
 
-        fullChassis.insert({ -5, 20, convertToRadians(90) }, 100);
+        pros::delay(200);
+
+        driveCont.setGains({ 15, 0, 0.00001, 0 });
+        turnCont.setGains({ 207, 0, .2, 0 });
+        fullChassis.insert({ 0, -10, convertToRadians(300) }, 200);
+        Point p1 = { 0, -12 }, p2 = { 3,-15 }, p3 = { 5.25, -18.5 }, p4 = { 5.25, -47 };
+        Spline spline1({ p1, p2, p3, p4 });
+        fullChassis.insert(spline1, 35, 700);
         fullChassis.execute();
+
+        phase = 5;
+        pros::delay(250);
+        driveCont.setGains({ 12, 0, 0.00001, 0 });
+        fullChassis.insert({ -13, -48.75, convertToRadians(275) }, 500);
+        fullChassis.execute();
+
+        newX.strafeVelocity(500, 150);
+
+        fullChassis.insert({ -17, -39.5, convertToRadians(240) }, 500);
+        fullChassis.execute();
+
+        runIntake(0);
+        newX.forwardVelocity(650, 150);
+
+        shoot(1, 1000, 400);
+
+        while (pros::millis() - startTime < 14600) {
+            pros::delay(20);
+        }
+        newX.forwardVelocity(300, -350);
         runIntake(0);
     }
     else {

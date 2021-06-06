@@ -10,8 +10,8 @@
 
  std::string selectedAuton = "None";
  const char * btnarr_map[] = {"Left Top Off", "Home Row", "\n",
-                               "Left to Mid (7, MID)", "Right Side (9,6)", "\n",
-                               "9 to 8", "None", ""};
+                               "Left to Mid (7, MID)", "7-8-Mid", "\n",
+                               "7-8 Safe", "None", ""};
 
 void initialize() {
 }
