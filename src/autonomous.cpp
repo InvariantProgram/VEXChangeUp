@@ -303,19 +303,19 @@
 
 
 
-  void subsystemSynchronous(void* p) {
+void subsystemSynchronous(void* p) {
     rightUptake.set_brake_mode(MOTOR_BRAKE_BRAKE);
     leftUptake.set_brake_mode(MOTOR_BRAKE_BRAKE);
     rightIntake.set_brake_mode(MOTOR_BRAKE_BRAKE);
     leftIntake.set_brake_mode(MOTOR_BRAKE_BRAKE);
 
-    
-    flipOut();
 
     if (selectedAuton == "Home Row") {
+        flipOut();
+
         delayUntilPhase(1);
         pros::delay(150);
-        scoreAuto(3, 1100);
+        scoreAuto(3, 1100, 1300);
         phase = 2;
         pros::delay(600);
         outtake(1000);
@@ -337,6 +337,8 @@
         runUptake(0);
     }
     else if (selectedAuton == "Cap Home Row") {
+        flipOut();
+
         delayUntilPhase(1);
         runIntake(300);
         pros::delay(850);
@@ -357,6 +359,8 @@
         phase = 6;
     }
     else if (selectedAuton == "7 to Mid") {
+        flipOut();
+
         delayUntilPhase(1);
         scoreAuto(3, 1100, 1500);
         phase = 2;
@@ -376,6 +380,8 @@
         index(2000);
     }
     else if (selectedAuton == "7-Mid Cap") {
+        flipOut();
+
         delayUntilPhase(1);
         runIntake(300);
         pros::delay(850);
@@ -395,6 +401,9 @@
         index(2000);
     }
     else if (selectedAuton == "8-7-Mid") {
+        pros::delay(200);
+        flipOut();
+
         delayUntilPhase(1);
         pros::delay(300);
         shoot(1);
@@ -416,6 +425,8 @@
         runUptake(0);
     }
     else if (selectedAuton == "9 and 6") {
+        flipOut();
+
         delayUntilPhase(1);
         pros::delay(125);
         scoreAuto(3, 1100);
@@ -437,7 +448,7 @@ void robotTask(void* p) {
 
     double startTime = pros::millis();
 
-    if (selectedAuton == "Home Row" || selectedAuton == "Cap Home Row") {
+    if (selectedAuton == "Home Row") {
         driveCont.setGains({ 17.5, 0, 0.00001, 0 });
         turnCont.setGains({ 180, 0, 0, 0 });
 
@@ -487,6 +498,58 @@ void robotTask(void* p) {
         fullChassis.execute();
 
         newX.strafeVelocity(450, 200);
+    }
+    else if (selectedAuton == "Cap Home Row") {
+        driveCont.setGains({ 18.5, 0, 0.00001, 0 });
+        turnCont.setGains({ 180, 0, 0, 0 });
+
+        fullChassis.insert({ 12.5, 14.5, convertToRadians(311) }, 500);
+        fullChassis.insert({ 16.25, 8.5, convertToRadians(313) }, 200); //15,6
+        chassisController.changeFloorVel(50);
+        fullChassis.execute();
+
+        phase = 1;
+        newX.forwardVelocity(350, 200);
+        pros::delay(200);
+        newX.forwardVelocity(700, 200);
+        delayUntilPhase(2);
+        newX.forwardVelocity(300, -200);
+
+        driveCont.setGains(auto2);
+        turnCont.setGains(turn2);
+        fullChassis.insert({ -29, 10.5, convertToRadians(270) }, 500);
+        chassisController.changeFloorVel(100);
+        fullChassis.execute();
+
+        phase = 3;
+        newX.forwardVelocity(600, 200);
+        delayUntilPhase(4);
+        newX.forwardVelocity(300, -200);
+
+        fullChassis.insert({ -38, 25, convertToRadians(265) }, 400);
+        fullChassis.insert({ -60, 25, convertToRadians(240) }, 400);
+        fullChassis.insert({ -74.5, 6.5, convertToRadians(225) }, 400); //-76.5
+        fullChassis.execute();
+
+        phase = 5;
+        newX.forwardVelocity(350, 150);
+        pros::delay(500);
+        newX.forwardVelocity(700, 200);
+        delayUntilPhase(6);
+        newX.forwardVelocity(600, -200);
+
+        if (pros::millis() - startTime > 13300) {
+            chassisController.toAngle(convertToRadians(90));
+            pros::delay(3000);
+        }
+
+        driveCont.setGains({ 16, 0, 0, 0 });
+        turnCont.setGains({ 225, 0, 0, 0 });
+        fullChassis.insert({ -52, 45.5, convertToRadians(93.5) }, 750); //-52, 45.5, 93.5
+        chassisController.changeFloorVel(50);
+        fullChassis.execute();
+
+        newX.strafeVelocity(350, 200);
     }
     else if (selectedAuton == "7 to Mid" || selectedAuton == "7-Mid Cap") {
         driveCont.setGains({ 18.5, 0, 0.00001, 0 });
@@ -547,6 +610,70 @@ void robotTask(void* p) {
         runIntake(0);
     }
     else if (selectedAuton == "8-7-Mid") {
+        odomSys.setState({ -16.5, -2.5, convertToRadians(90) });
+
+        chassisController.changeFloorVel(35);
+
+        driveCont.setGains({ 20.5, 0, 0.00001, 0 });
+        turnCont.setGains({ 180, 0, 0, 0 });
+
+        fullChassis.insert({ -26, -15, convertToRadians(90) }, 300);
+        fullChassis.insert({ -32, -10.5, convertToRadians(90) }, 50);
+        fullChassis.execute();
+
+        newX.forwardVelocity(500, 150);
+        phase = 1;
+        delayUntilPhase(2);
+
+        newX.forwardVelocity(300, -200);
+
+        driveCont.setGains({ 18.5, 0, 0.00001, 0 });
+        turnCont.setGains({ 180, 0, 0, 0 });
+
+        chassisController.changeFloorVel(50);
+
+        fullChassis.insert({ 12.5, -14.5, convertToRadians(49) }, 500);
+        fullChassis.insert({ 15.5, -10, convertToRadians(45) }, 200); //14.5, -8.5
+        chassisController.changeFloorVel(50);
+        fullChassis.execute();
+
+        phase = 3;
+        newX.forwardVelocity(1050, 125);
+        delayUntilPhase(4);
+        newX.forwardVelocity(300, -200);
+
+        pros::delay(200);
+
+        driveCont.setGains({ 15, 0, 0.00001, 0 });
+        turnCont.setGains({ 220, 0, .2, 0 });
+        fullChassis.insert({ 0, -10, convertToRadians(300) }, 200);
+        Point p1 = { 0, -12 }, p2 = { 3,-15 }, p3 = { 5.25, -12.5 }, p4 = { 5.25, -47 };
+        Spline spline1({ p1, p2, p3, p4 });
+        fullChassis.insert(spline1, 35, 700);
+        fullChassis.execute();
+
+        phase = 5;
+        pros::delay(250);
+        driveCont.setGains({ 12, 0, 0.00001, 0 });
+        fullChassis.insert({ -13, -49.25, convertToRadians(275) }, 500);
+        fullChassis.execute();
+
+        newX.strafeVelocity(450, 150);
+
+        fullChassis.insert({ 10, -38, convertToRadians(270) }, 300);
+        fullChassis.insert({ -17, -39.5, convertToRadians(240) }, 100);
+        fullChassis.execute();
+
+        runIntake(0);
+        newX.forwardVelocity(650, 150);
+
+        shoot(1, 1000);
+
+        while (pros::millis() - startTime < 14600) {
+            pros::delay(20);
+        }
+        newX.forwardVelocity(300, -350);
+        runIntake(0);
     }
     else if (selectedAuton == "9 and 6") {
         driveCont.setGains({ 18.5, 0, 0.00001, 0 });
